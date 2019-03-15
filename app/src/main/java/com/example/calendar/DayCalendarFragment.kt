@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import com.example.calendar.MyAdapter
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_day_calendar.view.*
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 
 class DayCalendarFragment : Fragment() {
@@ -18,6 +21,10 @@ class DayCalendarFragment : Fragment() {
             return DayCalendarFragment()
         }
     }
+
+    private val calendar = Calendar.getInstance()
+    private val dayOfWeekFormatter = SimpleDateFormat("EEE")
+    private val dayFormatter = SimpleDateFormat("MMMM dd")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,16 +36,21 @@ class DayCalendarFragment : Fragment() {
             R.layout.fragment_day_calendar,
             container, false
         )
-//        calendarView.setOnDateChangeListener(this)
-//        abfAddNote = view.findViewById(R.id.abfAddNote)
-//        abfAddNote.setOnClickListener()
 
+        val arguments = arguments
+        if (arguments != null && arguments.containsKey(DATE_DAY_CALENDAR)) {
+            calendar.timeInMillis = arguments.getLong(DATE_DAY_CALENDAR)
+        } else {
+            calendar.timeInMillis = Date().time
+        }
+
+        // TODO: error on change orientation
         var myDataset = arrayOf("")
         for (i in 1..23) {
             myDataset += i.toString()
         }
-        view.tvDayOfWeek.text = "CБ"
-        view.tvDay.text = "11"
+        view.tvDayOfWeek.text = dayOfWeekFormatter.format(calendar.time)
+        view.tvDay.text = dayFormatter.format(calendar.time)
 
         view.rvDayCalendar.apply {
             layoutManager = LinearLayoutManager(context)
@@ -53,7 +65,5 @@ class DayCalendarFragment : Fragment() {
         this.clearFindViewByIdCache()
     }
 
-    fun onClickAddNote(v: View?) {
-
-    }
+    fun onClickAddNote(v: View?) {  }
 }
