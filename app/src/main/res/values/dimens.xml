@@ -2,12 +2,8 @@
 <resources>
     <dimen name="fab_margin">6dp</dimen>
 
-    <dimen name="day_item_min_height">64dp</dimen>
-    <dimen name="day_item_hour_width">40dp</dimen>
-    <dimen name="day_item_hour_margin_end">5dp</dimen>
-    <dimen name="day_item_hour_text_size">12sp</dimen>
-    <dimen name="day_item_divide_hour_height">0.5dp</dimen>
-
-
+    <dimen name="calendar_header_text_size">12sp</dimen>
+    <dimen name="calendar_divide_height">0.5dp</dimen>
+    <dimen name="item_hour_default_event_height">80dp</dimen>
 
 </resources>
