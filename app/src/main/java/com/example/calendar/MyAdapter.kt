@@ -1,18 +1,16 @@
 package com.example.calendar
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
-import com.example.calendar.R
 import com.example.calendar.helpers.inflate
-import kotlinx.android.synthetic.main.list_item_hour.view.*
+import kotlinx.android.synthetic.main.view_item_hour_day_calendar.view.*
 
 class MyAdapter(internal val items: Array<String>) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+
+    var Header = arrayOf("")
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -36,17 +34,16 @@ class MyAdapter(internal val items: Array<String>) :
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): MyViewHolder {
         // create a new view
-        val textView = parent.inflate(R.layout.list_item_hour, false)
-//        val textView = parent.inflate(R.layout.my_text_view, false) as TextView
+        val view = parent.inflate(R.layout.view_item_hour_day_calendar, false)
         // set the view's size, margins, paddings and layout parameters
         //...
-        return MyViewHolder(textView)
+        return MyViewHolder(view)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-//    If the list needs an update, call a notification method on the RecyclerView.Adapter object,
-//    such as notifyItemChanged(). The layout manager then rebinds any affected view holders,
-//    allowing their data to be updated.
+    // If the list needs an update, call a notification method on the RecyclerView.Adapter object,
+    //such as notifyItemChanged(). The layout manager then rebinds any affected view holders,
+    //allowing their data to be updated.
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element

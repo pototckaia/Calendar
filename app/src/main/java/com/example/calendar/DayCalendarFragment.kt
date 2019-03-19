@@ -2,13 +2,13 @@ package com.example.calendar
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.calendar.MyAdapter
 import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment_day_calendar.*
 import kotlinx.android.synthetic.main.fragment_day_calendar.view.*
+import java.text.SimpleDateFormat
 
 
 class DayCalendarFragment : Fragment() {
@@ -29,22 +29,7 @@ class DayCalendarFragment : Fragment() {
             R.layout.fragment_day_calendar,
             container, false
         )
-//        calendarView.setOnDateChangeListener(this)
-//        abfAddNote = view.findViewById(R.id.abfAddNote)
-//        abfAddNote.setOnClickListener()
-
-        var myDataset = arrayOf("")
-        for (i in 1..23) {
-            myDataset += i.toString()
-        }
-        view.tvDayOfWeek.text = "CБ"
-        view.tvDay.text = "11"
-
-        view.rvDayCalendar.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = MyAdapter(myDataset)
-        }
-
+        view.abfAddNote.setOnClickListener() { onClickAddNote() }
         return view
     }
 
@@ -53,7 +38,21 @@ class DayCalendarFragment : Fragment() {
         this.clearFindViewByIdCache()
     }
 
-    fun onClickAddNote(v: View?) {
+    fun onClickAddNote() {
+        val formatter = SimpleDateFormat("EE, dd MMM YYYY")
+        val text = formatter.format(cdvMu.curDate.time)
 
+        val bundle = Bundle()
+        bundle.putString(TEXT_VIEW_KEY, text)
+        val fragment = NoteReviewFragment.newInstance()
+        fragment.arguments = bundle
+        activity!!.supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.clMainContainer,
+                fragment
+            )
+            .addToBackStack(null)
+            .commit()
     }
 }
