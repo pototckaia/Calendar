@@ -11,7 +11,7 @@ import java.util.Date
 
 class NoteReviewFragment  : Fragment() {
     private lateinit var tvDateField: TextView
-//    private var date: Long = 0
+    private var date: Long = 0
 
     companion object {
         fun newInstance(): NoteReviewFragment{
@@ -29,7 +29,7 @@ class NoteReviewFragment  : Fragment() {
             R.layout.fragment_note_preview,
             container, false
         )
-        tvDateField = view.findViewById(R.id.tvDateField)
+        tvDateField = view.findViewById(R.id.etTextEvent)
         getArguments().run {
             tvDateField.text = this?.getString(TEXT_VIEW_KEY)
         }

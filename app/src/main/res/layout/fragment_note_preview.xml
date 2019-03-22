@@ -6,15 +6,70 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-                android:id="@+id/tvDateField"
+        <EditText
+                android:id="@+id/etTextEvent"
                 android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:hint="@string/no_date"
                 android:textSize="24sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:inputType=""/>
+
+        <TextView
+                android:id="@+id/tvBeginLabel"
+                android:text="@string/begin_label_name"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintTop_toTopOf="@id/etBeginDate"
+                app:layout_constraintBottom_toBottomOf="@id/etBeginDate"
+                app:layout_constraintEnd_toEndOf="@id/etBeginDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/etBeginDate"/>
+
+        <EditText
+                android:id="@+id/etBeginDate"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
+                android:layout_height="wrap_content"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="date"
+                android:gravity="end"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etTextEvent"
+                tools:text="птб 15/03 1:00" android:autofillHints=""/>
+
+        <TextView
+                android:id="@+id/tvEndLabel"
+                android:text="Конец"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintTop_toTopOf="@id/etEndDate"
+                app:layout_constraintBottom_toBottomOf="@id/etEndDate"
+                app:layout_constraintEnd_toEndOf="@id/etEndDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/etEndDate"/>
+
+        <EditText
+                android:id="@+id/etEndDate"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
+                android:layout_height="wrap_content"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="date"
+                android:gravity="end"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etBeginDate"
+                tools:text="пт 15/03 3:52"/>
 
 </android.support.constraint.ConstraintLayout>

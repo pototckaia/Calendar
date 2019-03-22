@@ -59,7 +59,7 @@ class CalendarDayView
     }
 
     private fun updateHour() {
-//        view.llHourContainer.removeAllViews()
+        view.llHourContainer.removeAllViews()
         var myHour = arrayOf("")
         for (i in 1..23) {
             myHour += i.toString()
@@ -71,20 +71,20 @@ class CalendarDayView
 //            hour.setOnClickListener() {
 //                onHourClickbefore_breakfast_option(i, i+1)
 //            }
-//            view.llHourContainer.addView(hour)
+            view.llHourContainer.addView(hour)
 
-            val cs = ConstraintSet()
-            cs.clone(this)
-            cs.connect(hour.id,
-                ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT,0)
-            cs.connect(hour.id,
-                ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,0)
-
-            cs.connect(hour.id, ConstraintSet.TOP, R.id.vDividerText, ConstraintSet.BOTTOM,0)
-            cs.applyTo(this)
-
-            prevView = hour
-            this.addView(hour)
+//            val cs = ConstraintSet()
+//            cs.clone(this)
+//            cs.connect(hour.id,
+//                ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT,0)
+//            cs.connect(hour.id,
+//                ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,0)
+//
+//            cs.connect(hour.id, ConstraintSet.TOP, R.id.vDividerText, ConstraintSet.BOTTOM,0)
+//            cs.applyTo(this)
+//
+//            prevView = hour
+//            this.addView(hour)
         }
     }
 
