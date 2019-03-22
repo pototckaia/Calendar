@@ -11,7 +11,7 @@
                 android:layout_width="0dp"
                 app:layout_constraintWidth_default="spread"
                 android:layout_height="wrap_content"
-                android:hint="@string/no_date"
+                android:hint="@string/default_event_text"
                 android:textSize="24sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -43,11 +43,11 @@
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etTextEvent"
-                tools:text="птб 15/03 1:00" android:autofillHints=""/>
+                tools:text="пт 15/03 1:00"/>
 
         <TextView
                 android:id="@+id/tvEndLabel"
-                android:text="Конец"
+                android:text="@string/end_label_name"
                 android:layout_width="0dp"
                 app:layout_constraintWidth_default="spread"
                 android:layout_height="wrap_content"

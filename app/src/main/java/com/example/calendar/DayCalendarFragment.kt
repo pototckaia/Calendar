@@ -45,21 +45,15 @@ class DayCalendarFragment : Fragment() {
         this.clearFindViewByIdCache()
     }
 
-    fun onClickAddNote() {
-        val formatter = SimpleDateFormat("EE, dd MMM YYYY")
-        val text = formatter.format(cdvMu.curDate.time)
-
-        val bundle = Bundle()
-        bundle.putString(TEXT_VIEW_KEY, text)
+    private fun onClickAddNote() {
         val fragment = NoteReviewFragment.newInstance()
-        fragment.arguments = bundle
-        activity!!.supportFragmentManager
-            .beginTransaction()
-            .replace(
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(
                 R.id.clMainContainer,
                 fragment
             )
-            .addToBackStack(null)
-            .commit()
+            ?.addToBackStack(null)
+            ?.commit()
     }
 }
