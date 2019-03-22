@@ -2,7 +2,6 @@ package com.example.calendar.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.serialization.Serializable
 import java.util.*
 
 class Event(var text:String, var begin: Long, var end: Long) : Parcelable {
@@ -28,6 +27,22 @@ class Event(var text:String, var begin: Long, var end: Long) : Parcelable {
         get() = Date(end)
         set(value) { end = value.time }
 
+    var beginCalendar: Calendar
+        get() {
+            val c = Calendar.getInstance()
+            c.timeInMillis = begin
+            return c
+        }
+        set(value) { begin = value.timeInMillis }
+
+    var endCalendar: Calendar
+        get() {
+            val c = Calendar.getInstance()
+            c.timeInMillis = end
+            return c
+        }
+        set(value) { end = value.timeInMillis }
+
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -52,7 +67,7 @@ class Event(var text:String, var begin: Long, var end: Long) : Parcelable {
         }
 
         override fun newArray(size: Int): Array<Event> {
-            return Array<Event>(size, {Event()} )
+            return Array(size, {Event()} )
         }
     }
 
