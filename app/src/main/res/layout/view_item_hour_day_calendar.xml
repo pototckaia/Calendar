@@ -4,7 +4,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/item_hour_default_event_height">
 
     <TextView
             android:id="@+id/tvHour"
@@ -35,16 +36,5 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvHour" />
     <!--match_constraint_spread -растояние -->
     <!--match_constraint_wrap - не может выйти за пределы-->
-
-    <android.support.constraint.ConstraintLayout
-            android:id="@+id/clEventConstrain"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
-            android:layout_height="@dimen/item_hour_default_event_height"
-
-            app:layout_constraintTop_toBottomOf="@+id/vDividerHour"
-            app:layout_constraintStart_toStartOf="@+id/vDividerHour"
-            app:layout_constraintEnd_toEndOf="@+id/vDividerHour">
-    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

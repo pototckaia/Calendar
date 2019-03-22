@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Calendar</string>
     <string name="no_date">No date</string>
+    <string name="begin_label_name">Начало</string>
+    <string name="label_name_prev">Prev</string>
+    <string name="label_text_next">Next</string>
 </resources>
