@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.dayCalendar
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,8 +6,8 @@ import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.view_day_calendar.view.*
-import android.support.constraint.ConstraintSet
 import android.widget.Toast
+import com.example.calendar.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -19,7 +19,7 @@ class CalendarDayView
     : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var view: View = LayoutInflater.from(context).inflate(
-            R.layout.view_day_calendar, this, true)
+        R.layout.view_day_calendar, this, true)
 
     val curDate = Calendar.getInstance();
 

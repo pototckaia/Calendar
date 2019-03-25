@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.dayCalendar
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
@@ -6,12 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.view_item_hour_day_calendar.view.*
-import android.text.Layout
-import android.text.StaticLayout
-import android.support.v4.view.MarginLayoutParamsCompat.getMarginStart
-import android.support.v4.view.MarginLayoutParamsCompat.getMarginEnd
-import android.widget.LinearLayout
-
+import com.example.calendar.R
 
 
 class HourItemView @JvmOverloads constructor(

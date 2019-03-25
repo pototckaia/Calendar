@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false">
-        <com.example.calendar.CalendarDayView
+        <com.example.calendar.dayCalendar.CalendarDayView
                 android:id="@+id/cdvMu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"    />

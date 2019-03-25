@@ -9,19 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import com.example.calendar.data.Event
+import com.example.calendar.helpers.EVENT_KEY
 import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.fragment_note_preview.view.*
+import kotlinx.android.synthetic.main.fragment_note_create.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteReviewFragment  : Fragment() {
+class NoteCreateFragment  : Fragment() {
     private lateinit var event: Event
     private lateinit var notePreview: View
     private val formatter = SimpleDateFormat("EE, dd/MM/yyyy HH:mm", Locale.getDefault())
 
     companion object {
-        fun newInstance(): NoteReviewFragment{
-            return NoteReviewFragment()
+        fun newInstance(): NoteCreateFragment{
+            return NoteCreateFragment()
         }
     }
 
@@ -32,7 +33,7 @@ class NoteReviewFragment  : Fragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
          notePreview = inflater.inflate(
-            R.layout.fragment_note_preview,
+            R.layout.fragment_note_create,
             container, false
         )
 

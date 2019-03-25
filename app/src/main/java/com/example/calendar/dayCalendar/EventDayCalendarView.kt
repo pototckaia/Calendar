@@ -1,15 +1,14 @@
-package com.example.calendar
+package com.example.calendar.dayCalendar
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.R.attr.left
-import android.R.attr.top
 import android.graphics.Rect
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.example.calendar.R
 import kotlinx.android.synthetic.main.view_event_day_calendar.view.*
 
 
