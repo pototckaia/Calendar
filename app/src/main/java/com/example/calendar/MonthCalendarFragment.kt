@@ -30,7 +30,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AddEventView,
     lateinit var addEventPresenter: AddEventPresenter
 
     private lateinit var v: View
-    private lateinit var c: MaterialCalendarView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,10 +42,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AddEventView,
             container, false
         )
 
-        c = v.findViewById(R.id.cvMonthCalendar)
-        c.cvMonthCalendar.setOnDateChangedListener(this)
-        c.cvMonthCalendar.setOnDateLongClickListener(this);
-        c.cvMonthCalendar.setOnMonthChangedListener(this);
+        v.cvMonthCalendar.setOnDateChangedListener(this)
+        v.cvMonthCalendar.setOnDateLongClickListener(this);
+        v.cvMonthCalendar.setOnMonthChangedListener(this);
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
 
         return v
