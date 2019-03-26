@@ -4,7 +4,7 @@ import com.example.calendar.data.Event
 import java.util.*
 
 class EventMock : EventRepository {
-    private val events  = mutableListOf<Event>()
+    private val events = mutableListOf<Event>()
 
     override fun addEvent(event: Event) {
         events.add(event)

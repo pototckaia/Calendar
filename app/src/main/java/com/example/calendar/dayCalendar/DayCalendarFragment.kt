@@ -46,14 +46,14 @@ class DayCalendarFragment : Fragment() {
     }
 
     private fun onClickAddNote() {
-        val fragment = NoteCreateFragment.newInstance()
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(
-                R.id.clMainContainer,
-                fragment
-            )
-            ?.addToBackStack(null)
-            ?.commit()
+//        val fragment = NoteCreateFragment.newInstance()
+//        activity?.supportFragmentManager
+//            ?.beginTransaction()
+//            ?.replace(
+//                R.id.clMainContainer,
+//                fragment
+//            )
+//            ?.addToBackStack(null)
+//            ?.commit()
     }
 }

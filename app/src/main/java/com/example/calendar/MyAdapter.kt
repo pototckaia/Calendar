@@ -31,8 +31,10 @@ class MyAdapter(internal val items: Array<String>) :
 
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): MyViewHolder {
         // create a new view
         val view = parent.inflate(R.layout.view_item_hour_day_calendar, false)
         // set the view's size, margins, paddings and layout parameters

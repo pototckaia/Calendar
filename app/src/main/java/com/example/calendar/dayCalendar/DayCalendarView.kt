@@ -14,12 +14,13 @@ import java.util.Date
 
 
 class CalendarDayView
-    @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ConstraintLayout(context, attrs, defStyleAttr) {
+@JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var view: View = LayoutInflater.from(context).inflate(
-        R.layout.view_day_calendar, this, true)
+        R.layout.view_day_calendar, this, true
+    )
 
     val curDate = Calendar.getInstance();
 
@@ -64,7 +65,7 @@ class CalendarDayView
         for (i in 1..23) {
             myHour += i.toString()
         }
-        var prevView : View = view.vDividerText
+        var prevView: View = view.vDividerText
         for (i in 0..23) {
             val hour = HourItemView(context)
             hour.setHour(myHour[i])

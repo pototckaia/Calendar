@@ -10,11 +10,12 @@ import com.example.calendar.R
 
 
 class HourItemView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ConstraintLayout(context, attrs, defStyleAttr) {
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var view: View = LayoutInflater.from(context).inflate(
-        R.layout.view_item_hour_day_calendar, this, true)
+        R.layout.view_item_hour_day_calendar, this, true
+    )
 
     fun setHour(hour: String) {
         view.tvHour.text = hour;

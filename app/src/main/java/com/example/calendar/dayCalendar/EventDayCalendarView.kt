@@ -13,19 +13,20 @@ import kotlinx.android.synthetic.main.view_event_day_calendar.view.*
 
 
 class EventDayCalendarView
-    @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ConstraintLayout(context, attrs, defStyleAttr) {
+@JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var view: View = LayoutInflater.from(context).inflate(
-        R.layout.view_event_day_calendar, this, true)
+        R.layout.view_event_day_calendar, this, true
+    )
 
     fun setEvent(title: String) {
         view.tvItemEventTitle.text = title
     }
 
 
-    fun setPosition(rect: Rect, topMargin: Int=0, bottomMargin: Int=0) {
+    fun setPosition(rect: Rect, topMargin: Int = 0, bottomMargin: Int = 0) {
         val params = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
