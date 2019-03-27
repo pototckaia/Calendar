@@ -40,11 +40,6 @@ class DayCalendarFragment : Fragment() {
         return view
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        this.clearFindViewByIdCache()
-    }
-
     private fun onClickAddNote() {
 //        val fragment = NoteCreateFragment.newInstance()
 //        activity?.supportFragmentManager

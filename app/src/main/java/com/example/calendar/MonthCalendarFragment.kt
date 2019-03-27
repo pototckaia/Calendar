@@ -54,11 +54,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AddEventView,
         addEventPresenter.addEventButtonClick(v.cvMonthCalendar.selectedDate.calendar)
     }
 
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        this.clearFindViewByIdCache()
-//    }
-
     override fun onDateSelected(
         widget: MaterialCalendarView, date: CalendarDay,
         selected: Boolean

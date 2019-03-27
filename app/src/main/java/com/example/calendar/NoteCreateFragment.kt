@@ -96,11 +96,6 @@ class NoteCreateFragment : MvpAppCompatFragment(), UpdateEventInfo {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        this.clearFindViewByIdCache()
-    }
-
     override fun updateEventInfo(e: Event) {
         v.etTextEvent.setText(e.text)
         v.etBeginDate.setText(fmt.format(e.beginDate))
