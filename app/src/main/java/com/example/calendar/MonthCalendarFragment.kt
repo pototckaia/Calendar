@@ -5,19 +5,17 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_month_calendar.view.*
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
-import com.example.calendar.view.AddEventView
+import com.example.calendar.view.AbleAddEventView
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
-import kotlinx.android.synthetic.main.fragment_month_calendar.*
 
-class MonthCalendarFragment : MvpAppCompatFragment(), AddEventView,
+class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
     companion object {
@@ -27,7 +25,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AddEventView,
     }
 
     @InjectPresenter
-    lateinit var addEventPresenter: AddEventPresenter
+    lateinit var addEventPresenter: AbleAddEventPresenter
 
     private lateinit var v: View
 
@@ -51,7 +49,11 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AddEventView,
     }
 
     private fun onClickAdfAddNote() {
-        addEventPresenter.addEventButtonClick(v.cvMonthCalendar.selectedDate.calendar)
+        if (v.cvMonthCalendar.selectedDate == null) {
+            addEventPresenter.addEventButtonClick()
+        } else {
+            addEventPresenter.addEventButtonClick(v.cvMonthCalendar.selectedDate.calendar)
+        }
     }
 
     override fun onDateSelected(

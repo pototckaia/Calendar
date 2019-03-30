@@ -2,12 +2,12 @@ package com.example.calendar
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.view.AddEventView
+import com.example.calendar.view.AbleAddEventView
 import java.util.Calendar
 
 
 @InjectViewState
-class AddEventPresenter : MvpPresenter<AddEventView>() {
+class AbleAddEventPresenter : MvpPresenter<AbleAddEventView>() {
 
     fun addEventButtonClick(begin: Calendar, end: Calendar) {
         val fragment = NoteCreateFragment.newInstance(begin, end)
@@ -21,5 +21,9 @@ class AddEventPresenter : MvpPresenter<AddEventView>() {
         end.set(Calendar.HOUR_OF_DAY, 2)
         addEventButtonClick(commonDate, end)
     }
+
+    fun addEventButtonClick() =
+        addEventButtonClick(Calendar.getInstance())
+
 
 }
