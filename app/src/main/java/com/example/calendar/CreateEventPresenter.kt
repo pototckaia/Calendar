@@ -20,10 +20,6 @@ class CreateEventPresenter(
         endEvent.timeInMillis = endTime
     }
 
-    fun onBackPressed() {
-
-    }
-
     fun onClickStartDateEvent() {}
 
     fun onClickEndDateEvent() {}

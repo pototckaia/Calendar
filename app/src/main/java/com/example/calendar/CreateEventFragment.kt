@@ -14,10 +14,12 @@ import com.example.calendar.helpers.END_EVENT_KEY
 import com.example.calendar.view.CreateEventInfo
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.view.BackPressedView
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
-class CreateEventFragment : MvpAppCompatFragment(), CreateEventInfo {
+class CreateEventFragment : MvpAppCompatFragment(),
+    CreateEventInfo, BackPressedView {
 
     companion object {
         fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
@@ -43,6 +45,9 @@ class CreateEventFragment : MvpAppCompatFragment(), CreateEventInfo {
             arguments!!.getLong(END_EVENT_KEY)
         )
     }
+
+    @InjectPresenter
+    lateinit var backPressedPresenter: BackPressedPresenter
 
     private val fmt = SimpleDateFormat(
         "EE, dd/MM/yyyy HH:mm", Locale.getDefault()
@@ -74,7 +79,7 @@ class CreateEventFragment : MvpAppCompatFragment(), CreateEventInfo {
         v.tbNoteCreate.navigationIcon?.setTint(
             ContextCompat.getColor(context!!, R.color.colorWhite)
         )
-        v.tbNoteCreate.setNavigationOnClickListener() { createEventPresenter.onBackPressed() }
+        v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
 //        v.tbNoteCreate.   inflateMenu(R.menu.menu_order_info)
 //        tbNoteCreate.overflowIcon?.setTint(
 //            ContextCompat.getColor(context!!, R.color.colorWhite)
@@ -118,6 +123,10 @@ class CreateEventFragment : MvpAppCompatFragment(), CreateEventInfo {
             true
         )
         tpd.show()
+    }
+
+    override fun finishView() {
+        activity!!.supportFragmentManager.popBackStack()
     }
 
 }
