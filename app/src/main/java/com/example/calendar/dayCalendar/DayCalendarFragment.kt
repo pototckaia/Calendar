@@ -5,9 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.calendar.NoteCreateFragment
 import com.example.calendar.R
-import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_day_calendar.view.*
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -41,7 +39,7 @@ class DayCalendarFragment : Fragment() {
     }
 
     private fun onClickAddNote() {
-//        val fragment = NoteCreateFragment.newInstance()
+//        val fragment = CreateEventFragment.newInstance()
 //        activity?.supportFragmentManager
 //            ?.beginTransaction()
 //            ?.replace(

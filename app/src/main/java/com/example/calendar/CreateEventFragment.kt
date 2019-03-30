@@ -3,7 +3,6 @@ package com.example.calendar;
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import kotlinx.android.synthetic.*
 import java.text.SimpleDateFormat
 import java.util.*
 import android.support.v4.content.ContextCompat
@@ -15,20 +14,19 @@ import com.example.calendar.helpers.END_EVENT_KEY
 import com.example.calendar.view.UpdateEventInfo
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_note_create.*
-import kotlinx.android.synthetic.main.fragment_note_create.view.*
+import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
-class NoteCreateFragment : MvpAppCompatFragment(), UpdateEventInfo {
+class CreateEventFragment : MvpAppCompatFragment(), UpdateEventInfo {
 
     companion object {
-        fun newInstance(startEvent: Calendar, endEvent: Calendar): NoteCreateFragment {
+        fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
             val args = Bundle()
             args.run {
                 this.putLong(START_EVENT_KEY, startEvent.timeInMillis)
                 this.putLong(END_EVENT_KEY, endEvent.timeInMillis)
             }
-            val f = NoteCreateFragment()
+            val f = CreateEventFragment()
             f.arguments = args
             return f
         }
@@ -64,7 +62,7 @@ class NoteCreateFragment : MvpAppCompatFragment(), UpdateEventInfo {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         v = inflater.inflate(
-            R.layout.fragment_note_create,
+            R.layout.fragment_create_event,
             container, false
         )
         initToolBar()

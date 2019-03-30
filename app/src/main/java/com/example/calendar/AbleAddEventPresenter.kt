@@ -10,7 +10,7 @@ import java.util.Calendar
 class AbleAddEventPresenter : MvpPresenter<AbleAddEventView>() {
 
     fun addEventButtonClick(begin: Calendar, end: Calendar) {
-        val fragment = NoteCreateFragment.newInstance(begin, end)
+        val fragment = CreateEventFragment.newInstance(begin, end)
         viewState.openFragment(fragment)
     }
 
