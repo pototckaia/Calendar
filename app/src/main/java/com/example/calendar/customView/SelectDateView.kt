@@ -1,10 +1,11 @@
-package com.example.calendar
+package com.example.calendar.customView
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.example.calendar.R
 import kotlinx.android.synthetic.main.view_select_date.view.*
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,9 +1,10 @@
-package com.example.calendar
+package com.example.calendar.customView
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.util.Log
 import android.view.View
+import com.example.calendar.R
 import com.example.calendar.helpers.inflate
 import kotlinx.android.synthetic.main.view_item_hour_day_calendar.view.*
 
