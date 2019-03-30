@@ -1,9 +1,11 @@
 package com.example.calendar
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.view.CreateEventInfoView
-import java.util.Calendar
+import java.util.*
 
 @InjectViewState
 class CreateEventPresenter(
@@ -18,99 +20,61 @@ class CreateEventPresenter(
     init {
         startEvent.timeInMillis = beginTime
         endEvent.timeInMillis = endTime
+        viewState.updateEventInfo(startEvent, endEvent)
     }
 
-    fun onClickStartDateEvent() {}
 
-    fun onClickEndDateEvent() {}
+    fun onClickBeginDay() {
+        viewState.showDatePickerDialog(
+            startEvent,
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                startEvent.set(year, monthOfYear, dayOfMonth)
+                if (startEvent > endEvent) {
+                    endEvent.set(year, monthOfYear, dayOfMonth)
+                }
+                viewState.updateEventInfo(startEvent, endEvent)
+            })
+    }
 
-//        val c = event.beginCalendar
-//        val dpd = DatePickerDialog(context,
-//            DatePickerDialog.OnDateSetListener {_, year_, monthOfYear, dayOfMonth ->
-//                onBeginDateSetListener(year_, monthOfYear, dayOfMonth)
-//        }, c.get(Calendar.YEAR),
-//           c.get(Calendar.MONTH),
-//           c.get(Calendar.DAY_OF_MONTH))
-//        dpd.show()
-//    }
-//
-//    private fun onClickEndDateEvent() {
-//        val c = event.endCalendar
-//        val dpd = DatePickerDialog(context,
-//            DatePickerDialog.OnDateSetListener {_, year_, monthOfYear, dayOfMonth ->
-//                onEndDateSetListener(year_, monthOfYear, dayOfMonth)
-//            }, c.get(Calendar.YEAR),
-//            c.get(Calendar.MONTH),
-//            c.get(Calendar.DAY_OF_MONTH))
-//        dpd.show()
-//    }
-//
-//    private fun onBeginDateSetListener(year: Int, monthOfYear: Int, dayOfMonth: Int) {
-//        val c = event.beginCalendar
-//        c.set(year, monthOfYear, dayOfMonth)
-//        event.beginCalendar = c
-//        if (event.endCalendar < c) {
-//            val end = event.endCalendar
-//            end.set(year, monthOfYear, dayOfMonth)
-//            event.endCalendar = end
-//        }
-//        createEventPresenter()
-//
-//        val tpd = TimePickerDialog(context,
-//            TimePickerDialog.OnTimeSetListener{ view: TimePicker?, hourOfDay: Int, minute: Int ->
-//                onBeginTimeSetListener(hourOfDay, minute)
-//            },
-//            c.get(Calendar.HOUR_OF_DAY),
-//            c.get(Calendar.MINUTE),
-//            true)
-//        tpd.show()
-//    }
-//
-//    private fun onEndDateSetListener(year: Int, monthOfYear: Int, dayOfMonth: Int) {
-//        val c = event.endCalendar
-//        c.set(year, monthOfYear, dayOfMonth)
-//        event.endCalendar = c
-//        if (event.beginCalendar > c) {
-//            val startEvent = event.beginCalendar
-//            startEvent.set(year, monthOfYear, dayOfMonth)
-//            event.beginCalendar = startEvent
-//        }
-//        createEventPresenter()
-//
-//        val tpd = TimePickerDialog(context,
-//            TimePickerDialog.OnTimeSetListener{ _: TimePicker?, hourOfDay: Int, minute: Int ->
-//                onEndTimeSetListener(hourOfDay, minute)
-//            },
-//            c.get(Calendar.HOUR_OF_DAY),
-//            c.get(Calendar.MINUTE),
-//            true)
-//        tpd.show()
-//    }
-//
-//    private fun onBeginTimeSetListener(hourOfDay: Int, minute: Int) {
-//        val c = event.beginCalendar
-//        c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-//        c.set(Calendar.MINUTE, minute)
-//        if (event.endCalendar < c) {
-//            val end = c.clone() as Calendar
-//            end.add(Calendar.HOUR_OF_DAY, 1)
-//            event.endCalendar = end
-//        }
-//        event.beginCalendar = c
-//        createEventPresenter()
-//    }
-//
-//    private fun onEndTimeSetListener(hourOfDay: Int, minute: Int) {
-//        val c = event.endCalendar
-//        c.set(Calendar.HOUR_OF_DAY, hourOfDay)
-//        c.set(Calendar.MINUTE, minute)
-//        if (event.beginCalendar > c) {
-//            val startEvent = c.clone() as Calendar
-//            startEvent.add(Calendar.HOUR_OF_DAY, -1)
-//            event.beginCalendar = startEvent
-//        }
-//        event.endCalendar = c
-//        createEventPresenter()
-//    }
+    fun onClickBeginHour() {
+        viewState.showTimePickerDialog(
+            startEvent,
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                startEvent.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                startEvent.set(Calendar.MINUTE, minute)
+                if (startEvent >= endEvent) {
+                    endEvent.timeInMillis = startEvent.timeInMillis
+                    endEvent.add(Calendar.HOUR_OF_DAY, 1)
+                }
+                viewState.updateEventInfo(startEvent, endEvent)
+            })
+    }
+
+    fun onClickEndDay() {
+        viewState.showDatePickerDialog(
+            endEvent,
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                endEvent.set(year, monthOfYear, dayOfMonth)
+                if (endEvent < startEvent) {
+                    startEvent.set(year, monthOfYear, dayOfMonth)
+                }
+                viewState.updateEventInfo(startEvent, endEvent)
+            })
+    }
+
+
+    fun onClickEndHour() {
+        viewState.showTimePickerDialog(
+            endEvent,
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                endEvent.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                endEvent.set(Calendar.MINUTE, minute)
+                if (endEvent <= startEvent) {
+                    startEvent.timeInMillis = endEvent.timeInMillis
+                    startEvent.add(Calendar.HOUR_OF_DAY, -1)
+                }
+                viewState.updateEventInfo(startEvent, endEvent)
+            })
+    }
 
 }

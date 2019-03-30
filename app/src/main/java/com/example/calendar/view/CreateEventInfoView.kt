@@ -12,7 +12,7 @@ import java.util.*
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface CreateEventInfoView : MvpView {
 
-    fun updateEventInfo(e: Event)
+    fun updateEventInfo(begin: Calendar, end: Calendar)
 
     fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener)
 

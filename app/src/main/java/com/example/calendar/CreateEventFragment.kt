@@ -68,6 +68,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
             container, false
         )
         initToolBar()
+        v.vBegin.onClickDayListener = View.OnClickListener { createEventPresenter.onClickBeginDay() }
+        v.vBegin.onClickHourListener = View.OnClickListener { createEventPresenter.onClickBeginHour() }
+        v.vEnd.onClickDayListener = View.OnClickListener { createEventPresenter.onClickEndDay() }
+        v.vEnd.onClickHourListener = View.OnClickListener { createEventPresenter.onClickEndHour() }
 
         return v
     }
@@ -96,10 +100,9 @@ class CreateEventFragment : MvpAppCompatFragment(),
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun updateEventInfo(e: Event) {
-        v.etTextEvent.setText(e.text)
-        v.vBegin.date = e.beginCalendar
-        v.vEnd.date = e.endCalendar
+    override fun updateEventInfo(begin: Calendar, end: Calendar) {
+        v.vBegin.date = begin
+        v.vEnd.date = end
     }
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
