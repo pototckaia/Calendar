@@ -13,6 +13,10 @@ ext {
 
 	moxyVersion = "1.5.5"
 
+	roomVersion = '1.1.1'
+	archLifecycleVersion = '1.1.1'
+
+	rxJavaVersion = '2.0.2'
 
 	jUnitVersion = "4.12"
 	testRunnerVersion = "1.0.2"
@@ -32,7 +36,6 @@ ext {
 	// retrofitVersion = '2.2.0'
 	// retrofitRxAdapterVersion = '2.4.0'
 	// rxBindingVersion = '2.0.0'
-	// rxJavaVersion = '2.0.2'
 	// rxAndroidVersion = '2.0.1'
 	// rxRelayVersion = '2.0.0'
 	// sentryVersion = '1.7.4'
@@ -61,11 +64,15 @@ ext {
 		constraintLayout:                  "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
 		recyclerview:                  	   "com.android.support:recyclerview-v7:${supportLibraryVersion}",
 		design:                            "com.android.support:design:${supportLibraryVersion}",
-		
+
 		moxyCore:                          "com.arello-mobile:moxy:${moxyVersion}",
 		moxyAppCompat:                 	   "com.arello-mobile:moxy-app-compat:${moxyVersion}",
 
 		materialCalendarView: 			   "com.github.prolificinteractive:material-calendarview:${materialCalendarviewVersion}",
+
+		room:							   "android.arch.persistence.room:runtime:${roomVersion}",
+		lifeCycle:						   "android.arch.lifecycle:extensions:${archLifecycleVersion}",
+		rxJava:                            "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
 
 		// retrofitGson:                   "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
 		// retrofit:                       "com.squareup.retrofit2:retrofit:${retrofitVersion}",
@@ -84,7 +91,6 @@ ext {
 		// retrofitRxAdapter:              "com.squareup.retrofit2:adapter-rxjava2:${retrofitRxAdapterVersion}",
 		// rxAndroid:                      "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
 		// rxBinding:                      "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}",
-		// rxJava:                         "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
 		// rxRelay:                        "com.jakewharton.rxrelay2:rxrelay:${rxRelayVersion}",
 		// sentry:                         "io.sentry:sentry-android:${sentryVersion}",
 		// maskEditText:                   "ru.egslava:MaskedEditText:${maskEditTextVersion}",
@@ -103,6 +109,8 @@ ext {
 		// butterknifeCompiler:            "com.jakewharton:butterknife-compiler:${butterknifeVersion}",
 		// daggerCompiler:                 "com.google.dagger:dagger-compiler:${daggerVersion}",
 		moxyCompiler:                   	"com.arello-mobile:moxy-compiler:${moxyVersion}",
+		roomCompiler: 						"android.arch.persistence.room:compiler:${roomVersion}",
+		lifeCycleCompiler: 					"android.arch.lifecycle:compiler:${archLifecycleVersion}",
 		// permissionDispatcherProcessor:  "com.github.hotchemi:permissionsdispatcher-processor:${permissionDispatcherVersion}",
 		// epoxyProcessor:                 "com.airbnb.android:epoxy-processor:${epoxyVersion}"
 
@@ -110,6 +118,7 @@ ext {
 		junit:								"junit:junit:${jUnitVersion}",
 		testRunner:							"com.android.support.test:runner:${testRunnerVersion}",
 		testEspresso: 						"com.android.support.test.espresso:espresso-core:${testEspressoCoreVersion}",
+		roomTest: 							"android.arch.persistence.room:testing:${roomVersion}",
 	]
 	// domainDependencies = [
 	// 	/*implementation*/

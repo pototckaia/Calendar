@@ -42,6 +42,15 @@ dependencies {
 
     implementation deps.materialCalendarView
 
+    implementation deps.room
+    implementation deps.roomTest
+    kapt deps.roomCompiler
+
+    implementation deps.lifeCycle
+    kapt deps.lifeCycleCompiler
+
+    implementation deps.rxJava
+
     testImplementation deps.junit
     androidTestImplementation deps.testRunner
     androidTestImplementation deps.testEspresso
