@@ -11,7 +11,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.data.Event
 import com.example.calendar.helpers.START_EVENT_KEY
 import com.example.calendar.helpers.END_EVENT_KEY
-import com.example.calendar.view.CreateEventInfo
+import com.example.calendar.view.CreateEventInfoView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.view.BackPressedView
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfo, BackPressedView {
+    CreateEventInfoView, BackPressedView {
 
     companion object {
         fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
@@ -101,7 +101,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     override fun updateEventInfo(e: Event) {
         v.etTextEvent.setText(e.text)
-        v.etBeginDate.setText(fmt.format(e.beginDate))
+        v.etBeginDay.setText(fmt.format(e.beginDate))
         v.etEndDate.setText(fmt.format(e.endDate))
     }
 

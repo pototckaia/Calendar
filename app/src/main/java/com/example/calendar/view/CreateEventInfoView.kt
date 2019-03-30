@@ -10,7 +10,7 @@ import com.example.calendar.data.Event
 import java.util.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface CreateEventInfo : MvpView {
+interface CreateEventInfoView : MvpView {
 
     fun updateEventInfo(e: Event)
 
