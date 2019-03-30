@@ -27,7 +27,7 @@ dependencies {
     def deps = rootProject.ext.appDependencies
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    
+
     implementation deps.kotlinStdlibJdk7
     implementation deps.kotlinSerialization
 
