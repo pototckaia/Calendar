@@ -98,8 +98,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     override fun updateEventInfo(e: Event) {
         v.etTextEvent.setText(e.text)
-//        v.etDay.setText(fmt.format(e.beginDate))
-//        v.etEndDate.setText(fmt.format(e.endDate))
+        v.vBegin.date = e.beginCalendar
+        v.vEnd.date = e.endCalendar
     }
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
