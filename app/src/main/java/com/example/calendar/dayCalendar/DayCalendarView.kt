@@ -8,6 +8,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.view_day_calendar.view.*
 import android.widget.Toast
 import com.example.calendar.R
+import com.example.calendar.helpers.getCalendarWithUTF
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -22,7 +23,7 @@ class CalendarDayView
         R.layout.view_day_calendar, this, true
     )
 
-    val curDate = Calendar.getInstance();
+    val curDate = getCalendarWithUTF()
 
 //    private var mStartHour = 0
 //    private val mDayHeight = 80
@@ -93,7 +94,7 @@ class CalendarDayView
 ////        view.flEventContainer.removeAllViews()
 //
 ////        for (event in mEvents) {
-////            val begin = Calendar.getInstance()
+////            val begin = getCalendarWithUTF()
 ////            begin.time = Date()
 ////            val end = begin
 ////            end.set(Calendar.HOUR, end.get(Calendar.HOUR) + 1)

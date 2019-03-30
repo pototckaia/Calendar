@@ -6,6 +6,7 @@ import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.calendar.R
+import com.example.calendar.helpers.getCalendarWithUTF
 import kotlinx.android.synthetic.main.fragment_day_calendar.view.*
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -19,7 +20,7 @@ class DayCalendarFragment : Fragment() {
         }
     }
 
-    private val calendar = Calendar.getInstance()
+    private val calendar = getCalendarWithUTF()
     private val dayOfWeekFormatter = SimpleDateFormat("EEE")
     private val dayFormatter = SimpleDateFormat("MMMM dd")
 

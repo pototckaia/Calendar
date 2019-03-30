@@ -107,7 +107,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
         val dpd = DatePickerDialog(
-            context, l,
+            context!!, l,
             c.get(Calendar.YEAR),
             c.get(Calendar.MONTH),
             c.get(Calendar.DAY_OF_MONTH)

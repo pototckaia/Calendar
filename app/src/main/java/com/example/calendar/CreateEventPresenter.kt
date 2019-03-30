@@ -4,6 +4,9 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.example.calendar.helpers.cloneWithDefaultTimeZone
+import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
+import com.example.calendar.helpers.getCalendarWithUTF
 import com.example.calendar.view.CreateEventInfoView
 import java.util.*
 
@@ -14,34 +17,48 @@ class CreateEventPresenter(
     endTime: Long
 ) : MvpPresenter<CreateEventInfoView>() {
 
-    private val startEvent = Calendar.getInstance()
-    private val endEvent = Calendar.getInstance()
+    private val startEvent = getCalendarWithUTF()
+    private val endEvent = getCalendarWithUTF()
 
     init {
         startEvent.timeInMillis = beginTime
         endEvent.timeInMillis = endTime
-        viewState.updateEventInfo(startEvent, endEvent)
+        updateView()
     }
 
+    private fun updateView() {
+        viewState.updateEventInfo(
+            startEvent.cloneWithDefaultTimeZone(),
+            endEvent.cloneWithDefaultTimeZone())
+    }
 
     fun onClickBeginDay() {
         viewState.showDatePickerDialog(
-            startEvent,
+            startEvent.cloneWithDefaultTimeZone(),
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                startEvent.set(year, monthOfYear, dayOfMonth)
+                // TODO check it work
+                val local = getCalendarWithDefaultTimeZone()
+                local.timeInMillis = startEvent.timeInMillis
+                local.set(year, monthOfYear, dayOfMonth)
+                startEvent.timeInMillis = local.timeInMillis
+
                 if (startEvent > endEvent) {
                     endEvent.set(year, monthOfYear, dayOfMonth)
                 }
-                viewState.updateEventInfo(startEvent, endEvent)
+                updateView()
             })
     }
 
     fun onClickBeginHour() {
         viewState.showTimePickerDialog(
-            startEvent,
+            startEvent.cloneWithDefaultTimeZone(),
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                startEvent.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                startEvent.set(Calendar.MINUTE, minute)
+                val local = getCalendarWithDefaultTimeZone()
+                local.timeInMillis = startEvent.timeInMillis
+                local.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                local.set(Calendar.MINUTE, minute)
+                startEvent.timeInMillis = local.timeInMillis
+
                 if (startEvent >= endEvent) {
                     endEvent.timeInMillis = startEvent.timeInMillis
                     endEvent.add(Calendar.HOUR_OF_DAY, 1)
@@ -52,9 +69,13 @@ class CreateEventPresenter(
 
     fun onClickEndDay() {
         viewState.showDatePickerDialog(
-            endEvent,
+            endEvent.cloneWithDefaultTimeZone(),
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                endEvent.set(year, monthOfYear, dayOfMonth)
+                val local = getCalendarWithDefaultTimeZone()
+                local.timeInMillis = endEvent.timeInMillis
+                local.set(year, monthOfYear, dayOfMonth)
+                endEvent.timeInMillis = local.timeInMillis
+
                 if (endEvent < startEvent) {
                     startEvent.set(year, monthOfYear, dayOfMonth)
                 }
@@ -65,10 +86,14 @@ class CreateEventPresenter(
 
     fun onClickEndHour() {
         viewState.showTimePickerDialog(
-            endEvent,
+            endEvent.cloneWithDefaultTimeZone(),
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                endEvent.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                endEvent.set(Calendar.MINUTE, minute)
+                val local = getCalendarWithDefaultTimeZone()
+                local.timeInMillis = endEvent.timeInMillis
+                local.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                local.set(Calendar.MINUTE, minute)
+                endEvent.timeInMillis = local.timeInMillis
+
                 if (endEvent <= startEvent) {
                     startEvent.timeInMillis = endEvent.timeInMillis
                     startEvent.add(Calendar.HOUR_OF_DAY, -1)

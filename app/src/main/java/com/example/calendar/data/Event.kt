@@ -2,20 +2,10 @@ package com.example.calendar.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.calendar.helpers.getCalendarWithUTF
 import java.util.*
 
 class Event(var text: String, var begin: Long, var end: Long) : Parcelable {
-
-    constructor(text: String) : this(text, 0, 0) {
-//        val startDate = Calendar.getInstance()
-//        startDate.set(Calendar.HOUR, 1)
-//        startDate.set(Calendar.MINUTE, 0)
-//        startDate.set(Calendar.SECOND, 0)
-//        val endDate = startDate.clone() as Calendar
-//        endDate.set(Calendar.HOUR, 2)
-//        begin = startDate.timeInMillis
-//        end = endDate.timeInMillis
-    }
 
     constructor() : this("", 0, 0)
 
@@ -33,7 +23,7 @@ class Event(var text: String, var begin: Long, var end: Long) : Parcelable {
 
     var beginCalendar: Calendar
         get() {
-            val c = Calendar.getInstance()
+            val c = getCalendarWithUTF()
             c.timeInMillis = begin
             return c
         }
@@ -43,7 +33,7 @@ class Event(var text: String, var begin: Long, var end: Long) : Parcelable {
 
     var endCalendar: Calendar
         get() {
-            val c = Calendar.getInstance()
+            val c = getCalendarWithUTF()
             c.timeInMillis = end
             return c
         }

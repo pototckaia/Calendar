@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.example.calendar.R
+import com.example.calendar.helpers.getCalendarWithUTF
 import kotlinx.android.synthetic.main.view_select_date.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,6 +16,7 @@ class SelectDateView
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
+    // TODO Local.getDefault and TimeZone.getDefault???
     private val fmt_day = SimpleDateFormat(
         "EE, dd/MM/yyyy", Locale.getDefault()
     )
@@ -43,7 +45,7 @@ class SelectDateView
     var date: Calendar
         get() {
             // TODO: check it work
-            val c = Calendar.getInstance()
+            val c = getCalendarWithUTF()
             c.time = fmt_day.parse(view.etDay.toString())
             c.time = fmt_hour.parse(view.etHour.toString())
             return c
