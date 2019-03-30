@@ -49,9 +49,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @InjectPresenter
     lateinit var backPressedPresenter: BackPressedPresenter
 
-    private val fmt = SimpleDateFormat(
-        "EE, dd/MM/yyyy HH:mm", Locale.getDefault()
-    )
 
     private lateinit var v: View
 
@@ -101,8 +98,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     override fun updateEventInfo(e: Event) {
         v.etTextEvent.setText(e.text)
-        v.etBeginDay.setText(fmt.format(e.beginDate))
-        v.etEndDate.setText(fmt.format(e.endDate))
+//        v.etDay.setText(fmt.format(e.beginDate))
+//        v.etEndDate.setText(fmt.format(e.endDate))
     }
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {

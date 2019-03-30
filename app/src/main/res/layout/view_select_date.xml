@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+            android:id="@+id/tvLabel"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="@id/etDay"
+            app:layout_constraintBottom_toBottomOf="@id/etDay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/etDay"/>
+
+    <EditText
+            android:id="@+id/etDay"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:inputType="date"
+            android:gravity="end"
+
+            app:layout_constraintStart_toEndOf="@id/tvLabel"
+            app:layout_constraintEnd_toStartOf="@id/etHour"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="пт 15/03"/>
+
+    <EditText
+            android:id="@+id/etHour"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:inputType="date"
+            android:gravity="end"
+
+            app:layout_constraintTop_toTopOf="@id/etDay"
+            app:layout_constraintBottom_toBottomOf="@id/etDay"
+            app:layout_constraintStart_toEndOf="@id/etDay"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="12:00"/>
+
+</android.support.constraint.ConstraintLayout>
