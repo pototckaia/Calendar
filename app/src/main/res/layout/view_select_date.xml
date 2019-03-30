@@ -8,8 +8,10 @@
     <TextView
             android:id="@+id/tvLabel"
             android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
+            app:layout_constraintHorizontal_weight="1"
             android:layout_height="wrap_content"
+            android:gravity="end"
+            tools:text="Начало"
 
             app:layout_constraintTop_toTopOf="@id/etDay"
             app:layout_constraintBottom_toBottomOf="@id/etDay"
@@ -19,7 +21,7 @@
     <EditText
             android:id="@+id/etDay"
             android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
+            app:layout_constraintHorizontal_weight="2"
             android:layout_height="wrap_content"
             android:cursorVisible="false"
             android:focusable="false"
@@ -29,12 +31,12 @@
             app:layout_constraintStart_toEndOf="@id/tvLabel"
             app:layout_constraintEnd_toStartOf="@id/etHour"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="пт 15/03"/>
+            tools:text="пт, 15/03/2019"/>
 
     <EditText
             android:id="@+id/etHour"
             android:layout_width="0dp"
-            app:layout_constraintWidth_default="spread"
+            app:layout_constraintHorizontal_weight="1"
             android:layout_height="wrap_content"
             android:cursorVisible="false"
             android:focusable="false"
