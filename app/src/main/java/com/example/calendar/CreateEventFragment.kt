@@ -11,13 +11,13 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.data.Event
 import com.example.calendar.helpers.START_EVENT_KEY
 import com.example.calendar.helpers.END_EVENT_KEY
-import com.example.calendar.view.UpdateEventInfo
+import com.example.calendar.view.CreateEventInfo
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
-class CreateEventFragment : MvpAppCompatFragment(), UpdateEventInfo {
+class CreateEventFragment : MvpAppCompatFragment(), CreateEventInfo {
 
     companion object {
         fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {

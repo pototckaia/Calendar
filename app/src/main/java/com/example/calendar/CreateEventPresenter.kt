@@ -2,7 +2,7 @@ package com.example.calendar
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.view.UpdateEventInfo
+import com.example.calendar.view.CreateEventInfo
 import java.util.Calendar
 
 @InjectViewState
@@ -10,7 +10,7 @@ class CreateEventPresenter(
     var titleEvent: String,
     beginTime: Long,
     endTime: Long
-) : MvpPresenter<UpdateEventInfo>() {
+) : MvpPresenter<CreateEventInfo>() {
 
     private val startEvent = Calendar.getInstance()
     private val endEvent = Calendar.getInstance()
@@ -20,7 +20,9 @@ class CreateEventPresenter(
         endEvent.timeInMillis = endTime
     }
 
-    fun onBackPressed() {}
+    fun onBackPressed() {
+
+    }
 
     fun onClickStartDateEvent() {}
 
