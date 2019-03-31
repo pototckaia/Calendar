@@ -28,9 +28,9 @@
     <android.support.v7.widget.RecyclerView
             android:id="@+id/rvEventsMonthCalendar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
 
-            app:layout_constraintTop_toBottomOf="@id/cvMonthCalendar"/>
+            app:layout_constraintTop_toBottomOf="@+id/cvMonthCalendar"/>
 
 
 </android.support.constraint.ConstraintLayout>
