@@ -50,6 +50,7 @@ dependencies {
     kapt deps.lifeCycleCompiler
 
     implementation deps.rxJava
+    implementation deps.rxAndroid
 
     testImplementation deps.junit
     androidTestImplementation deps.testRunner
