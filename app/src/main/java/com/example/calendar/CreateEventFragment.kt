@@ -13,6 +13,7 @@ import com.example.calendar.helpers.END_EVENT_KEY
 import com.example.calendar.view.CreateEventInfoView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.view.BackPressedView
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
@@ -39,6 +40,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideCreateEventPresenter(): CreateEventPresenter {
         return CreateEventPresenter(
+            EventRoomDatabase.getInstance(context!!).eventDao(),
             resources.getString(R.string.default_event_text),
             arguments!!.getLong(START_EVENT_KEY),
             arguments!!.getLong(END_EVENT_KEY)
