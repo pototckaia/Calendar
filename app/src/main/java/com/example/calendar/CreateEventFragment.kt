@@ -80,18 +80,13 @@ class CreateEventFragment : MvpAppCompatFragment(),
             ContextCompat.getColor(context!!, R.color.colorWhite)
         )
         v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
-//        v.tbNoteCreate.   inflateMenu(R.menu.menu_order_info)
-//        tbNoteCreate.overflowIcon?.setTint(
-//            ContextCompat.getColor(context!!, R.color.colorWhite)
-//        )
-//        v.tbNoteCreate.getMenu().findItem(R.id.actionCancel).setOnMenuItemClickListener({ item ->
-//            customerOrderInfoPresenter.cancelRequest()
-//            true
-//        })
-//        toolbar.getMenu().findItem(R.id.actionRepeat).setOnMenuItemClickListener({ item ->
-//            customerOrderInfoPresenter.repeatOrder()
-//            true
-//        })
+        v.tbNoteCreate.   inflateMenu(R.menu.menu_enent_create)
+        v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener() {
+            createEventPresenter.onSaveEvent(
+                view!!.etTextEvent.toString(),
+                backPressedPresenter)
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

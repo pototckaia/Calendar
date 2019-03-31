@@ -32,6 +32,12 @@ class CreateEventPresenter(
             endEvent.cloneWithDefaultTimeZone())
     }
 
+    fun onSaveEvent(title: String, back: BackPressedPresenter) {
+
+        back.onBackPressed()
+    }
+
+    // todo how remove this shit
     fun onClickBeginDay() {
         viewState.showDatePickerDialog(
             startEvent.cloneWithDefaultTimeZone(),

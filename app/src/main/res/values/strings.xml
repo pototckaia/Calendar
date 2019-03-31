@@ -5,4 +5,7 @@
     <string name="end_label_name">Конец</string>
     <string name="label_name_prev">Предыдущий</string>
     <string name="label_text_next">Следующий</string>
+    <string name="label_event_create">Сохранить</string>
+    <string name="label_event_update">Сохранить</string>
+    <string name="label_event_delete">Удалить</string>
 </resources>
