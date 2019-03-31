@@ -1,6 +1,6 @@
 package com.example.calendar.data
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import java.util.*

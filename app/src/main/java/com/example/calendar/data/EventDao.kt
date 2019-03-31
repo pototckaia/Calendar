@@ -1,7 +1,10 @@
 package com.example.calendar.data
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.*
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import java.util.*

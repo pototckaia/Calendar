@@ -2,7 +2,7 @@ package com.example.calendar.dayCalendar
 
 import android.content.Context
 import android.util.AttributeSet
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.view_day_calendar.view.*

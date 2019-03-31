@@ -1,6 +1,6 @@
 package com.example.calendar.view
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
@@ -10,7 +10,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface AbleAddEventView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
-    fun openFragment(f: Fragment)
+    fun openFragment(f: androidx.fragment.app.Fragment)
 }
 
 

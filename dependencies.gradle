@@ -1,0 +1,138 @@
+ext.deps = [:]
+
+def v = [:]
+ext.deps.androidBuildToolsVersion = "28"
+ext.deps.androidMinSdkVersion = 21
+ext.deps.androidTargetSdkVersion = 28
+ext.deps.androidCompileSdkVersion = 28
+
+ext.deps.kotlinxSerializationVersion = "0.10.0"
+
+v.supportLibraryVersion = "28.0.0-rc01"
+v.constraintLayoutVersion = "1.1.2"
+v.materialCalendarviewVersion = "1.6.0"
+
+v.moxyVersion = "1.7.0"
+
+v.roomVersion = '2.1.0-alpha06'
+v.archLifecycleVersion = '1.1.1'
+
+v.rxJavaVersion = '2.1.3'
+v.rxAndroidVersion = '2.0.1'
+
+v.jUnitVersion = "4.12"
+v.testRunnerVersion = "1.0.2"
+v.testEspressoCoreVersion = "3.0.2"
+
+
+ext.deps.support = [
+            appCompat       : "androidx.appcompat:appcompat:1.0.0-beta01",
+            design          : "com.google.android.material:material:1.0.0-beta01",
+            recyclerview    : "androidx.recyclerview:recyclerview:1.0.0-beta01",
+            constraintLayout: "androidx.constraintlayout:constraintlayout:1.1.3",
+    ]
+
+ext.deps.room = [
+            runTime : "androidx.room:room-runtime:$v.roomVersion",
+            compiler: "androidx.room:room-compiler:$v.roomVersion",
+            rxJava2  : "androidx.room:room-rxjava2:$v.roomVersion",
+            test    : "androidx.room:room-testing:$v.roomVersion",
+    ]
+
+ext.deps.lifeCycle = [
+            runTime : "androidx.lifecycle:lifecycle-extensions:2.0.0-beta01",
+            compiler: "androidx.lifecycle:lifecycle-compiler:2.0.0-beta01",
+    ]
+
+ext.deps.rx = [
+            rxJava2  : "io.reactivex.rxjava2:rxjava:$v.rxJavaVersion",
+            rxAndroid: "io.reactivex.rxjava2:rxandroid:$v.rxAndroidVersion",
+    ]
+
+ext.deps.moxy = [
+        core    : "tech.schoolhelper:moxy-x:$v.moxyVersion",
+        andoirdX: "tech.schoolhelper:moxy-x-androidx:$v.moxyVersion",
+        compiler: "tech.schoolhelper:moxy-x-compiler:$v.moxyVersion",
+]
+
+ext.deps.materialCalendarView = [
+            runTime: "com.github.prolificinteractive:material-calendarview:$v.materialCalendarviewVersion",
+    ]
+
+ext.deps.kotlin = [
+            stdlib       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+            serialization: "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$ext.deps.kotlinxSerializationVersion",
+    ]
+
+ext.deps.test = [
+            junit       : "junit:junit:$v.jUnitVersion",
+            testRunner  : "androidx.test:runner:1.1.0-alpha4",
+            testEspresso: "androidx.test.espresso:espresso-core:3.1.0-alpha4",
+    ]
+
+// retrofitGson:                   "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+// retrofit:                       "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+// butterknife:                    "com.jakewharton:butterknife:${butterknifeVersion}",
+// cardview:                       "com.android.support:cardview-v7:${supportLibraryVersion}",
+// cicerone:                       "ru.terrakok.cicerone:cicerone:${ciceroneVersion}",
+// dagger:                         "com.google.dagger:dagger:${daggerVersion}",
+// decoro:                         "ru.tinkoff.decoro:decoro:${decoroVersion}",
+// firebaseMessaging:              "com.google.firebase:firebase-messaging:${firebaseVersion}",
+// firebaseCore:                   "com.google.firebase:firebase-core:${firebaseVersion}",
+// iconics:                        "com.mikepenz:iconics-core:${iconicsVersion}@aar",
+// iconicsTypeface:                "com.mikepenz:material-design-iconic-typeface:${iconicTypefaceVersion}@aar",
+// multidex:                       "com.android.support:multidex:${multidexVersion}",
+// permissionDispatcher:           "com.github.hotchemi:permissionsdispatcher:${permissionDispatcherVersion}",
+// picasso:                        "com.squareup.picasso:picasso:${picassoVersion}",
+// retrofitRxAdapter:              "com.squareup.retrofit2:adapter-rxjava2:${retrofitRxAdapterVersion}",
+// rxBinding:                      "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}",
+// rxRelay:                        "com.jakewharton.rxrelay2:rxrelay:${rxRelayVersion}",
+// sentry:                         "io.sentry:sentry-android:${sentryVersion}",
+// maskEditText:                   "ru.egslava:MaskedEditText:${maskEditTextVersion}",
+// epoxy:                          "com.airbnb.android:epoxy:${epoxyVersion}",
+// indeterminateCheckbox:          "com.github.sevar83:indeterminate-checkbox:${indeterminateCheckboxVersion}",
+// circleImageView:                "de.hdodenhof:circleimageview:${circleImageViewVersion}",
+// imagePicker:                    "com.github.esafirm.android-image-picker:imagepicker:${imagePickerVersion}",
+// photoview:                      "com.github.chrisbanes:PhotoView:${photoviewVersion}",
+// yandexMetrica:                  "com.yandex.android:mobmetricalib:${yandexMetricaVersion}",
+// googleMaps:                     "com.google.android.gms:play-services-maps:${googleServicesVersion}",
+
+/* compileOnly */
+// javaxAnnotation:                "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+
+/* kapt */
+// butterknifeCompiler:            "com.jakewharton:butterknife-compiler:${butterknifeVersion}",
+// daggerCompiler:                 "com.google.dagger:dagger-compiler:${daggerVersion}",
+// permissionDispatcherProcessor:  "com.github.hotchemi:permissionsdispatcher-processor:${permissionDispatcherVersion}",
+// epoxyProcessor:                 "com.airbnb.android:epoxy-processor:${epoxyVersion}"
+// domainDependencies = [
+// 	/*implementation*/
+// 	annotationsSupport:             "com.android.support:support-annotations:${supportLibraryVersion}",
+// 	javaxAnnotation:                "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+// 	javaxInject:                    "javax.inject:javax.inject:${javaxInjectVersion}",
+// 	rxJava:                         "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
+// ]
+// dataDependencies = [
+// 	/*implementation*/
+// 	firebaseMessaging:              "com.google.firebase:firebase-messaging:${firebaseVersion}",
+// 	dagger:                         "com.google.dagger:dagger:${daggerVersion}",
+// 	javaxInject:                    "javax.inject:javax.inject:${javaxInjectVersion}",
+// 	retrofit:                       "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+// 	retrofitGson:                   "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+// 	retrofitRxAdapter:              "com.squareup.retrofit2:adapter-rxjava2:${retrofitRxAdapterVersion}",
+// 	rxJava:                         "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+// 	rxAndroid:                      "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+// 	supportAnnotations:             "com.android.support:support-annotations:${supportLibraryVersion}",
+// 	compressor:                     "id.zelory:compressor:${compressorVersion}",
+// 	yandexMetrica:                  "com.yandex.android:mobmetricalib:${yandexMetricaVersion}",
+// 	/*compileOnly*/
+// 	javaxAnnotation:                "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+// 	/*annotationProcessor*/
+// 	daggerCompiler:                 "com.google.dagger:dagger-compiler:${daggerVersion}"
+// ]
+// dataTestDependencies = [
+// 	junit:                          "junit:junit:${jUnitVersion}",
+// 	assertj:                        "org.assertj:assertj-core:${assertJVersion}",
+// 	mockito:                        "org.mockito:mockito-core:${mockitoVersion}",
+// 	robolectric:                    "org.robolectric:robolectric:${robolectricVersion}",
+// ]

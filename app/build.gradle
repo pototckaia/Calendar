@@ -5,11 +5,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 
 android {
-    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    compileSdkVersion rootProject.ext.deps.androidCompileSdkVersion
     defaultConfig {
         applicationId "com.example.calendar"
-        minSdkVersion rootProject.ext.androidMinSdkVersion
-        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        minSdkVersion rootProject.ext.deps.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.deps.androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.titleEvent.runner.AndroidJUnitRunner"
@@ -24,36 +24,38 @@ android {
 }
 
 dependencies {
-    def deps = rootProject.ext.appDependencies
+
+    def deps = rootProject.ext.deps
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation deps.kotlinStdlibJdk7
-    implementation deps.kotlinSerialization
+    implementation deps.kotlin.stdlib
+    implementation deps.kotlin.serialization
 
-    implementation deps.appCompat
-    implementation deps.constraintLayout
-    implementation deps.recyclerview
-    implementation deps.design
+    implementation deps.support.appCompat
+    implementation deps.support.constraintLayout
+    implementation deps.support.recyclerview
+    implementation deps.support.design
 
-    implementation deps.moxyCore
-    implementation deps.moxyAppCompat
-    kapt deps.moxyCompiler
+    implementation deps.moxy.core
+    implementation deps.moxy.andoirdX
+    kapt deps.moxy.compiler
 
-    implementation deps.materialCalendarView
+    implementation deps.materialCalendarView.runTime
 
-    implementation deps.room
-    implementation deps.roomTest
-    kapt deps.roomCompiler
+    implementation deps.room.runTime
+    implementation deps.room.test
+    implementation deps.room.rxJava2
+    kapt deps.room.compiler
 
-    implementation deps.lifeCycle
-    kapt deps.lifeCycleCompiler
+    implementation deps.lifeCycle.runTime
+    kapt deps.lifeCycle.compiler
 
-    implementation deps.rxJava
-    implementation deps.rxAndroid
+    implementation deps.rx.rxJava2
+    implementation deps.rx.rxAndroid
 
-    testImplementation deps.junit
-    androidTestImplementation deps.testRunner
-    androidTestImplementation deps.testEspresso
+    testImplementation deps.test.junit
+    androidTestImplementation deps.test.testRunner
+    androidTestImplementation deps.test.testEspresso
 
 }

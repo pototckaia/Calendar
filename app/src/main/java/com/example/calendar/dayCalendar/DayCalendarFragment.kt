@@ -1,7 +1,7 @@
 package com.example.calendar.dayCalendar
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 
-class DayCalendarFragment : Fragment() {
+class DayCalendarFragment : androidx.fragment.app.Fragment() {
 
     companion object {
         fun newInstance(): DayCalendarFragment {

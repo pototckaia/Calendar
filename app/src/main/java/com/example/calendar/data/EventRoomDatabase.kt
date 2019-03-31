@@ -1,9 +1,9 @@
 package com.example.calendar.data
 
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.Database
 import android.content.Context
-import android.arch.persistence.room.Room
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 
 
 @Database(entities = [EventTable::class], version = 1, exportSchema = false)

@@ -1,6 +1,6 @@
 package com.example.calendar.data
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.example.calendar.helpers.getCalendarWithUTF
 import java.util.*
 

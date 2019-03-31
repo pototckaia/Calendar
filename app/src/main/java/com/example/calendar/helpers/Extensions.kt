@@ -1,7 +1,7 @@
 package com.example.calendar.helpers
 
 import android.provider.CalendarContract
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

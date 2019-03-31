@@ -1,9 +1,8 @@
 package com.example.calendar
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import com.example.calendar.dayCalendar.DayCalendarFragment
+import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +14,7 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(
                 R.id.clMainContainer,
-                MonthCalendarFragment.newInstance()
+                MonthCalendarFragment.newInstance()  as Fragment
             )
             .addToBackStack(null)
             .commit()

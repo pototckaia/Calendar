@@ -1,8 +1,8 @@
 package com.example.calendar
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +48,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
         v.rvEventsMonthCalendar.run {
             this.adapter = EventAdapter()
-            this.layoutManager = LinearLayoutManager(context)
+            this.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         }
 
         return v
@@ -71,7 +71,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
 
     override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {}
 
-    override fun openFragment(f: Fragment) {
+    override fun openFragment(f: androidx.fragment.app.Fragment) {
         activity?.supportFragmentManager
             ?.beginTransaction()
             ?.replace(R.id.clMainContainer, f)

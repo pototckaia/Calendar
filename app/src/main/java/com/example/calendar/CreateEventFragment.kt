@@ -5,7 +5,7 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import java.text.SimpleDateFormat
 import java.util.*
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.helpers.START_EVENT_KEY
