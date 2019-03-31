@@ -2,6 +2,7 @@ package com.example.calendar
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.example.calendar.view.AbleAddEventView
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.example.calendar.customView.EventAdapter
 
 class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
@@ -44,6 +46,10 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
         v.cvMonthCalendar.setOnDateLongClickListener(this);
         v.cvMonthCalendar.setOnMonthChangedListener(this);
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
+        v.rvEventsMonthCalendar.run {
+            this.adapter = EventAdapter()
+            this.layoutManager = LinearLayoutManager(context)
+        }
 
         return v
     }
