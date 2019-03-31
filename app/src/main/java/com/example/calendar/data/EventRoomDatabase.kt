@@ -11,22 +11,17 @@ abstract class EventRoomDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
 
     companion object {
-        @Volatile
-        private var instance: EventRoomDatabase? = null
 
-        fun getDatabase(context: Context): EventRoomDatabase? {
-            if (instance == null) {
-                synchronized(EventRoomDatabase::class.java) {
-                    if (instance == null) {
-                        instance = Room.databaseBuilder(
-                            context.applicationContext,
-                            EventRoomDatabase::class.java, "event_database"
-                        )
-                            .build()
-                    }
-                }
+        @Volatile private var INSTANCE: EventRoomDatabase? = null
+
+        fun getInstance(context: Context): EventRoomDatabase =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
-            return instance
-        }
+
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(context.applicationContext,
+                EventRoomDatabase::class.java, "event.db")
+                .build()
     }
 }
