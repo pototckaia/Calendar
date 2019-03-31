@@ -6,7 +6,7 @@ import java.util.*
 @Entity(tableName = "events")
 @TypeConverters(CalendarConverter::class)
 data class EventTable(
-    @PrimaryKey(autoGenerate = true) var id: String = UUID.randomUUID().toString(),
+    @PrimaryKey var id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "name") var name: String,
 
 //Time in UTF
