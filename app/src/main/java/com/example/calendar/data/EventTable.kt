@@ -9,7 +9,7 @@ import android.arch.persistence.room.Dao
 @Entity(tableName = "events")
 @TypeConverters(CalendarConverter::class)
 data class EventTable(
-    @PrimaryKey var id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Long? = null,
     @ColumnInfo(name = "name") var name: String,
 
 //Time in UTF
