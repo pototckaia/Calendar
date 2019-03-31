@@ -43,8 +43,10 @@ class CreateEventPresenter(
 
         eventRepository.insert(event)
             .subscribeOn(Schedulers.io())
+            .subscribe({
+                back.onBackPressed()
+            })
 
-        back.onBackPressed()
     }
 
     // todo how remove this shit
