@@ -8,7 +8,6 @@ import java.util.*
 import android.support.v4.content.ContextCompat
 import android.view.*
 import com.arellomobile.mvp.MvpAppCompatFragment
-import com.example.calendar.data.Event
 import com.example.calendar.helpers.START_EVENT_KEY
 import com.example.calendar.helpers.END_EVENT_KEY
 import com.example.calendar.view.CreateEventInfoView
