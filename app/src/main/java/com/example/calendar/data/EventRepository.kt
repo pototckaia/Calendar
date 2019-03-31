@@ -15,8 +15,8 @@ interface EventRepository {
 
     fun deleteAll()
 
-//    val all: List<EventTable>
-//
+    val all: Flowable<List<EventTable>>
+
 //    fun fromTo(start: Calendar, end: Calendar): List<EventTable>
 //
 //    val allLive: LiveData<List<EventTable>>

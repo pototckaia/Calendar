@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_month_calendar.view.*
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -15,9 +16,16 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.example.calendar.view.AbleAddEventView
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.EventAdapter
+import com.example.calendar.data.EventRoomDatabase
+import com.example.calendar.data.EventTable
+import com.example.calendar.helpers.END_EVENT_KEY
+import com.example.calendar.helpers.START_EVENT_KEY
+import com.example.calendar.view.ListEventView
 
-class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
+class MonthCalendarFragment : MvpAppCompatFragment(),
+    AbleAddEventView, ListEventView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
     companion object {
@@ -28,6 +36,17 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
 
     @InjectPresenter
     lateinit var addEventPresenter: AbleAddEventPresenter
+
+    @InjectPresenter
+    lateinit var listEventPresenter: ListEventPresenter
+
+    @ProvidePresenter
+    fun provideListEventPresenter (): ListEventPresenter {
+        return ListEventPresenter(
+            EventRoomDatabase.getInstance(context!!).eventDao()
+        )
+    }
+
 
     private lateinit var v: View
 
@@ -47,7 +66,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
         v.cvMonthCalendar.setOnMonthChangedListener(this);
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
         v.rvEventsMonthCalendar.run {
-            this.adapter = EventAdapter()
+//            this.adapter = EventAdapter()
             this.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         }
 
@@ -77,5 +96,15 @@ class MonthCalendarFragment : MvpAppCompatFragment(), AbleAddEventView,
             ?.replace(R.id.clMainContainer, f)
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    override fun showError(e: String) {
+        Toast.makeText(context, "Something go wrong", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun setEvents(it: List<EventTable>) {
+        v.rvEventsMonthCalendar.run {
+            this.adapter = EventAdapter(it)
+        }
     }
 }

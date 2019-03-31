@@ -10,7 +10,7 @@ import com.example.calendar.helpers.inflate
 import kotlinx.android.synthetic.main.view_event_day_calendar.view.*
 
 
-class EventAdapter : RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
+class EventAdapter(private val events: List<EventTable>) : RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -27,11 +27,6 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
         }
     }
 
-    private val events : ArrayList<EventTable>? = null
-
-    fun setEvents(e : ArrayList<EventTable>) {
-        events?.addAll(e)
-    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,17 +37,10 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        if (events != null) {
             holder.view.tvItemEventTitle.text = events[position].name
-        } else {
-            holder.view.tvItemEventTitle.text = "Error"
-        }
     }
 
     override fun getItemCount() : Int {
-        if (events != null)
-            return events.size
-        else
-            return 0
+        return events.size
     }
 }

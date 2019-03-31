@@ -25,6 +25,9 @@ interface EventDao : EventRepository {
     @Query("DELETE FROM events")
     override fun deleteAll()
 
+    @get:Query("SELECT * from events ORDER BY started_at ASC")
+    override val all: Flowable<List<EventTable>>
+
 //    @TypeConverters(CalendarConverter::class)
 //    @Query("SELECT * FROM events WHERE started_at >= :start OR ended_at <= :end")
 //    override fun fromTo(start: Calendar, end: Calendar): List<EventTable>
@@ -33,8 +36,6 @@ interface EventDao : EventRepository {
 //    @Query("SELECT * FROM events WHERE started_at >= :start OR ended_at <= :end")
 //    override fun fromToLive(start: Calendar, end: Calendar): LiveData<List<EventTable>>
 //
-//    @get:Query("SELECT * from events ORDER BY started_at ASC")
-//    override val all: List<EventTable>
 //
 //    @get:Query("SELECT * from events ORDER BY started_at ASC")
 //    override val allLive: LiveData<List<EventTable>>
