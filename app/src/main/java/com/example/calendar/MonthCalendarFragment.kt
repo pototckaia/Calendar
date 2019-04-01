@@ -19,6 +19,7 @@ import com.example.calendar.customView.EventAdapter
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.view.ListEventView
+import java.util.*
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
     OpenView, ListEventView,
@@ -104,5 +105,10 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.rvEventsMonthCalendar.adapter.run {
             (this as EventAdapter).setEvents(it)
         }
+    }
+
+    override fun setCurrentDate(localStart: Calendar, localEnd: Calendar) {
+        // common day
+        v.cvMonthCalendar.selectedDate = CalendarDay.from(localStart)
     }
 }
