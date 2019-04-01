@@ -5,6 +5,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
+import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.helpers.getCalendarWithUTF
 import com.example.calendar.helpers.wrapAsync
 import com.example.calendar.view.ListEventView
@@ -13,7 +14,8 @@ import java.util.*
 
 
 @InjectViewState
-class ListEventPresenter(private val eventRepository: EventRepository) : MvpPresenter<ListEventView>() {
+class ListEventPresenter(private val eventRepository: EventRepository) :
+    BaseMvpSubscribe<ListEventView>() {
 
     private val start = getCalendarWithUTF()
     private val end = getCalendarWithUTF()
@@ -33,7 +35,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) : MvpPres
     }
 
     private fun loadEvents() {
-        eventRepository.all
+        val subscription = eventRepository.all
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ repositories ->
 //                onLoadingFinish(isPageLoading, isRefreshing)
@@ -41,6 +43,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) : MvpPres
             }, { error ->
                 onLoadingFailed(error)
             });
+        unsubscribeOnDestroy(subscription)
     }
 
     private fun onLoadingFailed(error: Throwable) {
