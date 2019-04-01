@@ -7,7 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface AbleAddEventView : MvpView {
+interface OpenView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun openFragment(f: androidx.fragment.app.Fragment)

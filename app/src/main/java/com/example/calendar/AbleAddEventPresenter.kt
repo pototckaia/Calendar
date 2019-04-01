@@ -4,12 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.helpers.getCalendarWithUTF
-import com.example.calendar.view.AbleAddEventView
+import com.example.calendar.view.OpenView
 import java.util.Calendar
 
 
 @InjectViewState
-class AbleAddEventPresenter : MvpPresenter<AbleAddEventView>() {
+class AbleAddEventPresenter : MvpPresenter<OpenView>() {
 
     fun addEventButtonClick(begin: Calendar, end: Calendar) {
         val fragment = CreateEventFragment.newInstance(begin, end)

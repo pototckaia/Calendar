@@ -1,8 +1,6 @@
 package com.example.calendar
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +11,17 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
-import com.example.calendar.view.AbleAddEventView
+import com.example.calendar.view.OpenView
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.EventAdapter
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
-import com.example.calendar.helpers.END_EVENT_KEY
-import com.example.calendar.helpers.START_EVENT_KEY
 import com.example.calendar.view.ListEventView
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
-    AbleAddEventView, ListEventView,
+    OpenView, ListEventView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
     companion object {
