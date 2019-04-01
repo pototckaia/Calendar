@@ -85,7 +85,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
         v.tbNoteCreate.   inflateMenu(R.menu.menu_enent_create)
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener() {
             createEventPresenter.onSaveEvent(
-                view!!.etTextEvent.toString(),
+                view!!.etTextEvent.text.toString(),
                 backPressedPresenter)
             true
         }
