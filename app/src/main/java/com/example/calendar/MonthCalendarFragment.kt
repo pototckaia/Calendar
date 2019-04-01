@@ -62,7 +62,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.cvMonthCalendar.setOnMonthChangedListener(this);
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
         v.rvEventsMonthCalendar.run {
-//            this.adapter = EventAdapter()
+            this.adapter = EventAdapter { _, position ->
+                Toast.makeText(context, "Position $position", Toast.LENGTH_SHORT).show()
+            }
             this.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         }
 
@@ -99,10 +101,8 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun setEvents(it: List<EventTable>) {
-        v.rvEventsMonthCalendar.run {
-            this.adapter = EventAdapter(it) { _, position ->
-                Toast.makeText(context, "Position $position", Toast.LENGTH_SHORT).show()
-            }
+        v.rvEventsMonthCalendar.adapter.run {
+            (this as EventAdapter).setEvents(it)
         }
     }
 }

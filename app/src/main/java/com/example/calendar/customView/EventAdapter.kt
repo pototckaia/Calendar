@@ -11,8 +11,17 @@ import kotlinx.android.synthetic.main.view_event_day_calendar.view.*
 
 
 // todo replace to ArrayList
-class EventAdapter(private val events: List<EventTable>, private val listener: (View, Int) -> Unit) :
+class EventAdapter(private val listener: (View, Int) -> Unit) :
     RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
+
+    private val events = ArrayList<EventTable>()
+
+    fun setEvents(d: List<EventTable>) {
+        events.clear()
+        events.addAll(d)
+        notifyDataSetChanged()
+    }
+
 
     class MyViewHolder(val view: View, private val listener: (View, Int) -> Unit) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
