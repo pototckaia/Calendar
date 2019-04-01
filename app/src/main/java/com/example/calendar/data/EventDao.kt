@@ -25,8 +25,9 @@ interface EventDao : EventRepository {
     @get:Query("SELECT * from events ORDER BY started_at ASC")
     override val all: Flowable<List<EventTable>>
 
+    // [from, to)
     @TypeConverters(CalendarConverter::class)
-    @Query("SELECT * FROM events WHERE (started_at >= :start and ended_at <= :end) or (started_at < :end and ended_at > :start)")
+    @Query("SELECT * FROM events WHERE (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)")
     override fun fromTo(start: Calendar, end: Calendar): Flowable<List<EventTable>>
 
 }

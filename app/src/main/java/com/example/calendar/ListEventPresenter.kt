@@ -5,10 +5,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
-import com.example.calendar.helpers.BaseMvpSubscribe
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
-import com.example.calendar.helpers.getCalendarWithUTF
-import com.example.calendar.helpers.wrapAsync
+import com.example.calendar.helpers.*
 import com.example.calendar.view.ListEventView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
@@ -23,11 +20,10 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
 
     init {
         // default now
-        start.set(Calendar.HOUR_OF_DAY, 0)
-        start.set(Calendar.MINUTE, 0)
-        end.set(Calendar.HOUR_OF_DAY, 24)
-        end.set(Calendar.MINUTE, 0)
-
+        start.setHourOfDayAndMinute(0, 0)
+        // 24 hour
+        end.setHourOfDayAndMinute(0, 0)
+        end.add(Calendar.DAY_OF_MONTH, 1)
         updateCurrentDate()
         loadEvents()
     }
@@ -37,12 +33,21 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
         end.timeInMillis = endTime
     }
 
+    // todo not work on two click
+    fun onDateSelected(local: Calendar) {
+        val uft = local.cloneWitUTF()
+        start.setYearMonthDay(uft)
+        start.setHourOfDayAndMinute(0, 0)
+        end.setYearMonthDay(uft)
+        end.setHourOfDayAndMinute(0, 0)
+        end.add(Calendar.DAY_OF_MONTH, 1)
+        loadEvents()
+    }
+
     private fun updateCurrentDate() {
         // convert to local
-        val localStart = getCalendarWithDefaultTimeZone()
-        localStart.timeInMillis = start.timeInMillis
-        val localEnd = getCalendarWithDefaultTimeZone()
-        localEnd.timeInMillis = end.timeInMillis
+        val localStart = start.cloneWithDefaultTimeZone()
+        val localEnd = end.cloneWithDefaultTimeZone()
         viewState.setCurrentDate(localStart, localEnd)
     }
 
@@ -50,7 +55,6 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
         val subscription = eventRepository.fromTo(start, end)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ repositories ->
-//                onLoadingFinish(isPageLoading, isRefreshing)
                 onLoadingSuccess(repositories)
             }, { error ->
                 onLoadingFailed(error)
