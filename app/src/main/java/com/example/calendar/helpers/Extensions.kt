@@ -33,6 +33,26 @@ fun Calendar.cloneWithDefaultTimeZone(): Calendar {
     return c
 }
 
+fun Calendar.cloneWitUTF(): Calendar {
+    val c = this.clone() as Calendar
+    c.timeZone = TimeZone.getTimeZone("UTC")
+    return c
+}
+
+fun Calendar.setYearMonthDay(c: Calendar) {
+    this.set(Calendar.YEAR, c.get(Calendar.YEAR))
+    this.set(Calendar.MONTH, c.get(Calendar.MONTH))
+    this.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
+}
+
+fun Calendar.setHourOfDayAndMinute(hourOfDay: Int, minute: Int) {
+    this.set(Calendar.HOUR_OF_DAY, hourOfDay)
+    this.set(Calendar.MINUTE, minute)
+    this.set(Calendar.SECOND, 0)
+    this.set(Calendar.MILLISECOND, 0)
+}
+
+
 fun <T> wrapAsync(observable: Observable<T>, scheduler: Scheduler = Schedulers.io()): Observable<T> {
     return observable
         .subscribeOn(scheduler)
