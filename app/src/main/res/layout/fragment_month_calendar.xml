@@ -8,8 +8,11 @@
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/cvMonthCalendar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/rvEventsMonthCalendar"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/abfAddNote"
@@ -28,9 +31,11 @@
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEventsMonthCalendar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="1"
 
-            app:layout_constraintTop_toBottomOf="@+id/cvMonthCalendar"/>
+            app:layout_constraintTop_toBottomOf="@+id/cvMonthCalendar"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
