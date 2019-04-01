@@ -100,7 +100,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     override fun setEvents(it: List<EventTable>) {
         v.rvEventsMonthCalendar.run {
-            this.adapter = EventAdapter(it)
+            this.adapter = EventAdapter(it) { _, position ->
+                Toast.makeText(context, "Position $position", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

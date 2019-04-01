@@ -10,20 +10,20 @@ import com.example.calendar.helpers.inflate
 import kotlinx.android.synthetic.main.view_event_day_calendar.view.*
 
 
-class EventAdapter(private val events: List<EventTable>) : RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
+// todo replace to ArrayList
+class EventAdapter(private val events: List<EventTable>, private val listener: (View, Int) -> Unit) :
+    RecyclerView.Adapter<EventAdapter.MyViewHolder>() {
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder.
-    // Each data item is just a string in this case that is shown in a TextView.
-    class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class MyViewHolder(val view: View, private val listener: (View, Int) -> Unit) :
+        RecyclerView.ViewHolder(view), View.OnClickListener {
 
         init {
             view.setOnClickListener(this)
+
         }
 
         override fun onClick(v: View) {
-            Log.d("RecyclerView", "CLICK!")
+            listener(v, adapterPosition)
         }
     }
 
@@ -33,7 +33,7 @@ class EventAdapter(private val events: List<EventTable>) : RecyclerView.Adapter<
         viewType: Int
     ): MyViewHolder {
         val view = parent.inflate(R.layout.view_event_day_calendar, false)
-        return MyViewHolder(view)
+        return MyViewHolder(view, listener)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
