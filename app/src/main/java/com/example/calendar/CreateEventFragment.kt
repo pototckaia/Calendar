@@ -15,11 +15,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.view.BackPressedView
+import com.example.calendar.view.DateClickView
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfoView, BackPressedView {
+    CreateEventInfoView, BackPressedView,
+    DateClickView {
 
     companion object {
         fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
@@ -40,15 +42,23 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideCreateEventPresenter(): CreateEventPresenter {
         return CreateEventPresenter(
-            EventRoomDatabase.getInstance(context!!).eventDao(),
-            resources.getString(R.string.default_event_text),
-            arguments!!.getLong(START_EVENT_KEY),
-            arguments!!.getLong(END_EVENT_KEY)
+            EventRoomDatabase.getInstance(context!!).eventDao()
         )
     }
 
     @InjectPresenter
     lateinit var backPressedPresenter: BackPressedPresenter
+
+    @InjectPresenter
+    lateinit var dateClickPresenter: DateClickPresenter
+
+    @ProvidePresenter
+    fun provideDateClickPresenter(): DateClickPresenter {
+        return DateClickPresenter(
+            arguments!!.getLong(START_EVENT_KEY),
+            arguments!!.getLong(END_EVENT_KEY)
+        )
+    }
 
 
     private lateinit var v: View
@@ -69,10 +79,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
             container, false
         )
         initToolBar()
-        v.vBegin.onClickDayListener = View.OnClickListener { createEventPresenter.onClickBeginDay() }
-        v.vBegin.onClickHourListener = View.OnClickListener { createEventPresenter.onClickBeginHour() }
-        v.vEnd.onClickDayListener = View.OnClickListener { createEventPresenter.onClickEndDay() }
-        v.vEnd.onClickHourListener = View.OnClickListener { createEventPresenter.onClickEndHour() }
+        v.vBegin.onClickDayListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
+        v.vBegin.onClickHourListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
+        v.vEnd.onClickDayListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
+        v.vEnd.onClickHourListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
 
         return v
     }
@@ -86,6 +96,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener() {
             createEventPresenter.onSaveEvent(
                 view!!.etTextEvent.text.toString(),
+                dateClickPresenter.startEvent,
+                dateClickPresenter.endEvent,
                 backPressedPresenter)
             true
         }
@@ -96,7 +108,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun updateEventInfo(begin: Calendar, end: Calendar) {
+    override fun updateDateInfo(begin: Calendar, end: Calendar) {
         v.vBegin.date = begin
         v.vEnd.date = end
     }
