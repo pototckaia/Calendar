@@ -87,7 +87,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         listEventPresenter.onDateSelected(date.calendar)
     }
 
-    override fun onDateLongClick(widget: MaterialCalendarView, date: CalendarDay) {}
+    override fun onDateLongClick(widget: MaterialCalendarView, date: CalendarDay) {
+        addEventPresenter.addEventButtonClick(date.calendar)
+    }
 
     override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {}
 

@@ -15,15 +15,11 @@ import java.util.*
 class ListEventPresenter(private val eventRepository: EventRepository) :
     BaseMvpSubscribe<ListEventView>() {
 
-    private val start = getCalendarWithUTF()
-    private val end = getCalendarWithUTF()
+    private val start = getCalendarWithDefaultTimeZone()
+    private val end = getCalendarWithDefaultTimeZone()
 
     init {
-        // default now
-        start.setHourOfDayAndMinute(0, 0)
-        // 24 hour
-        end.setHourOfDayAndMinute(0, 0)
-        end.add(Calendar.DAY_OF_MONTH, 1)
+        setHourAndMinute()
         updateCurrentDate()
         loadEvents()
     }
@@ -33,22 +29,22 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
         end.timeInMillis = endTime
     }
 
-    // todo not work on two click
-    fun onDateSelected(local: Calendar) {
-        val uft = local.cloneWitUTF()
-        start.setYearMonthDay(uft)
+    private fun setHourAndMinute(){
         start.setHourOfDayAndMinute(0, 0)
-        end.setYearMonthDay(uft)
         end.setHourOfDayAndMinute(0, 0)
         end.add(Calendar.DAY_OF_MONTH, 1)
+    }
+
+    // todo not work on two click
+    fun onDateSelected(local: Calendar) {
+        start.setYearMonthDay(local)
+        end.setYearMonthDay(local)
+        setHourAndMinute()
         loadEvents()
     }
 
     private fun updateCurrentDate() {
-        // convert to local
-        val localStart = start.cloneWithDefaultTimeZone()
-        val localEnd = end.cloneWithDefaultTimeZone()
-        viewState.setCurrentDate(localStart, localEnd)
+        viewState.setCurrentDate(start, end)
     }
 
     private fun loadEvents() {

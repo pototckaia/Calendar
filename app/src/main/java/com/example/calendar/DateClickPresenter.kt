@@ -6,7 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.helpers.cloneWithDefaultTimeZone
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
-import com.example.calendar.helpers.getCalendarWithUTF
+import com.example.calendar.helpers.setHourOfDayAndMinute
 import com.example.calendar.view.DateClickView
 import java.util.*
 
@@ -17,8 +17,8 @@ class DateClickPresenter (
     endTime: Long
 ) : MvpPresenter<DateClickView>() {
 
-    val startEvent = getCalendarWithUTF()
-    val endEvent = getCalendarWithUTF()
+    val startEvent = getCalendarWithDefaultTimeZone()
+    val endEvent = getCalendarWithDefaultTimeZone()
 
     init {
         startEvent.timeInMillis = beginTime
@@ -28,21 +28,17 @@ class DateClickPresenter (
 
     private fun updateView() {
         viewState.updateDateInfo(
-            startEvent.cloneWithDefaultTimeZone(),
-            endEvent.cloneWithDefaultTimeZone())
+            startEvent,
+            endEvent)
     }
 
     // todo how remove this shit
     fun onClickBeginDay() {
         viewState.showDatePickerDialog(
-            startEvent.cloneWithDefaultTimeZone(),
+            startEvent,
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 // TODO check it work
-                val local = getCalendarWithDefaultTimeZone()
-                local.timeInMillis = startEvent.timeInMillis
-                local.set(year, monthOfYear, dayOfMonth)
-                startEvent.timeInMillis = local.timeInMillis
-
+                startEvent.set(year, monthOfYear, dayOfMonth)
                 if (startEvent > endEvent) {
                     endEvent.set(year, monthOfYear, dayOfMonth)
                 }
@@ -54,12 +50,7 @@ class DateClickPresenter (
         viewState.showTimePickerDialog(
             startEvent.cloneWithDefaultTimeZone(),
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                val local = getCalendarWithDefaultTimeZone()
-                local.timeInMillis = startEvent.timeInMillis
-                local.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                local.set(Calendar.MINUTE, minute)
-                startEvent.timeInMillis = local.timeInMillis
-
+                startEvent.setHourOfDayAndMinute(hourOfDay, minute)
                 if (startEvent >= endEvent) {
                     endEvent.timeInMillis = startEvent.timeInMillis
                     endEvent.add(Calendar.HOUR_OF_DAY, 1)
@@ -72,11 +63,7 @@ class DateClickPresenter (
         viewState.showDatePickerDialog(
             endEvent.cloneWithDefaultTimeZone(),
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                val local = getCalendarWithDefaultTimeZone()
-                local.timeInMillis = endEvent.timeInMillis
-                local.set(year, monthOfYear, dayOfMonth)
-                endEvent.timeInMillis = local.timeInMillis
-
+                endEvent.set(year, monthOfYear, dayOfMonth)
                 if (endEvent < startEvent) {
                     startEvent.set(year, monthOfYear, dayOfMonth)
                 }
@@ -89,12 +76,7 @@ class DateClickPresenter (
         viewState.showTimePickerDialog(
             endEvent.cloneWithDefaultTimeZone(),
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                val local = getCalendarWithDefaultTimeZone()
-                local.timeInMillis = endEvent.timeInMillis
-                local.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                local.set(Calendar.MINUTE, minute)
-                endEvent.timeInMillis = local.timeInMillis
-
+                endEvent.setHourOfDayAndMinute(hourOfDay, minute)
                 if (endEvent <= startEvent) {
                     startEvent.timeInMillis = endEvent.timeInMillis
                     startEvent.add(Calendar.HOUR_OF_DAY, -1)

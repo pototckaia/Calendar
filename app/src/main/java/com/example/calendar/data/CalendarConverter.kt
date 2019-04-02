@@ -1,7 +1,7 @@
 package com.example.calendar.data
 
 import androidx.room.TypeConverter
-import com.example.calendar.helpers.getCalendarWithUTF
+import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import java.util.*
 
 class CalendarConverter {
@@ -10,7 +10,7 @@ class CalendarConverter {
         if (dateLong == null) {
             return null
         }
-        val utf = getCalendarWithUTF()
+        val utf = getCalendarWithDefaultTimeZone()
         utf.timeInMillis = dateLong
         return utf
     }

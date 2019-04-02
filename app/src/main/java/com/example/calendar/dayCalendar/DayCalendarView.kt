@@ -8,7 +8,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.view_day_calendar.view.*
 import android.widget.Toast
 import com.example.calendar.R
-import com.example.calendar.helpers.getCalendarWithUTF
+import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -23,7 +23,7 @@ class CalendarDayView
         R.layout.view_day_calendar, this, true
     )
 
-    val curDate = getCalendarWithUTF()
+    val curDate = getCalendarWithDefaultTimeZone()
 
 //    private var mStartHour = 0
 //    private val mDayHeight = 80

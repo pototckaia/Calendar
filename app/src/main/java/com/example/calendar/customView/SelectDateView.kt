@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.example.calendar.R
-import com.example.calendar.helpers.getCalendarWithUTF
+import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import kotlinx.android.synthetic.main.view_select_date.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,11 +44,8 @@ class SelectDateView
 
     var date: Calendar
         get() {
-            // TODO: check it work
-            val c = getCalendarWithUTF()
-            c.time = fmt_day.parse(view.etDay.toString())
-            c.time = fmt_hour.parse(view.etHour.toString())
-            return c
+            // TODO: remove
+            return getCalendarWithDefaultTimeZone()
         }
         set(value) {
             view.etDay.setText(fmt_day.format(value.time))

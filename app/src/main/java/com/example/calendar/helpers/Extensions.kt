@@ -23,19 +23,11 @@ fun ViewGroup.inflate(
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
-fun getCalendarWithUTF() : Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-
 fun getCalendarWithDefaultTimeZone() : Calendar = Calendar.getInstance(TimeZone.getDefault());
 
 fun Calendar.cloneWithDefaultTimeZone(): Calendar {
     val c = this.clone() as Calendar
     c.timeZone = TimeZone.getDefault()
-    return c
-}
-
-fun Calendar.cloneWitUTF(): Calendar {
-    val c = this.clone() as Calendar
-    c.timeZone = TimeZone.getTimeZone("UTC")
     return c
 }
 

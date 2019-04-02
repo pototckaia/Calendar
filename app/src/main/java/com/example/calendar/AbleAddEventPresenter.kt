@@ -20,11 +20,7 @@ class AbleAddEventPresenter : MvpPresenter<OpenView>() {
         local_start.setHourOfDayAndMinute(0, 0)
         val local_end = local_start.clone() as Calendar
         local_end.set(Calendar.HOUR_OF_DAY, 1)
-
-        val utf_start = local_start.cloneWitUTF()
-        val uft_end = local_end.cloneWitUTF()
-
-        addEventButtonClick(utf_start, uft_end)
+        addEventButtonClick(local_start, local_end)
     }
 
     fun addEventButtonClick() =
