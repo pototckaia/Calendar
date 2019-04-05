@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -39,6 +40,17 @@ class EditEventFragment : MvpAppCompatFragment(),
 
     @InjectPresenter
     lateinit var dateClickPresenter: DateClickPresenter
+
+    @InjectPresenter
+    lateinit var editEventPresenter: EditEventPresenter
+
+    @ProvidePresenter
+    fun provideEditEventPresenter(): EditEventPresenter {
+        return EditEventPresenter (
+            EventRoomDatabase.getInstance(context!!).eventDao(),
+            arguments!!.getString(EVENT_ID_KEY)!!
+        )
+    }
 
 
     private lateinit var v: View
@@ -82,12 +94,16 @@ class EditEventFragment : MvpAppCompatFragment(),
 
     override fun updateEventInfo(e: EventTable) {
         v.etTextEvent.setText(e.name)
-        updateDateInfo(e.started_at, e.ended_at)
+        dateClickPresenter.setDate(e.started_at, e.ended_at)
     }
 
     override fun updateDateInfo(begin: Calendar, end: Calendar) {
         v.vBegin.date = begin
         v.vEnd.date = end
+    }
+
+    override fun showError(e: String) {
+        Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {

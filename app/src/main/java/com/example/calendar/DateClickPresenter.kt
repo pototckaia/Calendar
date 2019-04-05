@@ -15,6 +15,7 @@ import java.util.*
 class DateClickPresenter () : MvpPresenter<DateClickView>() {
 
     val startEvent = getCalendarWithDefaultTimeZone()
+
     val endEvent = getCalendarWithDefaultTimeZone()
 
     init {
@@ -27,6 +28,11 @@ class DateClickPresenter () : MvpPresenter<DateClickView>() {
         updateView()
     }
 
+    fun setDate(start: Calendar, end: Calendar) {
+        startEvent.timeInMillis = start.timeInMillis
+        endEvent.timeInMillis = end.timeInMillis
+        updateView()
+    }
 
     private fun updateView() {
         viewState.updateDateInfo(
