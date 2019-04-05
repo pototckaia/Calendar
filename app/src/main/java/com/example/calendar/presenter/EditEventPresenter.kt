@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.data.EventRepository

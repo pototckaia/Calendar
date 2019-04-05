@@ -3,7 +3,6 @@ package com.example.calendar;
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import java.text.SimpleDateFormat
 import java.util.*
 import androidx.core.content.ContextCompat
 import android.view.*
@@ -14,6 +13,9 @@ import com.example.calendar.view.CreateEventInfoView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.data.EventRoomDatabase
+import com.example.calendar.presenter.BackPressedPresenter
+import com.example.calendar.presenter.CreateEventPresenter
+import com.example.calendar.presenter.DateClickPresenter
 import com.example.calendar.view.BackPressedView
 import com.example.calendar.view.DateClickView
 import kotlinx.android.synthetic.main.fragment_create_event.view.*

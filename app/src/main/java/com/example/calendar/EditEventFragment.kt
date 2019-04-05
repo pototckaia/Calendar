@@ -12,6 +12,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.EVENT_ID_KEY
+import com.example.calendar.presenter.BackPressedPresenter
+import com.example.calendar.presenter.DateClickPresenter
+import com.example.calendar.presenter.EditEventPresenter
 import com.example.calendar.view.BackPressedView
 import com.example.calendar.view.DateClickView
 import com.example.calendar.view.EditEventView
@@ -46,7 +49,7 @@ class EditEventFragment : MvpAppCompatFragment(),
 
     @ProvidePresenter
     fun provideEditEventPresenter(): EditEventPresenter {
-        return EditEventPresenter (
+        return EditEventPresenter(
             EventRoomDatabase.getInstance(context!!).eventDao(),
             arguments!!.getString(EVENT_ID_KEY)!!
         )

@@ -1,7 +1,8 @@
-package com.example.calendar
+package com.example.calendar.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.example.calendar.CreateEventFragment
 import com.example.calendar.helpers.*
 import com.example.calendar.view.OpenView
 import java.util.Calendar

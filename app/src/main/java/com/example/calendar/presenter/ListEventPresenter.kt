@@ -1,8 +1,7 @@
-package com.example.calendar
+package com.example.calendar.presenter
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import com.example.calendar.EditEventFragment
 import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.*
