@@ -12,19 +12,21 @@ import java.util.*
 
 
 @InjectViewState
-class DateClickPresenter (
-    beginTime: Long,
-    endTime: Long
-) : MvpPresenter<DateClickView>() {
+class DateClickPresenter () : MvpPresenter<DateClickView>() {
 
     val startEvent = getCalendarWithDefaultTimeZone()
     val endEvent = getCalendarWithDefaultTimeZone()
 
     init {
+        updateView()
+    }
+
+    constructor(beginTime: Long, endTime: Long) : this() {
         startEvent.timeInMillis = beginTime
         endEvent.timeInMillis = endTime
         updateView()
     }
+
 
     private fun updateView() {
         viewState.updateDateInfo(
