@@ -11,7 +11,7 @@ import java.util.*
 interface EventDao : EventRepository {
 
     @Query("SELECT * FROM events WHERE id = :id")
-    override fun getUserById(id: String): Flowable<EventTable>
+    override fun getUserById(id: String): Flowable<List<EventTable>>
 
     @Insert
     override fun insert(event: EventTable) : Completable

@@ -7,7 +7,7 @@ import java.util.*
 
 interface EventRepository {
 
-    fun getUserById(id: String): Flowable<EventTable>
+    fun getUserById(id: String): Flowable<List<EventTable>>
 
     fun insert(event: EventTable) : Completable
 
