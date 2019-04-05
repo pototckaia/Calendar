@@ -2,6 +2,7 @@ package com.example.calendar.view
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.example.calendar.data.EventTable
@@ -16,4 +17,7 @@ interface ListEventView : MvpView {
     fun showError(e : String)
 
     fun setCurrentDate(localStart: Calendar, localEnd: Calendar)
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun openFragment(f: androidx.fragment.app.Fragment)
 }
