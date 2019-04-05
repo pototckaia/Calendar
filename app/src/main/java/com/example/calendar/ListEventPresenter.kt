@@ -17,6 +17,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
 
     private val start = getCalendarWithDefaultTimeZone()
     private val end = getCalendarWithDefaultTimeZone()
+    private val listEvent = ArrayList<EventTable>()
 
     init {
         setHourAndMinute()
@@ -63,6 +64,8 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
     }
 
     private fun onLoadingSuccess(rep: List<EventTable>) {
+        listEvent.clear()
+        listEvent.addAll(rep)
         viewState.setEvents(rep)
     }
 }
