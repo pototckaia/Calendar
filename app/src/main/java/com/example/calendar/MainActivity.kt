@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.clMainContainer,
                 MonthCalendarFragment.newInstance()  as Fragment
             )
-            .addToBackStack(null)
             .commit()
     }
 }
