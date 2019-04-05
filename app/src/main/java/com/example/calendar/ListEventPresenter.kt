@@ -44,6 +44,14 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
         loadEvents()
     }
 
+    fun openEvent(pos: Int) {
+        if (pos > listEvent.size) {
+            throw IllegalArgumentException("Event not exist")
+        }
+        val fragment = EditEventFragment.newInstance(listEvent[pos].id)
+        viewState.openFragment(fragment)
+    }
+
     private fun updateCurrentDate() {
         viewState.setCurrentDate(start, end)
     }

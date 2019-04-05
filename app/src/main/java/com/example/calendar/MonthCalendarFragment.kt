@@ -18,6 +18,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.EventAdapter
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
+import com.example.calendar.view.EditEventView
 import com.example.calendar.view.ListEventView
 import java.util.*
 
@@ -64,7 +65,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
         v.rvEventsMonthCalendar.run {
             this.adapter = EventAdapter { _, position ->
-                Toast.makeText(context, "Position $position", Toast.LENGTH_SHORT).show()
+                onClickEvent(position)
             }
             this.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         }
@@ -78,6 +79,11 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         } else {
             addEventPresenter.addEventButtonClick(v.cvMonthCalendar.selectedDate.calendar)
         }
+    }
+
+    private fun onClickEvent(pos: Int) {
+        listEventPresenter.openEvent(pos)
+//        Toast.makeText(context, "Position $position", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDateSelected(
