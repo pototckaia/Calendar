@@ -19,6 +19,9 @@ interface EventDao : EventRepository {
     @Update
     override fun update(event: EventTable) : Completable
 
+    @Delete
+    override fun delete(event: EventTable) : Completable
+
     @Query("DELETE FROM events")
     override fun deleteAll()
 

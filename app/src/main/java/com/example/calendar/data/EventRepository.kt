@@ -13,6 +13,8 @@ interface EventRepository {
 
     fun update(event: EventTable) : Completable
 
+    fun delete(event: EventTable) : Completable
+
     fun deleteAll()
 
     val all: Flowable<List<EventTable>>
