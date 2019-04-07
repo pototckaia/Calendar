@@ -90,11 +90,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbNoteCreate.navigationIcon?.setTint(
-            ContextCompat.getColor(context!!, R.color.colorWhite)
-        )
         v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
-        v.tbNoteCreate.   inflateMenu(R.menu.menu_enent_create)
+        v.tbNoteCreate.inflateMenu(R.menu.menu_enent_create)
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener() {
             createEventPresenter.onSaveEvent(
                 view!!.etTextEvent.text.toString(),

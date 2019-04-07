@@ -83,11 +83,12 @@ class EditEventFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbNoteCreate.navigationIcon?.setTint(
-            ContextCompat.getColor(context!!, R.color.colorWhite)
-        )
         v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
-        v.tbNoteCreate.   inflateMenu(R.menu.menu_event_edit)
+        v.tbNoteCreate.inflateMenu(R.menu.menu_event_edit)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

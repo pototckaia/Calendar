@@ -11,6 +11,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
                 android:background="@color/toolbarBackground"
+                android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="?attr/homeAsUpIndicator">
         </androidx.appcompat.widget.Toolbar>
