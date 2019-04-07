@@ -41,7 +41,8 @@ dependencies {
     implementation deps.moxy.andoirdX
     kapt deps.moxy.compiler
 
-    implementation deps.materialCalendarView.runTime
+    implementation deps.calendar.material
+    implementation deps.calendar.week
 
     implementation deps.room.runTime
     implementation deps.room.test

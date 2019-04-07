@@ -10,7 +10,9 @@ ext.deps.kotlinxSerializationVersion = "0.10.0"
 
 v.supportLibraryVersion = "28.0.0-rc01"
 v.constraintLayoutVersion = "1.1.2"
+
 v.materialCalendarviewVersion = "1.6.0"
+v.androidWeekViewVersion = "3.3"
 
 v.moxyVersion = "1.7.0"
 
@@ -55,9 +57,10 @@ ext.deps.moxy = [
         compiler: "tech.schoolhelper:moxy-x-compiler:$v.moxyVersion",
 ]
 
-ext.deps.materialCalendarView = [
-            runTime: "com.github.prolificinteractive:material-calendarview:$v.materialCalendarviewVersion",
-    ]
+ext.deps.calendar = [
+        material: "com.github.prolificinteractive:material-calendarview:$v.materialCalendarviewVersion",
+        week    : "com.github.thellmund:android-week-view:3.3",
+]
 
 ext.deps.kotlin = [
             stdlib       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",

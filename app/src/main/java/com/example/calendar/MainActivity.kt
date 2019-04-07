@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(
                     R.id.clMainContainer,
-                    MonthCalendarFragment.newInstance() as Fragment
+                    WeekCalendarFragment.newInstance(WeekCalendarFragment.TypeView.WEEK) as Fragment
                 )
                 .commit()
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbWeekCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/toolbarBackground"
+            android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="?attr/homeAsUpIndicator">
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.alamkanak.weekview.WeekView
+            android:id="@+id/wvCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:columnGap="1dp"
+            app:eventCornerRadius="4dp"
+            app:eventTextColor="@android:color/white"
+            app:headerRowBottomLineColor="#EEEEEE"
+            app:headerRowBottomLineWidth="1dp"
+            app:headerRowPadding="12dp"
+            app:hourHeight="60dp"
+            app:nowLineColor="#2789e4"
+            app:nowLineDotColor="#2789e4"
+            app:nowLineDotRadius="5dp"
+            app:nowLineStrokeWidth="1dp"
+            app:numberOfVisibleDays="3"
+            app:overlappingEventGap="1dp"
+            app:showCurrentTimeFirst="true"
+            app:showHeaderRowBottomLine="true"
+            app:showNowLine="true"
+            app:showNowLineDot="true"
+            app:showTimeColumnSeparator="true"
+            app:singleDayHorizontalMargin="8dp"
+            app:timeColumnBackgroundColor="#ffffffff"
+            app:timeColumnPadding="8dp"
+            app:timeColumnSeparatorColor="#EEEEEE"
+            app:timeColumnSeparatorStrokeWidth="1dp"
+            app:timeColumnTextColor="#8f000000"
+            app:timeColumnTextSize="12sp"
+            app:todayHeaderTextColor="#2789e4" />
+
+</LinearLayout>
