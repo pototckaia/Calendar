@@ -40,6 +40,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
         start.setYearMonthDay(local)
         end.setYearMonthDay(local)
         setHourAndMinute()
+        updateCurrentDate()
         loadEvents() // TODO how work unsubsribe
     }
 

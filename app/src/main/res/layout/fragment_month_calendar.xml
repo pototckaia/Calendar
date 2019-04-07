@@ -12,7 +12,7 @@
             app:layout_constraintVertical_weight="1"
 
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/rvEventsMonthCalendar"/>
+            app:layout_constraintBottom_toTopOf="@id/tvSelectDate"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/abfAddNote"
@@ -28,13 +28,28 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+    <TextView
+            android:id="@+id/tvSelectDate"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="0.1"
+            android:textSize="20sp"
+            android:gravity="center"
+
+            tools:text="2019, 30/11/98"
+
+            app:layout_constraintTop_toBottomOf="@+id/cvMonthCalendar"
+            app:layout_constraintBottom_toTopOf="@+id/rvEventsMonthCalendar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEventsMonthCalendar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintVertical_weight="1"
 
-            app:layout_constraintTop_toBottomOf="@+id/cvMonthCalendar"
+            app:layout_constraintTop_toBottomOf="@+id/tvSelectDate"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
 

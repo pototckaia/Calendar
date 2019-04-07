@@ -25,6 +25,7 @@ import com.example.calendar.presenter.ListEventPresenter
 import com.example.calendar.presenter.MonthEventPresenter
 import com.example.calendar.view.ListEventView
 import com.example.calendar.view.MonthEventView
+import java.text.SimpleDateFormat
 import java.time.Month
 import java.util.*
 
@@ -64,6 +65,8 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     private lateinit var v: View
 
     private val decorator = EventMonthDecorator()
+
+    private val fmt_day = SimpleDateFormat("EE, dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -149,5 +152,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     override fun setCurrentDate(localStart: Calendar, localEnd: Calendar) {
         // common day
         v.cvMonthCalendar.selectedDate = CalendarDay.from(localStart)
+        v.tvSelectDate.text = fmt_day.format(localStart.time)
     }
 }
