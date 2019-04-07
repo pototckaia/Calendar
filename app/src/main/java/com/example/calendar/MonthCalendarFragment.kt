@@ -17,6 +17,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.EventAdapter
 import com.example.calendar.customView.EventMonthDecorator
+import com.example.calendar.customView.TodayDecorator
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.presenter.AbleAddEventPresenter
@@ -78,7 +79,10 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.cvMonthCalendar.setOnDateChangedListener(this)
         v.cvMonthCalendar.setOnDateLongClickListener(this);
         v.cvMonthCalendar.setOnMonthChangedListener(this);
-        v.cvMonthCalendar.addDecorator(decorator)
+        v.cvMonthCalendar.addDecorators(
+            decorator,
+            TodayDecorator(resources.getDrawable(R.drawable.today_circle_background, null))
+        )
 
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
 
