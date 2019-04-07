@@ -84,7 +84,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickEvent(pos: Int) {
         listEventPresenter.openEvent(pos)
-//        Toast.makeText(context, "Position $position", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDateSelected(

@@ -2,6 +2,7 @@ package com.example.calendar
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(
                     R.id.clMainContainer,
-                    MonthCalendarFragment.newInstance()  as Fragment
+                    MonthCalendarFragment.newInstance() as Fragment
                 )
                 .commit()
 

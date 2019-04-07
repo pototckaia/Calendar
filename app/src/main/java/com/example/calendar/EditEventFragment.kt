@@ -85,16 +85,28 @@ class EditEventFragment : MvpAppCompatFragment(),
     private fun initToolBar() {
         v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_event_edit)
+        v.tbNoteCreate.setOnMenuItemClickListener {
+            onItemSelected(it);
+            true
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return super.onOptionsItemSelected(item)
+    fun onItemSelected(item: MenuItem?) {
+        when (item?.itemId) {
+            R.id.actionUpdate -> {
+                editEventPresenter.onUpdate(
+                    view!!.etTextEvent.text.toString(),
+                    dateClickPresenter.startEvent,
+                    dateClickPresenter.endEvent)
+            }
+            R.id.actionDelete -> {
+                editEventPresenter.onDelete(
+                    backPressedPresenter)
+            }
+        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        setHasOptionsMenu(true)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+
 
     override fun updateEventInfo(e: EventTable) {
         v.etTextEvent.setText(e.name)
