@@ -16,15 +16,19 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.EventAdapter
+import com.example.calendar.customView.EventMonthDecorator
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.presenter.AbleAddEventPresenter
 import com.example.calendar.presenter.ListEventPresenter
+import com.example.calendar.presenter.MonthEventPresenter
 import com.example.calendar.view.ListEventView
+import com.example.calendar.view.MonthEventView
+import java.time.Month
 import java.util.*
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
-    OpenView, ListEventView,
+    OpenView, ListEventView, MonthEventView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
     companion object {
@@ -46,8 +50,19 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         )
     }
 
+    @InjectPresenter
+    lateinit var monthEventPresenter: MonthEventPresenter
+
+    @ProvidePresenter
+    fun provideMonthEventPresenter(): MonthEventPresenter {
+        return MonthEventPresenter(
+            EventRoomDatabase.getInstance(context!!).eventDao()
+        )
+    }
 
     private lateinit var v: View
+
+    private val decorator = EventMonthDecorator()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +78,10 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.cvMonthCalendar.setOnDateChangedListener(this)
         v.cvMonthCalendar.setOnDateLongClickListener(this);
         v.cvMonthCalendar.setOnMonthChangedListener(this);
+        v.cvMonthCalendar.addDecorator(decorator)
+
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
+
         v.rvEventsMonthCalendar.run {
             this.adapter = EventAdapter { _, position ->
                 onClickEvent(position)
@@ -97,7 +115,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         addEventPresenter.addEventButtonClick(date.calendar)
     }
 
-    override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {}
+    override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {
+        monthEventPresenter.onMonthChange(date.calendar)
+    }
 
     override fun openFragment(f: androidx.fragment.app.Fragment) {
         activity?.supportFragmentManager
@@ -111,7 +131,12 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         Toast.makeText(context, "Something go wrong", Toast.LENGTH_SHORT).show()
     }
 
-    override fun setEvents(it: List<EventTable>) {
+    override fun setMonthEvents(it: HashSet<Calendar>) {
+        decorator.setDates(it)
+        v.cvMonthCalendar.invalidateDecorators();
+    }
+
+    override fun setDayEvents(it: List<EventTable>) {
         v.rvEventsMonthCalendar.adapter.run {
             (this as EventAdapter).setEvents(it)
         }

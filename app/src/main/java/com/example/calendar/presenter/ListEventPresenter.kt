@@ -40,7 +40,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
         start.setYearMonthDay(local)
         end.setYearMonthDay(local)
         setHourAndMinute()
-        loadEvents()
+        loadEvents() // TODO how work unsubsribe
     }
 
     fun openEvent(pos: Int) {
@@ -73,7 +73,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
     private fun onLoadingSuccess(rep: List<EventTable>) {
         listEvent.clear()
         listEvent.addAll(rep)
-        viewState.setEvents(rep)
+        viewState.setDayEvents(rep)
     }
 }
 
