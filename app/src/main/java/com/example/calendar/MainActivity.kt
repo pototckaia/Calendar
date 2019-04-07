@@ -10,12 +10,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                R.id.clMainContainer,
-                MonthCalendarFragment.newInstance()  as Fragment
-            )
-            .commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(
+                    R.id.clMainContainer,
+                    MonthCalendarFragment.newInstance()  as Fragment
+                )
+                .commit()
+
+        }
     }
 }
