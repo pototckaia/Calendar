@@ -13,7 +13,7 @@ import kotlin.collections.HashSet
 
 
 @InjectViewState
-class MonthEventPresenter(
+class MonthDotPresenter(
     private val eventRepository: EventRepository,
     private val monthDate: Calendar = getCalendarWithDefaultTimeZone()) :
     BaseMvpSubscribe<MonthEventView>() {

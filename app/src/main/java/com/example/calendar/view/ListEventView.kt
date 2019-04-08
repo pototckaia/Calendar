@@ -11,7 +11,7 @@ import java.util.*
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ListEventView : MvpView {
 
-    fun setDayEvents(it: List<EventTable>)
+    fun setEvents(it: List<EventTable>)
 
     @StateStrategyType(SkipStrategy::class)
     fun showError(e : String)

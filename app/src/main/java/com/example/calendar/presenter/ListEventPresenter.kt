@@ -74,7 +74,7 @@ class ListEventPresenter(private val eventRepository: EventRepository) :
     private fun onLoadingSuccess(rep: List<EventTable>) {
         listEvent.clear()
         listEvent.addAll(rep)
-        viewState.setDayEvents(rep)
+        viewState.setEvents(rep)
     }
 }
 

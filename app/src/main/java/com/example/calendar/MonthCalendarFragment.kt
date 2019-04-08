@@ -22,11 +22,10 @@ import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.presenter.AbleAddEventPresenter
 import com.example.calendar.presenter.ListEventPresenter
-import com.example.calendar.presenter.MonthEventPresenter
+import com.example.calendar.presenter.MonthDotPresenter
 import com.example.calendar.view.ListEventView
 import com.example.calendar.view.MonthEventView
 import java.text.SimpleDateFormat
-import java.time.Month
 import java.util.*
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
@@ -53,11 +52,11 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var monthEventPresenter: MonthEventPresenter
+    lateinit var monthEventPresenter: MonthDotPresenter
 
     @ProvidePresenter
-    fun provideMonthEventPresenter(): MonthEventPresenter {
-        return MonthEventPresenter(
+    fun provideMonthEventPresenter(): MonthDotPresenter {
+        return MonthDotPresenter(
             EventRoomDatabase.getInstance(context!!).eventDao()
         )
     }
@@ -143,7 +142,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.cvMonthCalendar.invalidateDecorators();
     }
 
-    override fun setDayEvents(it: List<EventTable>) {
+    override fun setEvents(it: List<EventTable>) {
         v.rvEventsMonthCalendar.adapter.run {
             (this as EventAdapter).setEvents(it)
         }
