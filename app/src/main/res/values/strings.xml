@@ -8,4 +8,5 @@
     <string name="label_event_create">Сохранить</string>
     <string name="label_event_update">Сохранить</string>
     <string name="label_event_delete">Удалить</string>
+    <string name="today">Сегодня</string>
 </resources>

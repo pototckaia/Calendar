@@ -49,16 +49,16 @@ class NavigationFragment : MvpAppCompatFragment() {
                 ?.commit()
         }
 
-//        v.bDay.setOnClickListener {
-//            activity?.supportFragmentManager
-//                ?.beginTransaction()
-//                ?.replace(
-//                    R.id.clMainContainer,
-//                    WeekCalendarFragment.newInstance(WeekCalendarFragment.TypeView.DAY)
-//                )
-//                ?.addToBackStack(null)
-//                ?.commit()
-//        }
+        v.bDay.setOnClickListener {
+            activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(
+                    R.id.clMainContainer,
+                    WeekCalendarFragment.newInstance(WeekCalendarFragment.TypeView.DAY)
+                )
+                ?.addToBackStack(null)
+                ?.commit()
+        }
 
         return v
     }

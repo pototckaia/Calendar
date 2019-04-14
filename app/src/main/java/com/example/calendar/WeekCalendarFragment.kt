@@ -3,7 +3,6 @@ package com.example.calendar
 import android.widget.Toast
 import android.graphics.RectF
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -29,23 +28,22 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
     EventLongPressListener<EventWeekCalendar>, EmptyViewLongPressListener {
 
-    enum class TypeView(val type: Int) {
+    enum class TypeView(val dayVisible: Int) {
         DAY(1),
-        THREE_DAY(2),
-        WEEK(3)
+        THREE_DAY(3),
+        WEEK(7)
     }
 
     companion object {
         fun newInstance(type: TypeView): WeekCalendarFragment {
             val args = Bundle()
             args.run {
-                this.putInt(TYPE_VIEW_KEY, type.type)
+                this.putInt(TYPE_VIEW_KEY, type.dayVisible)
             }
             val f = WeekCalendarFragment()
             f.arguments = args
             return f
         }
-
     }
 
     @InjectPresenter
@@ -66,10 +64,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         )
     }
 
-    private var calendarViewType = TypeView.THREE_DAY
-
     private lateinit var v: View
-
     private lateinit var wv: WeekView<EventWeekCalendar>
 
     override fun onCreateView(
@@ -83,18 +78,24 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
             container, false
         )
         initToolBar()
-        // todo get type view
 
         wv = v.findViewById(R.id.wvCalendar)
         wv.setOnEventClickListener(this)
         wv.setMonthChangeListener(this)
         wv.setEventLongPressListener(this)
+        // todo replace
         wv.setEmptyViewLongPressListener(this)
+
+        if (savedInstanceState == null) {
+            wv.numberOfVisibleDays = arguments!!.getInt(TYPE_VIEW_KEY)
+        }
+
 
         return v
     }
 
     private fun initToolBar() {
+        // todo add back
         v.tbWeekCalendar.setNavigationOnClickListener() { }
         v.tbWeekCalendar.inflateMenu(com.example.calendar.R.menu.menu_week_calendar)
         v.tbWeekCalendar.setOnMenuItemClickListener {
@@ -109,49 +110,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
             R.id.action_today -> {
                 wv.goToToday()
             }
-            R.id.action_day_view -> {
-                openDayView(it)
-            }
-            R.id.action_three_day_view -> {
-                openThreeDayView(it)
-            }
-            R.id.action_week_view -> {
-                openWeekView(it)
-            }
         }
-    }
-
-    // todo remove
-    private fun openDayView(item: MenuItem) {
-        if (calendarViewType === TypeView.DAY) {
-            return
-        }
-
-        item.isChecked = !item.isChecked
-        calendarViewType = TypeView.DAY
-        wv.setNumberOfVisibleDays(1)
-    }
-
-    // todo remove
-    private fun openThreeDayView(item: MenuItem) {
-        if (calendarViewType === TypeView.THREE_DAY) {
-            return
-        }
-
-        item.isChecked = !item.isChecked
-        calendarViewType = TypeView.THREE_DAY
-        wv.setNumberOfVisibleDays(3)
-    }
-
-    // todo remove
-    private fun openWeekView(item: MenuItem) {
-        if (calendarViewType === TypeView.WEEK) {
-            return
-        }
-
-        item.isChecked = !item.isChecked
-        calendarViewType = TypeView.WEEK
-        wv.setNumberOfVisibleDays(7)
     }
 
     private fun getEventTitle(time: Calendar): String {
