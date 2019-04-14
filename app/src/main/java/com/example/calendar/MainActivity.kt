@@ -3,6 +3,7 @@ package com.example.calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Button
 import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
@@ -16,10 +17,9 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(
                     R.id.clMainContainer,
-                    WeekCalendarFragment.newInstance(WeekCalendarFragment.TypeView.WEEK) as Fragment
+                    NavigationFragment.newInstance()
                 )
                 .commit()
-
         }
     }
 }
