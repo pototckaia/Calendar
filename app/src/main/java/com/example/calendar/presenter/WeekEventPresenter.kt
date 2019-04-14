@@ -25,6 +25,12 @@ class WeekEventPresenter(
     private val monthsLoad = HashSet<Pair<Int, Int>>()
     private var isFirstUpdate = true;
 
+    var firstVisibleHour : Int = 0
+    val firstVisibleDay = getCalendarWithDefaultTimeZone()
+
+    fun onCreate() {
+        viewState.updateState()
+    }
 
     fun onMonthChange(month: Calendar) : List<EventWeekCalendar> {
         val pair = Pair(month.get(Calendar.YEAR), month.get(Calendar.MONTH))

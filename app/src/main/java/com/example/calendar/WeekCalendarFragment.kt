@@ -3,7 +3,6 @@ package com.example.calendar
 import android.widget.Toast
 import android.graphics.RectF
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -16,18 +15,18 @@ import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import java.util.Calendar
-import java.util.Locale
 
 
 import com.example.calendar.data.EventWeekCalendar
 import com.example.calendar.presenter.AbleAddEventPresenter
+import com.example.calendar.presenter.BackPressedPresenter
 import com.example.calendar.presenter.WeekEventPresenter
+import com.example.calendar.view.BackPressedView
 import com.example.calendar.view.OpenView
 import com.example.calendar.view.WeekEventView
 
-
 class WeekCalendarFragment : MvpAppCompatFragment(),
-    WeekEventView, OpenView,
+    WeekEventView, OpenView, BackPressedView,
     EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
     EventLongPressListener<EventWeekCalendar>, EmptyViewClickListener {
 
@@ -51,6 +50,10 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     @InjectPresenter
     lateinit var weekEventPresenter: WeekEventPresenter
+
+    @InjectPresenter
+    lateinit var backPressedPresenter: BackPressedPresenter
+
 
     @ProvidePresenter
     fun providerWeekEventPresenter(): WeekEventPresenter {
@@ -91,18 +94,29 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         wv.setMonthChangeListener(this)
         wv.setEventLongPressListener(this)
         wv.emptyViewClickListener = this
-
         if (savedInstanceState == null) {
             wv.numberOfVisibleDays = arguments!!.getInt(TYPE_VIEW_KEY)
         }
-
+        // todo not work
+        weekEventPresenter.onCreate()
 
         return v
     }
 
+    override fun onStop() {
+        super.onStop()
+        saveState()
+    }
+
+    private fun saveState() {
+        // todo add hour height
+        weekEventPresenter.firstVisibleHour = kotlin.math.floor(wv.firstVisibleHour).toInt()
+        weekEventPresenter.firstVisibleDay.timeInMillis = wv.firstVisibleDay.timeInMillis
+    }
+
     private fun initToolBar() {
         // todo add back
-        v.tbWeekCalendar.setNavigationOnClickListener() { }
+        v.tbWeekCalendar.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
         v.tbWeekCalendar.inflateMenu(com.example.calendar.R.menu.menu_week_calendar)
         v.tbWeekCalendar.setOnMenuItemClickListener {
             onItemSelected(it);
@@ -114,6 +128,8 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         when (it.itemId) {
             R.id.action_today -> {
                 wv.goToToday()
+                weekEventPresenter.onCreate()
+
             }
         }
     }
@@ -156,5 +172,14 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
             ?.replace(R.id.clMainContainer, f)
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    override fun updateState() {
+        wv.goToHour(weekEventPresenter.firstVisibleHour)
+        wv.goToDate(weekEventPresenter.firstVisibleDay)
+    }
+
+    override fun finishView() {
+        activity!!.supportFragmentManager.popBackStack()
     }
 }

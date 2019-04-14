@@ -21,4 +21,6 @@ interface WeekEventView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun closeLoadingEvents()
+
+    fun updateState()
 }
