@@ -3,25 +3,29 @@ package com.example.calendar
 import android.widget.Toast
 import android.graphics.RectF
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.alamkanak.weekview.*
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 
-import com.example.calendar.data.EventTable
 import com.example.calendar.data.EventWeekCalendar
+import com.example.calendar.presenter.WeekEventPresenter
+import com.example.calendar.view.WeekEventView
 
 
-class WeekCalendarFragment : Fragment(),
+class WeekCalendarFragment : MvpAppCompatFragment(),
+    WeekEventView,
     EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
     EventLongPressListener<EventWeekCalendar>, EmptyViewLongPressListener {
 
@@ -42,6 +46,24 @@ class WeekCalendarFragment : Fragment(),
             return f
         }
 
+    }
+
+    @InjectPresenter
+    lateinit var weekEventPresenter: WeekEventPresenter
+
+    @ProvidePresenter
+    fun providerWeekEventPresenter(): WeekEventPresenter {
+        val res = context!!.resources
+        // todo replace
+        val color = listOf(
+            res.getColor(R.color.event_color_02),
+            res.getColor(R.color.event_color_03),
+            res.getColor(R.color.event_color_01)
+        )
+        return WeekEventPresenter(
+            EventRoomDatabase.getInstance(context!!).eventDao(),
+            color
+        )
     }
 
     private var calendarViewType = TypeView.THREE_DAY
@@ -81,6 +103,7 @@ class WeekCalendarFragment : Fragment(),
         }
     }
 
+    // todo remove
     private fun onItemSelected(it: MenuItem) {
         when (it.itemId) {
             R.id.action_today -> {
@@ -98,6 +121,7 @@ class WeekCalendarFragment : Fragment(),
         }
     }
 
+    // todo remove
     private fun openDayView(item: MenuItem) {
         if (calendarViewType === TypeView.DAY) {
             return
@@ -108,6 +132,7 @@ class WeekCalendarFragment : Fragment(),
         wv.setNumberOfVisibleDays(1)
     }
 
+    // todo remove
     private fun openThreeDayView(item: MenuItem) {
         if (calendarViewType === TypeView.THREE_DAY) {
             return
@@ -118,6 +143,7 @@ class WeekCalendarFragment : Fragment(),
         wv.setNumberOfVisibleDays(3)
     }
 
+    // todo remove
     private fun openWeekView(item: MenuItem) {
         if (calendarViewType === TypeView.WEEK) {
             return
@@ -140,203 +166,34 @@ class WeekCalendarFragment : Fragment(),
     }
 
     override fun onEventClick(data: EventWeekCalendar, eventRect: RectF) {
+        // todo add
         Toast.makeText(context, "Clicked " + data.event.name, Toast.LENGTH_SHORT).show()
     }
 
     override fun onEventLongPress(data: EventWeekCalendar, eventRect: RectF) {
+        // todo add
         Toast.makeText(context, "Long pressed event: " + data.event.name, Toast.LENGTH_SHORT).show()
     }
 
     override fun onEmptyViewLongPress(time: Calendar) {
+        // todo add
         Toast.makeText(context, "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show()
     }
 
-    override fun onMonthChange(startDate: Calendar, endDate: Calendar): List<WeekViewDisplayable<EventWeekCalendar>> {
-        val newYear = startDate.get(Calendar.YEAR)
-        val newMonth = startDate.get(Calendar.MONTH)
+    override fun onMonthChange(startDate: Calendar, endDate: Calendar):
+            List<WeekViewDisplayable<EventWeekCalendar>> {
+        return weekEventPresenter.onMonthChange(startDate)
+    }
 
-        val color1 = context!!.getResources().getColor(R.color.event_color_01)
-        val color2 = context!!.getResources().getColor(R.color.event_color_02)
-        val color3 = context!!.getResources().getColor(R.color.event_color_03)
-        val color4 = context!!.getResources().getColor(R.color.event_color_04)
+    override fun showLoadingEvents() {}
 
-        val events = ArrayList<EventWeekCalendar>()
-        var event: EventWeekCalendar
+    override fun closeLoadingEvents() {}
 
-        var startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 8)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        var endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.MINUTE, 30)
-        endTime.set(Calendar.MONTH, newMonth)
+    override fun showError(e: String) {
+        Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
+    }
 
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color1
-        )
-        events.add(event)
-
-        // Add multi-day event
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 3)
-        startTime.set(Calendar.MINUTE, 30)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.DAY_OF_MONTH, 1)
-        endTime.set(Calendar.HOUR_OF_DAY, 4)
-        endTime.set(Calendar.MINUTE, 30)
-        endTime.set(Calendar.MONTH, newMonth)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color4
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 3)
-        startTime.set(Calendar.MINUTE, 30)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.set(Calendar.HOUR_OF_DAY, 4)
-        endTime.set(Calendar.MINUTE, 30)
-        endTime.set(Calendar.MONTH, newMonth)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color2
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 4)
-        startTime.set(Calendar.MINUTE, 30)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.set(Calendar.HOUR_OF_DAY, 5)
-        endTime.set(Calendar.MINUTE, 0)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color3
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 5)
-        startTime.set(Calendar.MINUTE, 30)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.HOUR_OF_DAY, 2)
-        endTime.set(Calendar.MONTH, newMonth)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color2
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 5)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        startTime.add(Calendar.DATE, 1)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.HOUR_OF_DAY, 3)
-        endTime.set(Calendar.MONTH, newMonth)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color3
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.DAY_OF_MONTH, 15)
-        startTime.set(Calendar.HOUR_OF_DAY, 3)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.HOUR_OF_DAY, 3)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color4
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.DAY_OF_MONTH, 1)
-        startTime.set(Calendar.HOUR_OF_DAY, 3)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.HOUR_OF_DAY, 3)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color1
-        )
-        events.add(event)
-
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.DAY_OF_MONTH, startTime.getActualMaximum(Calendar.DAY_OF_MONTH))
-        startTime.set(Calendar.HOUR_OF_DAY, 15)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.HOUR_OF_DAY, 3)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color2
-        )
-        events.add(event)
-
-        //AllDay event
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, 0)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.add(Calendar.HOUR_OF_DAY, 23)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color4
-        )
-        events.add(event)
-        events.add(event)
-
-        // All day event until 00:00 next day
-        startTime = Calendar.getInstance()
-        startTime.set(Calendar.DAY_OF_MONTH, 10)
-        startTime.set(Calendar.HOUR_OF_DAY, 0)
-        startTime.set(Calendar.MINUTE, 0)
-        startTime.set(Calendar.SECOND, 0)
-        startTime.set(Calendar.MILLISECOND, 0)
-        startTime.set(Calendar.MONTH, newMonth)
-        startTime.set(Calendar.YEAR, newYear)
-        endTime = startTime.clone() as Calendar
-        endTime.set(Calendar.DAY_OF_MONTH, 11)
-
-        event = EventWeekCalendar(
-            EventTable(name = getEventTitle(startTime), started_at = startTime, ended_at = endTime),
-            color1
-        )
-        events.add(event)
-
-        return events
+    override fun notifyEventSetChanged() {
+        wv.notifyDataSetChanged()
     }
 }
