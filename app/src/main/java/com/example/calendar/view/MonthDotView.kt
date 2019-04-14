@@ -9,7 +9,7 @@ import com.example.calendar.data.EventTable
 import java.util.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface MonthEventView : MvpView {
+interface MonthDotView : MvpView {
 
     fun setMonthEvents(it: HashSet<Calendar>)
 

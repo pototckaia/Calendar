@@ -24,12 +24,12 @@ import com.example.calendar.presenter.AbleAddEventPresenter
 import com.example.calendar.presenter.ListEventPresenter
 import com.example.calendar.presenter.MonthDotPresenter
 import com.example.calendar.view.ListEventView
-import com.example.calendar.view.MonthEventView
+import com.example.calendar.view.MonthDotView
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
-    OpenView, ListEventView, MonthEventView,
+    OpenView, ListEventView, MonthDotView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
     companion object {

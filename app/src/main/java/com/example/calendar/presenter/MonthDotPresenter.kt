@@ -6,7 +6,7 @@ import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.helpers.setHourOfDayAndMinute
-import com.example.calendar.view.MonthEventView
+import com.example.calendar.view.MonthDotView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 import kotlin.collections.HashSet
@@ -16,7 +16,7 @@ import kotlin.collections.HashSet
 class MonthDotPresenter(
     private val eventRepository: EventRepository,
     private val monthDate: Calendar = getCalendarWithDefaultTimeZone()) :
-    BaseMvpSubscribe<MonthEventView>() {
+    BaseMvpSubscribe<MonthDotView>() {
 
     val dates = HashSet<Calendar>()
 
