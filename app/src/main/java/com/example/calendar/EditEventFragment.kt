@@ -122,6 +122,7 @@ class EditEventFragment : MvpAppCompatFragment(),
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
+    // todo replace on new
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
         val dpd = DatePickerDialog(
             context!!, l,

@@ -3,6 +3,7 @@ package com.example.calendar
 import android.widget.Toast
 import android.graphics.RectF
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -28,7 +29,7 @@ import com.example.calendar.view.WeekEventView
 class WeekCalendarFragment : MvpAppCompatFragment(),
     WeekEventView, OpenView,
     EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
-    EventLongPressListener<EventWeekCalendar>, EmptyViewLongPressListener {
+    EventLongPressListener<EventWeekCalendar>, EmptyViewClickListener {
 
     enum class TypeView(val dayVisible: Int) {
         DAY(1),
@@ -89,8 +90,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         wv.setOnEventClickListener(this)
         wv.setMonthChangeListener(this)
         wv.setEventLongPressListener(this)
-        // todo replace
-        wv.setEmptyViewLongPressListener(this)
+        wv.emptyViewClickListener = this
 
         if (savedInstanceState == null) {
             wv.numberOfVisibleDays = arguments!!.getInt(TYPE_VIEW_KEY)
@@ -110,7 +110,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         }
     }
 
-    // todo remove
     private fun onItemSelected(it: MenuItem) {
         when (it.itemId) {
             R.id.action_today -> {
@@ -119,28 +118,15 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         }
     }
 
-    private fun getEventTitle(time: Calendar): String {
-        return String.format(
-            Locale.getDefault(),
-            "Event of %02d:%02d %s/%d",
-            time.get(Calendar.HOUR_OF_DAY),
-            time.get(Calendar.MINUTE),
-            time.get(Calendar.MONTH) + 1,
-            time.get(Calendar.DAY_OF_MONTH)
-        )
-    }
-
     override fun onEventClick(data: EventWeekCalendar, eventRect: RectF) {
-        // todo add
-        Toast.makeText(context, "Clicked " + data.event.name, Toast.LENGTH_SHORT).show()
+        openFragment(EditEventFragment.newInstance(data.event.id))
     }
 
     override fun onEventLongPress(data: EventWeekCalendar, eventRect: RectF) {
-        // todo add
-        Toast.makeText(context, "Long pressed event: " + data.event.name, Toast.LENGTH_SHORT).show()
+        addEventPresenter.addEvent(data.event.started_at, data.event.ended_at)
     }
 
-    override fun onEmptyViewLongPress(time: Calendar) {
+    override fun onEmptyViewClicked(time: Calendar) {
         time.set(Calendar.MINUTE, 0)
         val end = time.clone() as Calendar
         end.add(Calendar.HOUR_OF_DAY, 1)
