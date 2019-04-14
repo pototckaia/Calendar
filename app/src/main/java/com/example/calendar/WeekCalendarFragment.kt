@@ -19,12 +19,14 @@ import java.util.Locale
 
 
 import com.example.calendar.data.EventWeekCalendar
+import com.example.calendar.presenter.AbleAddEventPresenter
 import com.example.calendar.presenter.WeekEventPresenter
+import com.example.calendar.view.OpenView
 import com.example.calendar.view.WeekEventView
 
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
-    WeekEventView,
+    WeekEventView, OpenView,
     EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
     EventLongPressListener<EventWeekCalendar>, EmptyViewLongPressListener {
 
@@ -63,6 +65,10 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
             color
         )
     }
+
+    @InjectPresenter
+    lateinit var addEventPresenter: AbleAddEventPresenter
+
 
     private lateinit var v: View
     private lateinit var wv: WeekView<EventWeekCalendar>
@@ -135,8 +141,10 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onEmptyViewLongPress(time: Calendar) {
-        // todo add
-        Toast.makeText(context, "Empty view long pressed: " + getEventTitle(time), Toast.LENGTH_SHORT).show()
+        time.set(Calendar.MINUTE, 0)
+        val end = time.clone() as Calendar
+        end.add(Calendar.HOUR_OF_DAY, 1)
+        addEventPresenter.addEvent(time, end)
     }
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
@@ -154,5 +162,13 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     override fun notifyEventSetChanged() {
         wv.notifyDataSetChanged()
+    }
+
+    override fun openFragment(f: androidx.fragment.app.Fragment) {
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.clMainContainer, f)
+            ?.addToBackStack(null)
+            ?.commit()
     }
 }

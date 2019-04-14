@@ -100,9 +100,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickAdfAddNote() {
         if (v.cvMonthCalendar.selectedDate == null) {
-            addEventPresenter.addEventButtonClick()
+            addEventPresenter.addEvent()
         } else {
-            addEventPresenter.addEventButtonClick(v.cvMonthCalendar.selectedDate.calendar)
+            addEventPresenter.addEvent(v.cvMonthCalendar.selectedDate.calendar)
         }
     }
 
@@ -118,7 +118,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onDateLongClick(widget: MaterialCalendarView, date: CalendarDay) {
-        addEventPresenter.addEventButtonClick(date.calendar)
+        addEventPresenter.addEvent(date.calendar)
     }
 
     override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {
