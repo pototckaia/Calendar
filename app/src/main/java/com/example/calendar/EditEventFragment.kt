@@ -92,7 +92,7 @@ class EditEventFragment : MvpAppCompatFragment(),
         }
     }
 
-    fun onItemSelected(item: MenuItem?) {
+    private fun onItemSelected(item: MenuItem?) {
         when (item?.itemId) {
             R.id.actionUpdate -> {
                 editEventPresenter.onUpdate(
