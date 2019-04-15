@@ -12,6 +12,7 @@ import com.example.calendar.helpers.END_EVENT_KEY
 import com.example.calendar.view.CreateEventInfoView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.customView.DialogDatePicker
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.presenter.BackPressedPresenter
 import com.example.calendar.presenter.CreateEventPresenter
@@ -113,13 +114,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = DatePickerDialog(
-            context!!, l,
-            c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
-            c.get(Calendar.DAY_OF_MONTH)
-        )
-        dpd.show()
+        val dpd = DialogDatePicker.newInstance(c, l)
+        dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 
     override fun showTimePickerDialog(c: Calendar, l: TimePickerDialog.OnTimeSetListener) {

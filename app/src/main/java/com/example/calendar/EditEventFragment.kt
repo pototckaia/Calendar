@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.customView.DialogDatePicker
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.EVENT_ID_KEY
@@ -122,15 +123,9 @@ class EditEventFragment : MvpAppCompatFragment(),
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
-    // todo replace on new
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = DatePickerDialog(
-            context!!, l,
-            c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
-            c.get(Calendar.DAY_OF_MONTH)
-        )
-        dpd.show()
+        val dpd = DialogDatePicker.newInstance(c, l)
+        dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 
     override fun showTimePickerDialog(c: Calendar, l: TimePickerDialog.OnTimeSetListener) {
