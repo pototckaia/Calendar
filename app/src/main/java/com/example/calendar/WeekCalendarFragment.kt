@@ -21,12 +21,14 @@ import com.example.calendar.data.EventWeekCalendar
 import com.example.calendar.presenter.AbleAddEventPresenter
 import com.example.calendar.presenter.BackPressedPresenter
 import com.example.calendar.presenter.WeekEventPresenter
+import com.example.calendar.presenter.WeekSaveStatePresenter
 import com.example.calendar.view.BackPressedView
 import com.example.calendar.view.OpenView
 import com.example.calendar.view.WeekEventView
+import com.example.calendar.view.WeekSaveStateView
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
-    WeekEventView, OpenView, BackPressedView,
+    WeekEventView, OpenView, BackPressedView, WeekSaveStateView,
     EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
     EventLongPressListener<EventWeekCalendar>, EmptyViewClickListener {
 
@@ -51,10 +53,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     @InjectPresenter
     lateinit var weekEventPresenter: WeekEventPresenter
 
-    @InjectPresenter
-    lateinit var backPressedPresenter: BackPressedPresenter
-
-
     @ProvidePresenter
     fun providerWeekEventPresenter(): WeekEventPresenter {
         val res = context!!.resources
@@ -71,7 +69,13 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
+    lateinit var backPressedPresenter: BackPressedPresenter
+
+    @InjectPresenter
     lateinit var addEventPresenter: AbleAddEventPresenter
+
+    @InjectPresenter
+    lateinit var weekSaveStatePresenter: WeekSaveStatePresenter
 
 
     private lateinit var v: View
@@ -97,21 +101,14 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         if (savedInstanceState == null) {
             wv.numberOfVisibleDays = arguments!!.getInt(TYPE_VIEW_KEY)
         }
-        weekEventPresenter.onCreate()
+        weekSaveStatePresenter.onCreateView()
 
         return v
     }
 
     override fun onStop() {
+        weekSaveStatePresenter.onStop()
         super.onStop()
-        saveState()
-    }
-
-    private fun saveState() {
-        // todo add hour height
-        weekEventPresenter.firstVisibleHour = kotlin.math.floor(wv.firstVisibleHour).toInt()
-        weekEventPresenter.firstVisibleDay.timeInMillis = wv.firstVisibleDay.timeInMillis
-        weekEventPresenter.hourHeight = wv.hourHeight
     }
 
     private fun initToolBar() {
@@ -128,13 +125,12 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         when (it.itemId) {
             R.id.action_today -> {
                 wv.goToToday()
-                weekEventPresenter.onCreate()
-
             }
         }
     }
 
     override fun onEventClick(data: EventWeekCalendar, eventRect: RectF) {
+        // todo presenter ??
         openFragment(EditEventFragment.newInstance(data.event.id))
     }
 
@@ -143,6 +139,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onEmptyViewClicked(time: Calendar) {
+        // todo presenter ??
         time.set(Calendar.MINUTE, 0)
         val end = time.clone() as Calendar
         end.add(Calendar.HOUR_OF_DAY, 1)
@@ -151,6 +148,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
             List<WeekViewDisplayable<EventWeekCalendar>> {
+        weekSaveStatePresenter.onMonthChange()
         return weekEventPresenter.onMonthChange(startDate)
     }
 
@@ -175,9 +173,15 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun updateState() {
-        wv.hourHeight = weekEventPresenter.hourHeight
-        wv.goToHour(weekEventPresenter.firstVisibleHour)
-        wv.goToDate(weekEventPresenter.firstVisibleDay)
+        wv.hourHeight = weekSaveStatePresenter.hourHeight
+        wv.goToHour(weekSaveStatePresenter.firstVisibleHour)
+        wv.goToDate(weekSaveStatePresenter.firstVisibleDay)
+    }
+
+    override fun saveState() {
+        weekSaveStatePresenter.firstVisibleHour = kotlin.math.floor(wv.firstVisibleHour).toInt()
+        weekSaveStatePresenter.firstVisibleDay.timeInMillis = wv.firstVisibleDay.timeInMillis
+        weekSaveStatePresenter.hourHeight = wv.hourHeight
     }
 
     override fun finishView() {
