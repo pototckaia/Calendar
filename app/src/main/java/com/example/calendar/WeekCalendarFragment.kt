@@ -97,7 +97,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         if (savedInstanceState == null) {
             wv.numberOfVisibleDays = arguments!!.getInt(TYPE_VIEW_KEY)
         }
-        // todo not work
         weekEventPresenter.onCreate()
 
         return v
@@ -112,6 +111,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         // todo add hour height
         weekEventPresenter.firstVisibleHour = kotlin.math.floor(wv.firstVisibleHour).toInt()
         weekEventPresenter.firstVisibleDay.timeInMillis = wv.firstVisibleDay.timeInMillis
+        weekEventPresenter.hourHeight = wv.hourHeight
     }
 
     private fun initToolBar() {
@@ -175,6 +175,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun updateState() {
+        wv.hourHeight = weekEventPresenter.hourHeight
         wv.goToHour(weekEventPresenter.firstVisibleHour)
         wv.goToDate(weekEventPresenter.firstVisibleDay)
     }

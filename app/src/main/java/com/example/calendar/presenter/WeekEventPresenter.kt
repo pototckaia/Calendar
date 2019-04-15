@@ -17,8 +17,7 @@ import kotlin.collections.ArrayList
 class WeekEventPresenter(
     private val eventRepository: EventRepository,
     private val colors: List<Int>
-) :
-    BaseMvpSubscribe<WeekEventView>() {
+) : BaseMvpSubscribe<WeekEventView>() {
 
     private val events : ArrayList<EventWeekCalendar> = arrayListOf()
 
@@ -27,13 +26,20 @@ class WeekEventPresenter(
 
     var firstVisibleHour : Int = 0
     val firstVisibleDay = getCalendarWithDefaultTimeZone()
+    var hourHeight = 12.toFloat()
+    var isUpdateState = false
 
     fun onCreate() {
-        viewState.updateState()
+        isUpdateState = true
+//        viewState.updateState()
     }
 
     fun onMonthChange(month: Calendar) : List<EventWeekCalendar> {
         val pair = Pair(month.get(Calendar.YEAR), month.get(Calendar.MONTH))
+        if (isUpdateState) {
+            isUpdateState = false
+            viewState.updateState()
+        }
 
         val monthStart = getCalendarWithDefaultTimeZone()
         monthStart.timeInMillis = month.timeInMillis
