@@ -1,24 +1,20 @@
-package com.example.calendar;
+package com.example.calendar.eventFragment;
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import java.util.*
-import androidx.core.content.ContextCompat
 import android.view.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.helpers.START_EVENT_KEY
 import com.example.calendar.helpers.END_EVENT_KEY
-import com.example.calendar.view.CreateEventInfoView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.example.calendar.customView.DialogDatePicker
+import com.example.calendar.R
+import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.presenter.BackPressedPresenter
-import com.example.calendar.presenter.CreateEventPresenter
-import com.example.calendar.presenter.DateClickPresenter
-import com.example.calendar.view.BackPressedView
-import com.example.calendar.view.DateClickView
+import com.example.calendar.remove.BackPressedPresenter
+import com.example.calendar.remove.BackPressedView
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
@@ -82,10 +78,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
             container, false
         )
         initToolBar()
-        v.vBegin.onClickDayListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
-        v.vBegin.onClickHourListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
-        v.vEnd.onClickDayListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
-        v.vEnd.onClickHourListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
+        v.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
+        v.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
+        v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
+        v.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
 
         return v
     }
@@ -109,12 +105,12 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     override fun updateDateInfo(begin: Calendar, end: Calendar) {
-        v.vBegin.date = begin
-        v.vEnd.date = end
+        v.vBegin.setDate(begin)
+        v.vEnd.setDate(end)
     }
 
     override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = DialogDatePicker.newInstance(c, l)
+        val dpd = MaterialDatePickerDialog.newInstance(c, l)
         dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 

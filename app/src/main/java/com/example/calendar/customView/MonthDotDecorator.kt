@@ -9,23 +9,25 @@ import java.util.Calendar
 import kotlin.collections.HashSet
 
 
-class EventMonthDecorator() : DayViewDecorator {
+class MonthDotDecorator() : DayViewDecorator {
 
-    private val dateHash = HashSet<CalendarDay>()
+    private val dates = HashSet<CalendarDay>()
+
     private val color = Color.BLUE
+    private val radius = 5f
 
     fun setDates(dates: HashSet<Calendar>) {
-        dateHash.clear()
-        dates.forEach {it ->
-            dateHash.add(CalendarDay.from(it))
+        this.dates.clear()
+        dates.forEach { it ->
+            this.dates.add(CalendarDay.from(it))
         }
     }
 
     override fun shouldDecorate(day: CalendarDay): Boolean {
-        return dateHash.contains(day)
+        return dates.contains(day)
     }
 
     override fun decorate(view: DayViewFacade) {
-        view.addSpan(DotSpan(5f, color))
+        view.addSpan(DotSpan(radius, color))
     }
 }

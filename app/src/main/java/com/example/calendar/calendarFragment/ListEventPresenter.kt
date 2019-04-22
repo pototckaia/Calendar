@@ -1,11 +1,10 @@
-package com.example.calendar.presenter
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.EditEventFragment
+import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.*
-import com.example.calendar.view.ListEventView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 

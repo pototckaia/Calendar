@@ -1,4 +1,4 @@
-package com.example.calendar.view
+package com.example.calendar.eventFragment
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

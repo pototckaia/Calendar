@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 
 
-class TodayDecorator(private val backgroundDrawable: Drawable) : DayViewDecorator {
+class TodayDecorator(
+    private val backgroundDrawable: Drawable
+) : DayViewDecorator {
 
     private val today = CalendarDay.today()
 

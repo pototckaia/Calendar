@@ -9,11 +9,11 @@ interface EventRepository {
 
     fun getUserById(id: String): Flowable<List<EventTable>>
 
-    fun insert(event: EventTable) : Completable
+    fun insert(event: EventTable): Completable
 
-    fun update(event: EventTable) : Completable
+    fun update(event: EventTable): Completable
 
-    fun delete(event: EventTable) : Completable
+    fun delete(event: EventTable): Completable
 
     fun deleteAll()
 

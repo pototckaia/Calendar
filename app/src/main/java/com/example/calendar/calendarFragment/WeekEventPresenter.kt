@@ -1,13 +1,12 @@
-package com.example.calendar.presenter
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
-import com.example.calendar.data.EventWeekCalendar
+import com.example.calendar.customView.EventWeekView
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.helpers.setHourOfDayAndMinute
-import com.example.calendar.view.WeekEventView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 import kotlin.collections.ArrayList
@@ -19,13 +18,13 @@ class WeekEventPresenter(
     private val colors: List<Int>
 ) : BaseMvpSubscribe<WeekEventView>() {
 
-    private val events : ArrayList<EventWeekCalendar> = arrayListOf()
+    private val events : ArrayList<EventWeekView> = arrayListOf()
 
     private val monthsLoad = HashSet<Pair<Int, Int>>()
     private var isFirstUpdate = true;
 
 
-    fun onMonthChange(month: Calendar) : List<EventWeekCalendar> {
+    fun onMonthChange(month: Calendar) : List<EventWeekView> {
         val pair = Pair(month.get(Calendar.YEAR), month.get(Calendar.MONTH))
 
         val monthStart = getCalendarWithDefaultTimeZone()
@@ -49,7 +48,7 @@ class WeekEventPresenter(
         return monthsLoad.contains(yearAndMonth)
     }
 
-    private fun isFromPeriod(it: EventWeekCalendar, start: Calendar, end: Calendar) : Boolean {
+    private fun isFromPeriod(it: EventWeekView, start: Calendar, end: Calendar) : Boolean {
         //        (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
         return (it.event.started_at >= start && it.event.ended_at < end) ||
                 (it.event.started_at < end && it.event.ended_at > start)
@@ -88,7 +87,7 @@ class WeekEventPresenter(
         }
 
         rep.forEach {
-            events.add(EventWeekCalendar(it, colors[0]))
+            events.add(EventWeekView(it, colors[0]))
         }
         viewState.notifyEventSetChanged()
     }

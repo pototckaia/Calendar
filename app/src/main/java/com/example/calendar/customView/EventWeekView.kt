@@ -1,16 +1,15 @@
-package com.example.calendar.data
+package com.example.calendar.customView
 
-import android.graphics.Color
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
-import java.util.*
+import com.example.calendar.data.EventTable
 
-class EventWeekCalendar (
+class EventWeekView (
     var event: EventTable,
     val color: Int
-) : WeekViewDisplayable<EventWeekCalendar> {
+) : WeekViewDisplayable<EventWeekView> {
 
-    override fun toWeekViewEvent(): WeekViewEvent<EventWeekCalendar> {
+    override fun toWeekViewEvent(): WeekViewEvent<EventWeekView> {
         return WeekViewEvent(0,
             event.name, event.started_at, event.ended_at,
             null, color, false, this)

@@ -1,4 +1,4 @@
-package com.example.calendar.view
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy

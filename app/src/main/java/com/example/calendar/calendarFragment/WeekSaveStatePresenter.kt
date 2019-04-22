@@ -1,11 +1,8 @@
-package com.example.calendar.presenter
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.data.EventWeekCalendar
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
-import com.example.calendar.view.WeekSaveStateView
-import java.util.*
 
 @InjectViewState
 class WeekSaveStatePresenter: MvpPresenter<WeekSaveStateView>() {

@@ -1,4 +1,4 @@
-package com.example.calendar.presenter
+package com.example.calendar.eventFragment
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -7,7 +7,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.helpers.cloneWithDefaultTimeZone
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.helpers.setHourOfDayAndMinute
-import com.example.calendar.view.DateClickView
+import com.example.calendar.eventFragment.DateClickView
 import java.util.*
 
 

@@ -1,8 +1,8 @@
-package com.example.calendar.presenter
+package com.example.calendar.remove
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.view.BackPressedView
+import com.example.calendar.remove.BackPressedView
 
 
 @InjectViewState

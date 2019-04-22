@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.calendarFragment
 
 import android.widget.Toast
 import android.graphics.RectF
@@ -11,26 +11,23 @@ import com.alamkanak.weekview.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.eventFragment.EditEventFragment
+import com.example.calendar.R
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import java.util.Calendar
 
 
-import com.example.calendar.data.EventWeekCalendar
-import com.example.calendar.presenter.AbleAddEventPresenter
-import com.example.calendar.presenter.BackPressedPresenter
-import com.example.calendar.presenter.WeekEventPresenter
-import com.example.calendar.presenter.WeekSaveStatePresenter
-import com.example.calendar.view.BackPressedView
-import com.example.calendar.view.OpenView
-import com.example.calendar.view.WeekEventView
-import com.example.calendar.view.WeekSaveStateView
+import com.example.calendar.customView.EventWeekView
+import com.example.calendar.remove.BackPressedPresenter
+import com.example.calendar.remove.BackPressedView
+import com.example.calendar.remove.OpenView
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
     WeekEventView, OpenView, BackPressedView, WeekSaveStateView,
-    EventClickListener<EventWeekCalendar>, MonthChangeListener<EventWeekCalendar>,
-    EventLongPressListener<EventWeekCalendar>, EmptyViewClickListener {
+    EventClickListener<EventWeekView>, MonthChangeListener<EventWeekView>,
+    EventLongPressListener<EventWeekView>, EmptyViewClickListener {
 
     enum class TypeView(val dayVisible: Int) {
         DAY(1),
@@ -79,7 +76,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
 
     private lateinit var v: View
-    private lateinit var wv: WeekView<EventWeekCalendar>
+    private lateinit var wv: WeekView<EventWeekView>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -114,7 +111,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     private fun initToolBar() {
         // todo add back
         v.tbWeekCalendar.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
-        v.tbWeekCalendar.inflateMenu(com.example.calendar.R.menu.menu_week_calendar)
+        v.tbWeekCalendar.inflateMenu(R.menu.menu_week_calendar)
         v.tbWeekCalendar.setOnMenuItemClickListener {
             onItemSelected(it);
             true
@@ -129,13 +126,13 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         }
     }
 
-    override fun onEventClick(data: EventWeekCalendar, eventRect: RectF) {
+    override fun onEventClick(data: EventWeekView, eventRect: RectF) {
         // todo presenter ??
         openFragment(EditEventFragment.newInstance(data.event.id))
     }
 
-    override fun onEventLongPress(data: EventWeekCalendar, eventRect: RectF) {
-        addEventPresenter.addEvent(data.event.started_at, data.event.ended_at)
+    override fun onEventLongPress(data: EventWeekView, eventRect: RectF) {
+        addEventPresenter.openEventFragment(data.event.started_at, data.event.ended_at)
     }
 
     override fun onEmptyViewClicked(time: Calendar) {
@@ -143,11 +140,11 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         time.set(Calendar.MINUTE, 0)
         val end = time.clone() as Calendar
         end.add(Calendar.HOUR_OF_DAY, 1)
-        addEventPresenter.addEvent(time, end)
+        addEventPresenter.openEventFragment(time, end)
     }
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
-            List<WeekViewDisplayable<EventWeekCalendar>> {
+            List<WeekViewDisplayable<EventWeekView>> {
         weekSaveStatePresenter.onMonthChange()
         return weekEventPresenter.onMonthChange(startDate)
     }

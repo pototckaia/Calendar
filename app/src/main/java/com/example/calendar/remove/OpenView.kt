@@ -1,23 +1,17 @@
-package com.example.calendar.view
+package com.example.calendar.remove
 
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.example.calendar.data.EventTable
-import java.util.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface ListEventView : MvpView {
-
-    fun setEvents(it: List<EventTable>)
-
-    @StateStrategyType(SkipStrategy::class)
-    fun showError(e : String)
-
-    fun setCurrentDate(localStart: Calendar, localEnd: Calendar)
+interface OpenView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun openFragment(f: androidx.fragment.app.Fragment)
 }
+
+

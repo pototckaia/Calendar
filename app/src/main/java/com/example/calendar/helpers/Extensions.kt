@@ -23,7 +23,8 @@ fun ViewGroup.inflate(
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
-fun getCalendarWithDefaultTimeZone() : Calendar = Calendar.getInstance(TimeZone.getDefault());
+fun getCalendarWithDefaultTimeZone(): Calendar =
+    Calendar.getInstance(TimeZone.getDefault());
 
 fun Calendar.cloneWithDefaultTimeZone(): Calendar {
     val c = this.clone() as Calendar
@@ -45,13 +46,19 @@ fun Calendar.setHourOfDayAndMinute(hourOfDay: Int, minute: Int) {
 }
 
 
-fun <T> wrapAsync(observable: Observable<T>, scheduler: Scheduler = Schedulers.io()): Observable<T> {
+fun <T> wrapAsync(
+    observable: Observable<T>,
+    scheduler: Scheduler = Schedulers.io()
+): Observable<T> {
     return observable
         .subscribeOn(scheduler)
         .observeOn(AndroidSchedulers.mainThread())
 }
 
-fun <T> wrapAsync(observable: Flowable<T>, scheduler: Scheduler = Schedulers.io()): Flowable<T> {
+fun <T> wrapAsync(
+    observable: Flowable<T>,
+    scheduler: Scheduler = Schedulers.io()
+): Flowable<T> {
     return observable
         .subscribeOn(scheduler)
         .observeOn(AndroidSchedulers.mainThread())

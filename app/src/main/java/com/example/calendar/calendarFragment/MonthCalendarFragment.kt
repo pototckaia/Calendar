@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.calendarFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,22 +11,21 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
-import com.example.calendar.view.OpenView
+import com.example.calendar.remove.OpenView
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.calendar.R
 import com.example.calendar.customView.EventAdapter
-import com.example.calendar.customView.EventMonthDecorator
+import com.example.calendar.customView.MonthDotDecorator
 import com.example.calendar.customView.TodayDecorator
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
-import com.example.calendar.presenter.AbleAddEventPresenter
-import com.example.calendar.presenter.ListEventPresenter
-import com.example.calendar.presenter.MonthDotPresenter
-import com.example.calendar.view.ListEventView
-import com.example.calendar.view.MonthDotView
 import java.text.SimpleDateFormat
+import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
+import androidx.recyclerview.widget.DividerItemDecoration
+
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
     OpenView, ListEventView, MonthDotView,
@@ -45,7 +44,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     lateinit var listEventPresenter: ListEventPresenter
 
     @ProvidePresenter
-    fun provideListEventPresenter (): ListEventPresenter {
+    fun provideListEventPresenter(): ListEventPresenter {
         return ListEventPresenter(
             EventRoomDatabase.getInstance(context!!).eventDao()
         )
@@ -63,7 +62,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private lateinit var v: View
 
-    private val decorator = EventMonthDecorator()
+    private val decorator = MonthDotDecorator()
 
     private val fmt_day = SimpleDateFormat("EE, dd/MM/yyyy", Locale.getDefault())
 
@@ -88,11 +87,17 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
         v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
 
+        val linerLayoutManager = LinearLayoutManager(context)
+        val dividerItemDecoration = DividerItemDecoration(
+            v.rvEventsMonthCalendar.context,
+            linerLayoutManager.orientation
+        )
         v.rvEventsMonthCalendar.run {
             this.adapter = EventAdapter { _, position ->
                 onClickEvent(position)
             }
-            this.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            this.layoutManager = linerLayoutManager
+            this.addItemDecoration(dividerItemDecoration)
         }
 
         return v
@@ -100,9 +105,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickAdfAddNote() {
         if (v.cvMonthCalendar.selectedDate == null) {
-            addEventPresenter.addEvent()
+            addEventPresenter.openEventFragment()
         } else {
-            addEventPresenter.addEvent(v.cvMonthCalendar.selectedDate.calendar)
+            addEventPresenter.openEventFragment(v.cvMonthCalendar.selectedDate.calendar)
         }
     }
 
@@ -118,7 +123,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onDateLongClick(widget: MaterialCalendarView, date: CalendarDay) {
-        addEventPresenter.addEvent(date.calendar)
+        addEventPresenter.openEventFragment(date.calendar)
     }
 
     override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {
@@ -134,7 +139,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun showError(e: String) {
-        Toast.makeText(context, "Something go wrong", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
     override fun setMonthEvents(it: HashSet<Calendar>) {

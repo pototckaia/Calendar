@@ -1,4 +1,4 @@
-package com.example.calendar.presenter
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.data.EventRepository
@@ -6,7 +6,6 @@ import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.helpers.setHourOfDayAndMinute
-import com.example.calendar.view.MonthDotView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
 import kotlin.collections.HashSet

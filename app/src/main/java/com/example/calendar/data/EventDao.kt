@@ -14,13 +14,13 @@ interface EventDao : EventRepository {
     override fun getUserById(id: String): Flowable<List<EventTable>>
 
     @Insert
-    override fun insert(event: EventTable) : Completable
+    override fun insert(event: EventTable): Completable
 
     @Update
-    override fun update(event: EventTable) : Completable
+    override fun update(event: EventTable): Completable
 
     @Delete
-    override fun delete(event: EventTable) : Completable
+    override fun delete(event: EventTable): Completable
 
     @Query("DELETE FROM events")
     override fun deleteAll()

@@ -1,31 +1,31 @@
-package com.example.calendar.presenter
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.CreateEventFragment
+import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.helpers.*
-import com.example.calendar.view.OpenView
+import com.example.calendar.remove.OpenView
 import java.util.Calendar
 
 
 @InjectViewState
 class AbleAddEventPresenter : MvpPresenter<OpenView>() {
 
-    fun addEvent(begin: Calendar, end: Calendar) {
+    fun openEventFragment(begin: Calendar, end: Calendar) {
         val fragment = CreateEventFragment.newInstance(begin, end)
         viewState.openFragment(fragment)
     }
 
-    fun addEvent(commonDate: Calendar) {
+    fun openEventFragment(commonDate: Calendar) {
         val local_start = commonDate.cloneWithDefaultTimeZone()
         local_start.setHourOfDayAndMinute(0, 0)
         val local_end = local_start.clone() as Calendar
         local_end.set(Calendar.HOUR_OF_DAY, 1)
-        addEvent(local_start, local_end)
+        openEventFragment(local_start, local_end)
     }
 
-    fun addEvent() =
-        addEvent(getCalendarWithDefaultTimeZone())
+    fun openEventFragment() =
+        openEventFragment(getCalendarWithDefaultTimeZone())
 
 
 }

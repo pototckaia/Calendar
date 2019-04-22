@@ -12,16 +12,18 @@ abstract class EventRoomDatabase : RoomDatabase() {
 
     companion object {
 
-        @Volatile private var INSTANCE: EventRoomDatabase? = null
+        @Volatile
+        private var instant: EventRoomDatabase? = null
 
         fun getInstance(context: Context): EventRoomDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+            instant ?: synchronized(this) {
+                instant ?: buildDatabase(context).also { instant = it }
             }
 
         private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext,
-                EventRoomDatabase::class.java, "event.db")
-                .build()
+            Room.databaseBuilder(
+                context.applicationContext,
+                EventRoomDatabase::class.java, "event.db"
+            ).build()
     }
 }
