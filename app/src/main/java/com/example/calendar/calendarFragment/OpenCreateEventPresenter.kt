@@ -9,7 +9,7 @@ import java.util.Calendar
 
 
 @InjectViewState
-class AbleAddEventPresenter : MvpPresenter<OpenView>() {
+class OpenCreateEventPresenter : MvpPresenter<OpenView>() {
 
     fun openEventFragment(begin: Calendar, end: Calendar) {
         val fragment = CreateEventFragment.newInstance(begin, end)

@@ -69,7 +69,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     lateinit var backPressedPresenter: BackPressedPresenter
 
     @InjectPresenter
-    lateinit var addEventPresenter: AbleAddEventPresenter
+    lateinit var addEventPresenter: OpenCreateEventPresenter
 
     @InjectPresenter
     lateinit var weekSaveStatePresenter: WeekSaveStatePresenter

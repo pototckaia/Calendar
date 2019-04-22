@@ -14,23 +14,24 @@ import kotlin.collections.HashSet
 @InjectViewState
 class MonthDotPresenter(
     private val eventRepository: EventRepository,
-    private val monthDate: Calendar = getCalendarWithDefaultTimeZone()) :
+    private val curMonth: Calendar = getCalendarWithDefaultTimeZone()
+) :
     BaseMvpSubscribe<MonthDotView>() {
 
-    val dates = HashSet<Calendar>()
+    private val dates = HashSet<Calendar>()
 
     init {
         loadEvents()
     }
 
     fun onMonthChange(month: Calendar) {
-        monthDate.timeInMillis = month.timeInMillis
+        curMonth.timeInMillis = month.timeInMillis
         loadEvents() // TODO how work unsubsribe
     }
 
     private fun loadEvents() {
         val monthStart = getCalendarWithDefaultTimeZone()
-        monthStart.timeInMillis = monthDate.timeInMillis
+        monthStart.timeInMillis = curMonth.timeInMillis
         monthStart.set(Calendar.DAY_OF_MONTH, 1)
         monthStart.setHourOfDayAndMinute(0, 0)
 
@@ -40,11 +41,13 @@ class MonthDotPresenter(
 
         val subscription = eventRepository.fromTo(monthStart, monthEnd)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ repositories ->
-                onLoadingSuccess(repositories)
-            }, { error ->
-                onLoadingFailed(error)
-            });
+            .subscribe(
+                { repositories ->
+                    onLoadingSuccess(repositories)
+                },
+                { error ->
+                    onLoadingFailed(error)
+                });
         unsubscribeOnDestroy(subscription)
     }
 
@@ -54,7 +57,7 @@ class MonthDotPresenter(
 
     private fun onLoadingSuccess(rep: List<EventTable>) {
         dates.clear()
-        rep.forEach {it ->
+        rep.forEach { it ->
             val c = it.started_at.clone() as Calendar
             while (c < it.ended_at) {
                 dates.add(c.clone() as Calendar)
@@ -62,7 +65,7 @@ class MonthDotPresenter(
                 c.setHourOfDayAndMinute(0, 0)
             }
         }
-        viewState.setMonthEvents(dates)
+        viewState.setMonthDots(dates)
     }
 
 }

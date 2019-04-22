@@ -28,7 +28,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
-    OpenView, ListEventView, MonthDotView,
+    OpenView, CurrentDateView,
+    ListEventView, MonthDotView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
     companion object {
@@ -38,7 +39,10 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var addEventPresenter: AbleAddEventPresenter
+    lateinit var openCreateEventPresenter: OpenCreateEventPresenter
+
+    @InjectPresenter
+    lateinit var currentDatePresenter: CurrentDatePresenter
 
     @InjectPresenter
     lateinit var listEventPresenter: ListEventPresenter
@@ -46,16 +50,18 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideListEventPresenter(): ListEventPresenter {
         return ListEventPresenter(
+            // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao()
         )
     }
 
     @InjectPresenter
-    lateinit var monthEventPresenter: MonthDotPresenter
+    lateinit var monthDotPresenter: MonthDotPresenter
 
     @ProvidePresenter
     fun provideMonthEventPresenter(): MonthDotPresenter {
         return MonthDotPresenter(
+            // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao()
         )
     }
@@ -64,7 +70,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private val decorator = MonthDotDecorator()
 
-    private val fmt_day = SimpleDateFormat("EE, dd/MM/yyyy", Locale.getDefault())
+    private val fmtCurDay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,10 +88,14 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         v.cvMonthCalendar.setOnMonthChangedListener(this);
         v.cvMonthCalendar.addDecorators(
             decorator,
-            TodayDecorator(resources.getDrawable(R.drawable.today_circle_background, null))
+            TodayDecorator(
+                resources.getDrawable(
+                    R.drawable.today_circle_background, null
+                )
+            )
         )
 
-        v.abfAddNote.setOnClickListener() { onClickAdfAddNote() }
+        v.abfAddNote.setOnClickListener { onClickAdfAddNote() }
 
         val linerLayoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
@@ -105,29 +115,33 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickAdfAddNote() {
         if (v.cvMonthCalendar.selectedDate == null) {
-            addEventPresenter.openEventFragment()
+            openCreateEventPresenter.openEventFragment()
         } else {
-            addEventPresenter.openEventFragment(v.cvMonthCalendar.selectedDate.calendar)
+            openCreateEventPresenter.openEventFragment(
+                v.cvMonthCalendar.selectedDate.calendar
+            )
         }
     }
 
     private fun onClickEvent(pos: Int) {
-        listEventPresenter.openEvent(pos)
+        val id = listEventPresenter.getId(pos)
+        // todo open
     }
 
     override fun onDateSelected(
         widget: MaterialCalendarView, date: CalendarDay,
-        selected: Boolean
-    ) {
-        listEventPresenter.onDateSelected(date.calendar)
+        selected: Boolean) {
+        currentDatePresenter.setCurrentDate(date.calendar)
     }
 
-    override fun onDateLongClick(widget: MaterialCalendarView, date: CalendarDay) {
-        addEventPresenter.openEventFragment(date.calendar)
+    override fun onDateLongClick(
+        widget: MaterialCalendarView, date: CalendarDay) {
+        openCreateEventPresenter.openEventFragment(date.calendar)
     }
 
-    override fun onMonthChanged(widget: MaterialCalendarView, date: CalendarDay) {
-        monthEventPresenter.onMonthChange(date.calendar)
+    override fun onMonthChanged(
+        widget: MaterialCalendarView, date: CalendarDay) {
+        monthDotPresenter.onMonthChange(date.calendar)
     }
 
     override fun openFragment(f: androidx.fragment.app.Fragment) {
@@ -142,7 +156,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
-    override fun setMonthEvents(it: HashSet<Calendar>) {
+    override fun setMonthDots(it: HashSet<Calendar>) {
         decorator.setDates(it)
         v.cvMonthCalendar.invalidateDecorators();
     }
@@ -153,9 +167,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         }
     }
 
-    override fun setCurrentDate(localStart: Calendar, localEnd: Calendar) {
-        // common day
-        v.cvMonthCalendar.selectedDate = CalendarDay.from(localStart)
-        v.tvSelectDate.text = fmt_day.format(localStart.time)
+    override fun setCurrentDate(date: Calendar) {
+        v.cvMonthCalendar.selectedDate = CalendarDay.from(date)
+        v.tvSelectDate.text = fmtCurDay.format(date.time)
+        listEventPresenter.onDateSelected(date)
     }
 }
