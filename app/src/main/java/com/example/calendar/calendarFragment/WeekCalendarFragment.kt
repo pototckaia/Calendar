@@ -26,7 +26,8 @@ import com.example.calendar.remove.OpenCreateEventPresenter
 import com.example.calendar.remove.OpenView
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
-    WeekEventView, OpenView, BackPressedView, WeekSaveStateView,
+    WeekEventView,
+    OpenView, BackPressedView, WeekSaveStateView,
     EventClickListener<EventWeekView>, MonthChangeListener<EventWeekView>,
     EventLongPressListener<EventWeekView>, EmptyViewClickListener {
 
@@ -55,14 +56,14 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     fun providerWeekEventPresenter(): WeekEventPresenter {
         val res = context!!.resources
         // todo replace
-        val color = listOf(
-            res.getColor(R.color.event_color_02),
-            res.getColor(R.color.event_color_03),
-            res.getColor(R.color.event_color_01)
-        )
+        val colorEvent = res.getColor(R.color.event_color_02)
+        val colorFake = res.getColor(R.color.event_color_03)
+
         return WeekEventPresenter(
+            // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao(),
-            color
+            colorEvent,
+            colorFake
         )
     }
 
@@ -110,7 +111,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        // todo add back
         v.tbWeekCalendar.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
         v.tbWeekCalendar.inflateMenu(R.menu.menu_week_calendar)
         v.tbWeekCalendar.setOnMenuItemClickListener {
@@ -128,10 +128,11 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onEventClick(data: EventWeekView, eventRect: RectF) {
-        // todo presenter ??
+        // todo need presenter ??
         openFragment(EditEventFragment.newInstance(data.event.id))
     }
 
+    // todo replace
     override fun onEventLongPress(data: EventWeekView, eventRect: RectF) {
         addEventPresenter.openFromTo(data.event.started_at, data.event.ended_at)
     }
@@ -142,19 +143,20 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
             List<WeekViewDisplayable<EventWeekView>> {
+        // todo remove flickering events
         weekSaveStatePresenter.onMonthChange()
         return weekEventPresenter.onMonthChange(startDate)
     }
 
-    override fun showLoadingEvents() {}
+    override fun showLoading() {}
 
-    override fun closeLoadingEvents() {}
+    override fun closeLoading() {}
 
     override fun showError(e: String) {
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
-    override fun notifyEventSetChanged() {
+    override fun notifySetChanged() {
         wv.notifyDataSetChanged()
     }
 

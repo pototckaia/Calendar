@@ -11,14 +11,14 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface WeekEventView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
-    fun notifyEventSetChanged()
+    fun notifySetChanged()
 
     @StateStrategyType(SkipStrategy::class)
     fun showError(e : String)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showLoadingEvents()
+    fun showLoading()
 
     @StateStrategyType(SkipStrategy::class)
-    fun closeLoadingEvents()
+    fun closeLoading()
 }

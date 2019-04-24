@@ -7,13 +7,11 @@ import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 @InjectViewState
 class WeekSaveStatePresenter: MvpPresenter<WeekSaveStateView>() {
 
-    private var isFirstUpdate = true;
-
     var firstVisibleHour : Int = 0
     val firstVisibleDay = getCalendarWithDefaultTimeZone()
     var hourHeight = 12.toFloat()
 
-    var isUpdateState = false
+    private var isUpdateState = false
 
     fun onCreateView() {
         isUpdateState = true

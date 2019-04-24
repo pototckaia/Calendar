@@ -15,7 +15,8 @@ import kotlin.collections.ArrayList
 @InjectViewState
 class WeekEventPresenter(
     private val eventRepository: EventRepository,
-    private val colors: List<Int>
+    private val colorEvent: Int,
+    private val colorFake: Int
 ) : BaseMvpSubscribe<WeekEventView>() {
 
     private val events : ArrayList<EventWeekView> = arrayListOf()
@@ -36,20 +37,21 @@ class WeekEventPresenter(
         monthEnd.set(Calendar.DATE, monthStart.getActualMaximum(Calendar.DATE))
         monthEnd.setHourOfDayAndMinute(24, 0)
 
-        if (isFirstUpdate || !containsEvents(pair)) {
+        if (isFirstUpdate || !isLoad(pair)) {
             isFirstUpdate = false
             monthsLoad.add(pair)
             loadEvents(monthStart, monthEnd);
         }
+
         return events.filter { isFromPeriod(it, monthStart, monthEnd) }
     }
 
-    private fun containsEvents(yearAndMonth: Pair<Int, Int>) : Boolean {
+    private fun isLoad(yearAndMonth: Pair<Int, Int>) : Boolean {
         return monthsLoad.contains(yearAndMonth)
     }
 
     private fun isFromPeriod(it: EventWeekView, start: Calendar, end: Calendar) : Boolean {
-        //        (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
+        // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
         return (it.event.started_at >= start && it.event.ended_at < end) ||
                 (it.event.started_at < end && it.event.ended_at > start)
     }
@@ -58,22 +60,24 @@ class WeekEventPresenter(
         onLoadingStart()
         val subscription = eventRepository.fromTo(monthStart, monthEnd)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ repositories ->
-                onLoadingStop()
-                onLoadingSuccess(repositories, monthStart, monthEnd)
-            }, { error ->
-                onLoadingStop()
-                onLoadingFailed(error)
-            });
+            .subscribe(
+                { repositories ->
+                    onLoadingStop()
+                    onLoadingSuccess(repositories, monthStart, monthEnd)
+                },
+                { error ->
+                    onLoadingStop()
+                    onLoadingFailed(error)
+                });
         unsubscribeOnDestroy(subscription)
     }
 
     private fun onLoadingStart() {
-        viewState.showLoadingEvents()
+        viewState.showLoading()
     }
 
     private fun onLoadingStop() {
-        viewState.closeLoadingEvents()
+        viewState.closeLoading()
     }
 
     private fun onLoadingFailed(error: Throwable) {
@@ -82,14 +86,12 @@ class WeekEventPresenter(
 
     private fun onLoadingSuccess(rep: List<EventTable>, start: Calendar, end: Calendar) {
         // remove all what load from with period
-        events.removeAll  {
-            isFromPeriod(it, start, end)
-        }
+        events.removeAll { isFromPeriod(it, start, end) }
 
         rep.forEach {
-            events.add(EventWeekView(it, colors[0]))
+            events.add(EventWeekView(it, colorEvent))
         }
-        viewState.notifyEventSetChanged()
+        viewState.notifySetChanged()
     }
 
 }
