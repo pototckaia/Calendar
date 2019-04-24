@@ -15,9 +15,4 @@ interface ListEventView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showError(e : String)
-
-//    fun setCurrentDate(localStart: Calendar, localEnd: Calendar)
-
-//    @StateStrategyType(OneExecutionStateStrategy::class)
-//    fun openFragment(f: Fragment)
 }

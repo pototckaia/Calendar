@@ -35,7 +35,7 @@ class ListEventPresenter(
     fun getId(pos: Int): String {
         if (pos >= events.size) {
             // todo hardcore
-            throw IllegalArgumentException("Position greater list events size ${events.size}")
+            throw IllegalArgumentException("Position greater list size ${events.size}")
         }
         return events[pos].id
     }

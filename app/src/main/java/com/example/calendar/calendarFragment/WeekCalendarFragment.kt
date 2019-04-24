@@ -22,6 +22,7 @@ import java.util.Calendar
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.remove.BackPressedPresenter
 import com.example.calendar.remove.BackPressedView
+import com.example.calendar.remove.OpenCreateEventPresenter
 import com.example.calendar.remove.OpenView
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
@@ -132,15 +133,11 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onEventLongPress(data: EventWeekView, eventRect: RectF) {
-        addEventPresenter.openEventFragment(data.event.started_at, data.event.ended_at)
+        addEventPresenter.openFromTo(data.event.started_at, data.event.ended_at)
     }
 
     override fun onEmptyViewClicked(time: Calendar) {
-        // todo presenter ??
-        time.set(Calendar.MINUTE, 0)
-        val end = time.clone() as Calendar
-        end.add(Calendar.HOUR_OF_DAY, 1)
-        addEventPresenter.openEventFragment(time, end)
+        addEventPresenter.openOnTime(time)
     }
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):

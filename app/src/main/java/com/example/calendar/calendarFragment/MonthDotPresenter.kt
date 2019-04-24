@@ -26,9 +26,10 @@ class MonthDotPresenter(
 
     fun onMonthChange(month: Calendar) {
         curMonth.timeInMillis = month.timeInMillis
-        loadEvents() // TODO how work unsubsribe
+        loadEvents()
     }
 
+    // TODO how work unsubsribe
     private fun loadEvents() {
         val monthStart = getCalendarWithDefaultTimeZone()
         monthStart.timeInMillis = curMonth.timeInMillis
@@ -57,7 +58,7 @@ class MonthDotPresenter(
 
     private fun onLoadingSuccess(rep: List<EventTable>) {
         dates.clear()
-        rep.forEach { it ->
+        rep.forEach {
             val c = it.started_at.clone() as Calendar
             while (c < it.ended_at) {
                 dates.add(c.clone() as Calendar)

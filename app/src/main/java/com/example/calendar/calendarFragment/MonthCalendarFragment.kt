@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.example.calendar.remove.OpenCreateEventPresenter
 
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
@@ -115,9 +116,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickAdfAddNote() {
         if (v.cvMonthCalendar.selectedDate == null) {
-            openCreateEventPresenter.openEventFragment()
+            openCreateEventPresenter.openOnTodayDay()
         } else {
-            openCreateEventPresenter.openEventFragment(
+            openCreateEventPresenter.openOnDay(
                 v.cvMonthCalendar.selectedDate.calendar
             )
         }
@@ -129,14 +130,13 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun onDateSelected(
-        widget: MaterialCalendarView, date: CalendarDay,
-        selected: Boolean) {
+        widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
         currentDatePresenter.setCurrentDate(date.calendar)
     }
 
     override fun onDateLongClick(
         widget: MaterialCalendarView, date: CalendarDay) {
-        openCreateEventPresenter.openEventFragment(date.calendar)
+        openCreateEventPresenter.openOnDay(date.calendar)
     }
 
     override fun onMonthChanged(
