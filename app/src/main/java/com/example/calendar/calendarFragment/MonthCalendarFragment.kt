@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.remove.OpenCreateEventPresenter
 
 
@@ -126,7 +127,8 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickEvent(pos: Int) {
         val id = listEventPresenter.getId(pos)
-        // todo open
+        // todo need presenter ???
+        openFragment(EditEventFragment.newInstance(id))
     }
 
     override fun onDateSelected(
