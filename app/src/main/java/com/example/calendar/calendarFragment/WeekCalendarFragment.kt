@@ -17,8 +17,6 @@ import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import java.util.Calendar
-
-
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.remove.BackPressedPresenter
 import com.example.calendar.remove.BackPressedView
@@ -29,19 +27,19 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     WeekEventView,
     OpenView, BackPressedView, WeekSaveStateView,
     EventClickListener<EventWeekView>, MonthChangeListener<EventWeekView>,
-    EventLongPressListener<EventWeekView>, EmptyViewClickListener {
+    EmptyViewLongPressListener, EmptyViewClickListener {
 
-    enum class TypeView(val dayVisible: Int) {
-        DAY(1),
-        THREE_DAY(3),
-        WEEK(7)
+    enum class TypeView(val dayVisible: Int, val maxIntersection: Int) {
+        DAY(1, 4),
+        THREE_DAY(3, 3),
+        WEEK(7, 2)
     }
 
     companion object {
         fun newInstance(type: TypeView): WeekCalendarFragment {
             val args = Bundle()
             args.run {
-                this.putInt(TYPE_VIEW_KEY, type.dayVisible)
+                this.putString(TYPE_VIEW_KEY, type.toString())
             }
             val f = WeekCalendarFragment()
             f.arguments = args
@@ -54,16 +52,16 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     @ProvidePresenter
     fun providerWeekEventPresenter(): WeekEventPresenter {
-        val res = context!!.resources
-        // todo replace
-        val colorEvent = res.getColor(R.color.event_color_02)
-        val colorFake = res.getColor(R.color.event_color_03)
-
+        val resources = context!!.resources
+        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY))
         return WeekEventPresenter(
             // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao(),
-            colorEvent,
-            colorFake
+            typeView.maxIntersection,
+            resources.getColor(R.color.event),
+            resources.getColor(R.color.intersection_event),
+            resources.getColor(R.color.fake_event),
+            resources.getString(R.string.title_fake_event)
         )
     }
 
@@ -71,7 +69,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     lateinit var backPressedPresenter: BackPressedPresenter
 
     @InjectPresenter
-    lateinit var addEventPresenter: OpenCreateEventPresenter
+    lateinit var openCreateEventPresenter: OpenCreateEventPresenter
 
     @InjectPresenter
     lateinit var weekSaveStatePresenter: WeekSaveStatePresenter
@@ -92,13 +90,16 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         )
         initToolBar()
 
+        // todo make global
+        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY))
+
         wv = v.findViewById(R.id.wvCalendar)
         wv.setOnEventClickListener(this)
         wv.setMonthChangeListener(this)
-        wv.setEventLongPressListener(this)
+        wv.emptyViewLongPressListener = this
         wv.emptyViewClickListener = this
         if (savedInstanceState == null) {
-            wv.numberOfVisibleDays = arguments!!.getInt(TYPE_VIEW_KEY)
+            wv.numberOfVisibleDays = typeView.dayVisible
         }
         weekSaveStatePresenter.onCreateView()
 
@@ -129,16 +130,19 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     override fun onEventClick(data: EventWeekView, eventRect: RectF) {
         // todo need presenter ??
-        openFragment(EditEventFragment.newInstance(data.event.id))
+        if (data.isFake) {
+            // todo open fragment
+        } else {
+            openFragment(EditEventFragment.newInstance(data.event.id))
+        }
     }
 
-    // todo replace
-    override fun onEventLongPress(data: EventWeekView, eventRect: RectF) {
-        addEventPresenter.openFromTo(data.event.started_at, data.event.ended_at)
+    override fun onEmptyViewLongPress(time: Calendar) {
+        openCreateEventPresenter.openOnTime(time)
     }
 
     override fun onEmptyViewClicked(time: Calendar) {
-        addEventPresenter.openOnTime(time)
+        openCreateEventPresenter.openOnTime(time)
     }
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):

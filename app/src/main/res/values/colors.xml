@@ -7,12 +7,13 @@
     <color name="colorWhite">#f0f0f0</color>
     <color name="colorLime">#85E7D5</color>
     <color name="colorDark">#3C5455</color>
+
     <color name="toolbarBackground">#09233d</color>
 
     <color name="orange">#f8b552</color>
     <color name="gray">#E2E2E2</color>
 
-    <color name="event_color_01">#59dbe0</color>
-    <color name="event_color_02">#f57f68</color>
-    <color name="event_color_03">#87d288</color>
+    <color name="event">#59dbe0</color>
+    <color name="intersection_event">#f57f68</color>
+    <color name="fake_event">#87d288</color>
 </resources>

@@ -6,6 +6,7 @@ import com.example.calendar.data.EventTable
 
 class EventWeekView (
     var event: EventTable,
+    val isFake: Boolean,
     val color: Int
 ) : WeekViewDisplayable<EventWeekView> {
 

@@ -26,6 +26,7 @@ class EditEventPresenter(private val eventRepository: EventRepository,
             .subscribe({ repositories ->
                 onLoadingSuccess(repositories)
             }, { error ->
+                // todo when not exist
                 onLoadingFailed(error)
             });
         unsubscribeOnDestroy(subscription)

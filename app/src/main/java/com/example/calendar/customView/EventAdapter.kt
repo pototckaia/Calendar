@@ -22,6 +22,7 @@ class EventViewHolder(
     }
 
     fun bind(e: EventTable, fmt: SimpleDateFormat) {
+        // todo update text
         val text = "${e.name}\n " +
                 "${fmt.format(e.started_at.time)} - " +
                 "${fmt.format(e.ended_at.time)} "

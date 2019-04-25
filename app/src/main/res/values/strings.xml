@@ -9,4 +9,5 @@
     <string name="label_event_update">Сохранить</string>
     <string name="label_event_delete">Удалить</string>
     <string name="today">Сегодня</string>
+    <string name="title_fake_event">...</string>
 </resources>
