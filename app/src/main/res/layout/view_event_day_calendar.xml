@@ -3,13 +3,15 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tool="http://schemas.android.com/tools"
+
         android:id="@+id/clItemEventContainer"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
     <TextView
-            android:id="@+id/tvItemEventTitle"
+            android:id="@+id/tvEventTitle"
             android:layout_width="0dp"
             app:layout_constraintWidth_default="wrap"
             android:layout_height="0dp"
@@ -17,10 +19,25 @@
             android:textSize="20sp"
             android:gravity="center"
 
-            tool:text="Event"
+            tool:text="Title Event"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/tvEventHourDuration"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="wrap"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_default="spread"
+            android:textSize="18sp"
+            android:gravity="center"
+
+            tool:text="Hour Duration Event"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvEventTitle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

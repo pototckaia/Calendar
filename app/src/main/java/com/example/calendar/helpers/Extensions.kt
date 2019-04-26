@@ -45,21 +45,20 @@ fun Calendar.setHourOfDayAndMinute(hourOfDay: Int, minute: Int) {
     this.set(Calendar.MILLISECOND, 0)
 }
 
+ fun Calendar.eqDay(c: Calendar) : Boolean {
+     return this.get(Calendar.YEAR) == c.get(Calendar.YEAR) &&
+             this.get(Calendar.MONTH) == c.get(Calendar.MONTH) &&
+             this.get(Calendar.DAY_OF_MONTH) == c.get(Calendar.DAY_OF_MONTH)
+ }
 
-fun <T> wrapAsync(
-    observable: Observable<T>,
-    scheduler: Scheduler = Schedulers.io()
-): Observable<T> {
-    return observable
-        .subscribeOn(scheduler)
-        .observeOn(AndroidSchedulers.mainThread())
+fun Calendar.lessDay(day: Calendar) : Boolean {
+    val d = day.cloneWithDefaultTimeZone()
+    d.setHourOfDayAndMinute(0, 0)
+    return this < d
 }
 
-fun <T> wrapAsync(
-    observable: Flowable<T>,
-    scheduler: Scheduler = Schedulers.io()
-): Flowable<T> {
-    return observable
-        .subscribeOn(scheduler)
-        .observeOn(AndroidSchedulers.mainThread())
+fun Calendar.greaterDay(day: Calendar) : Boolean {
+    val d = day.cloneWithDefaultTimeZone()
+    d.setHourOfDayAndMinute(24, 0)
+    return this >= d
 }
