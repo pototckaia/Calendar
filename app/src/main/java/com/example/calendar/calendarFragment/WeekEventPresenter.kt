@@ -148,7 +148,7 @@ class WeekEventPresenter(
             for (j in 0 until inter.size) {
                 if (ends.size == maxIntersection - 1) {
                     val iMin = ends.withIndex().minBy { it.value }?.index
-                    if (inter[j].started_at <= ends[iMin!!]) {
+                    if (inter[j].started_at < ends[iMin!!]) {
                         isAddFake = true
                     } else {
                         ends[iMin].timeInMillis = inter[j].ended_at.timeInMillis
