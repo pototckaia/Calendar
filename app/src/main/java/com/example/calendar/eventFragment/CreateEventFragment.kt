@@ -41,6 +41,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideCreateEventPresenter(): CreateEventPresenter {
         return CreateEventPresenter(
+            // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao()
         )
     }
@@ -62,11 +63,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     private lateinit var v: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,9 +71,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
         super.onCreateView(inflater, container, savedInstanceState)
         v = inflater.inflate(
             R.layout.fragment_create_event,
-            container, false
-        )
+            container, false)
+
         initToolBar()
+
         v.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
         v.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
         v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
@@ -87,9 +84,9 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
+        v.tbNoteCreate.setNavigationOnClickListener { backPressedPresenter.onBackPressed() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_enent_create)
-        v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener() {
+        v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
             createEventPresenter.onSaveEvent(
                 view!!.etTextEvent.text.toString(),
                 dateClickPresenter.startEvent,
@@ -97,11 +94,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
                 backPressedPresenter)
             true
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        setHasOptionsMenu(true)
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun updateDateInfo(begin: Calendar, end: Calendar) {

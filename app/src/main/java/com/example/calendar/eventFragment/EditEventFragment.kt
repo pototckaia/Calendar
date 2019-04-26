@@ -47,6 +47,7 @@ class EditEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideEditEventPresenter(): EditEventPresenter {
         return EditEventPresenter(
+            // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao(),
             arguments!!.getString(EVENT_ID_KEY)!!
         )
@@ -54,11 +55,6 @@ class EditEventFragment : MvpAppCompatFragment(),
 
 
     private lateinit var v: View
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +66,9 @@ class EditEventFragment : MvpAppCompatFragment(),
             R.layout.fragment_create_event,
             container, false
         )
+
         initToolBar()
+
         v.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
         v.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
         v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }

@@ -14,19 +14,18 @@ class CreateEventPresenter(
     private val eventRepository: EventRepository
 ) : BaseMvpSubscribe<CreateEventInfoView>() {
 
-    // TODO stop repeat press save
     fun onSaveEvent(
         title: String, startEvent: Calendar, endEvent: Calendar,
+        // todo remove
         back: BackPressedPresenter
     ) {
         val event = EventTable(name = title, started_at = startEvent, ended_at = endEvent)
 
         val subscription = eventRepository.insert(event)
             .subscribeOn(Schedulers.io())
-            .subscribe() {
+            .subscribe {
                 back.onBackPressed()
             }
         unsubscribeOnDestroy(subscription)
-
     }
 }

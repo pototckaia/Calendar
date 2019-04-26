@@ -6,53 +6,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/tbNoteCreate"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:background="@color/toolbarBackground"
-                android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
-                app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="?attr/homeAsUpIndicator">
-        </androidx.appcompat.widget.Toolbar>
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbNoteCreate"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/toolbarBackground"
+            android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="?attr/homeAsUpIndicator">
+    </androidx.appcompat.widget.Toolbar>
 
 
-        <EditText
-                android:id="@+id/etTextEvent"
-                android:layout_width="0dp"
-                app:layout_constraintWidth_default="spread"
-                android:layout_height="wrap_content"
-                android:hint="@string/default_event_text"
-                android:textSize="24sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tbNoteCreate"
-                android:inputType=""/>
+    <EditText
+            android:id="@+id/etTextEvent"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+            android:hint="@string/default_event_text"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tbNoteCreate"
+            android:inputType=""
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
-        <com.example.calendar.customView.DayHourView
-                android:id="@+id/vBegin"
-                android:layout_width="0dp"
-                app:layout_constraintWidth_default="spread"
-                android:layout_height="wrap_content"
+    <com.example.calendar.customView.DayHourView
+            android:id="@+id/vBegin"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
 
-                app:label_name="@string/begin_label_name"
+            app:label_name="@string/begin_label_name"
 
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etTextEvent"
-                app:layout_constraintBottom_toTopOf="@id/vEnd">
-        </com.example.calendar.customView.DayHourView>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etTextEvent"
+            app:layout_constraintBottom_toTopOf="@id/vEnd"
+            android:paddingLeft="0dp" android:paddingRight="10dp">
+    </com.example.calendar.customView.DayHourView>
 
-        <com.example.calendar.customView.DayHourView
-                android:id="@+id/vEnd"
-                android:layout_width="0dp"
-                app:layout_constraintWidth_default="spread"
-                android:layout_height="wrap_content"
-                app:label_name="@string/end_label_name"
+    <com.example.calendar.customView.DayHourView
+            android:id="@+id/vEnd"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+            app:label_name="@string/end_label_name"
 
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vBegin">
-        </com.example.calendar.customView.DayHourView>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vBegin"
+            android:paddingLeft="0dp" android:paddingRight="10dp">
+    </com.example.calendar.customView.DayHourView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

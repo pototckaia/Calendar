@@ -15,7 +15,6 @@ import java.util.*
 class DateClickPresenter () : MvpPresenter<DateClickView>() {
 
     val startEvent = getCalendarWithDefaultTimeZone()
-
     val endEvent = getCalendarWithDefaultTimeZone()
 
     init {
@@ -35,9 +34,7 @@ class DateClickPresenter () : MvpPresenter<DateClickView>() {
     }
 
     private fun updateView() {
-        viewState.updateDateInfo(
-            startEvent,
-            endEvent)
+        viewState.updateDateInfo(startEvent, endEvent)
     }
 
     // todo how remove this shit

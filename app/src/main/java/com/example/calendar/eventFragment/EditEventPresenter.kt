@@ -10,9 +10,10 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 @InjectViewState
-class EditEventPresenter(private val eventRepository: EventRepository,
-                         private val id: String)
-    : BaseMvpSubscribe<EditEventView>() {
+class EditEventPresenter(
+    private val eventRepository: EventRepository,
+    private val id: String
+) : BaseMvpSubscribe<EditEventView>() {
 
     private lateinit var event: EventTable
 
@@ -23,12 +24,14 @@ class EditEventPresenter(private val eventRepository: EventRepository,
     private fun loadEvent() {
         val subscription = eventRepository.getUserById(id)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ repositories ->
-                onLoadingSuccess(repositories)
-            }, { error ->
-                // todo when not exist
-                onLoadingFailed(error)
-            });
+            .subscribe(
+                { repositories ->
+                    onLoadingSuccess(repositories)
+                },
+                { error ->
+                    // todo when not exist
+                    onLoadingFailed(error.toString())
+                });
         unsubscribeOnDestroy(subscription)
     }
 
@@ -42,13 +45,15 @@ class EditEventPresenter(private val eventRepository: EventRepository,
         val sub = eventRepository.update(event)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                viewState.updateEventInfo(event)
-            }, { error->
-                onLoadingFailed(error)
-            })
+            .subscribe(
+                {
+                    viewState.updateEventInfo(event)
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
         unsubscribeOnDestroy(sub)
-     }
+    }
 
     fun onDelete(back: BackPressedPresenter) {
         val sub = eventRepository.delete(event)
@@ -57,19 +62,20 @@ class EditEventPresenter(private val eventRepository: EventRepository,
             .subscribe(
                 {
                     back.onBackPressed()
-                }, { error->
-                    onLoadingFailed(error)
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
                 })
         unsubscribeOnDestroy(sub)
     }
 
-    private fun onLoadingFailed(error: Throwable) {
-        viewState.showError(error.toString());
+    private fun onLoadingFailed(error: String) {
+        viewState.showError(error);
     }
 
     private fun onLoadingSuccess(rep: List<EventTable>) {
         if (rep.isEmpty()) {
-
+            onLoadingFailed("Event not exist")
         } else {
             event = rep.first()
             viewState.updateEventInfo(event)
