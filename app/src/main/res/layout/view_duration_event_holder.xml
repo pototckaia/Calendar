@@ -18,6 +18,15 @@
             tool:text="Title Event"/>
 
     <TextView
+        android:id="@+id/tvEventDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:gravity="center"
+
+        tool:text="Day Duration Event"/>
+
+    <TextView
             android:id="@+id/tvEventHourDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
