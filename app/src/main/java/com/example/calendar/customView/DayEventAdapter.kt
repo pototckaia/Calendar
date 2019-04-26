@@ -28,9 +28,14 @@ class DayEventViewHolder(
     // todo hard text
     private val rangeOut = "---"
     private val allDay = "Весь день"
+    private val emptyTitle = "< Нет названия >"
 
     fun bind(e: EventTable, day: Calendar) {
-        view.tvEventTitle.text = e.name
+        if (e.name.isEmpty()) {
+            view.tvEventTitle.text = emptyTitle
+        } else {
+            view.tvEventTitle.text = e.name
+        }
 
         var first = fmtHour.format(e.started_at.time)
         var second = fmtHour.format(e.ended_at.time)
