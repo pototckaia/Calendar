@@ -101,10 +101,10 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
         val linerLayoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
-            v.rvEventsMonthCalendar.context,
+            v.rvEvents.context,
             linerLayoutManager.orientation
         )
-        v.rvEventsMonthCalendar.run {
+        v.rvEvents.run {
             this.adapter = DayEventAdapter { _, position ->
                 onClickEvent(position)
             }
@@ -164,7 +164,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     override fun setEvents(it: List<EventTable>) {
-        v.rvEventsMonthCalendar.adapter.run {
+        v.rvEvents.adapter.run {
             (this as DayEventAdapter).setEvents(it, v.cvMonthCalendar.selectedDate.calendar)
         }
     }

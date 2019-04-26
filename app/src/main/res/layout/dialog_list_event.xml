@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/tvDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="26 - 27 апрель 2019"
+
+            android:textSize="23sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"/>
+
+    <TextView
+            android:id="@+id/tvHour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="10:00 - 12:00"
+
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"/>
+
+    <View
+            android:background="@color/colorGrey"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divide_height"/>
+
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvEventsMonthCalendar"
+            android:id="@+id/rvEvents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
 </LinearLayout>

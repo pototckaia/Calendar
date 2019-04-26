@@ -15,10 +15,9 @@ import com.example.calendar.calendarFragment.ListEventPresenter
 import com.example.calendar.calendarFragment.ListEventView
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
-import com.example.calendar.helpers.END_LIST_EVENT_KEY
-import com.example.calendar.helpers.START_LIST_EVENT_KEY
+import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
-import java.util.Calendar
+import java.util.*
 
 class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
 
@@ -48,6 +47,8 @@ class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
 
 
     lateinit var v: View
+    private val start = getCalendarWithDefaultTimeZone()
+    private val end = getCalendarWithDefaultTimeZone()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -58,17 +59,24 @@ class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
 
         val linerLayoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
-            v.rvEventsMonthCalendar.context,
+            v.rvEvents.context,
             linerLayoutManager.orientation
         )
-        v.rvEventsMonthCalendar.run {
-            // todo replace
-            this.adapter = DayEventAdapter { _, position ->
+        // todo add dot
+        v.rvEvents.run {
+            this.adapter = DurationEventAdapter { _, position ->
                 onClickEvent(position)
             }
             this.layoutManager = linerLayoutManager
             this.addItemDecoration(dividerItemDecoration)
         }
+
+        val b = savedInstanceState ?: arguments!!
+
+        start.timeInMillis = b.getLong(START_LIST_EVENT_KEY)
+        end.timeInMillis = b.getLong(END_LIST_EVENT_KEY)
+        setDuration(start, end)
+
 
         return AlertDialog.Builder(activity)
             .setTitle("")
@@ -77,6 +85,12 @@ class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
             .create()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(START_LIST_EVENT_KEY, start.timeInMillis)
+        outState.putLong(END_LIST_EVENT_KEY, end.timeInMillis)
+    }
+
+    // todo add open
     private fun onClickEvent(pos : Int) {}
 
     override fun showError(e: String) {
@@ -84,9 +98,13 @@ class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
     }
 
     override fun setEvents(it: List<EventTable>) {
-        // todo replace
-        v.rvEventsMonthCalendar.adapter.run {
-            (this as DayEventAdapter).setEvents(it, it[0].started_at)
+        v.rvEvents.adapter.run {
+            (this as DurationEventAdapter).setEvents(it, start, end)
         }
+    }
+
+    private fun setDuration(start: Calendar, end: Calendar) {
+        v.tvHour.text = getDiff(start, end, "HH:mm")
+        v.tvDay.text = getDayDiff(start, end)
     }
 }

@@ -94,6 +94,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         // todo make global
         val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
 
+        // todo header fix
         wv = v.findViewById(R.id.wvCalendar)
         wv.setOnEventClickListener(this)
         wv.setMonthChangeListener(this)
@@ -150,6 +151,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
             List<WeekViewDisplayable<EventWeekView>> {
         // todo remove flickering events
+        // todo not work in 2018
         weekSaveStatePresenter.onMonthChange()
         return weekEventPresenter.onMonthChange(startDate)
     }
