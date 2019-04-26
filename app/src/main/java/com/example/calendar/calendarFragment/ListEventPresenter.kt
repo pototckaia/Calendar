@@ -22,6 +22,7 @@ class ListEventPresenter(
     constructor(e: EventRepository, startTime: Long, endTime: Long) : this(e) {
         start.timeInMillis = startTime
         end.timeInMillis = endTime
+        loadEvents()
     }
 
     // todo not work on two click
