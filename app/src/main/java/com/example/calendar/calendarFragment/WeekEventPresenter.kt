@@ -146,7 +146,7 @@ class WeekEventPresenter(
             val ends = arrayListOf<Calendar>()
             var isAddFake = false;
             for (j in 0 until inter.size) {
-                if (ends.size == maxIntersection) {
+                if (ends.size == maxIntersection - 1) {
                     val iMin = ends.withIndex().minBy { it.value }?.index
                     if (inter[j].started_at <= ends[iMin!!]) {
                         isAddFake = true
