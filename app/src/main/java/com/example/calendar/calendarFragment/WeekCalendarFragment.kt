@@ -18,6 +18,7 @@ import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import java.util.Calendar
 import com.example.calendar.customView.EventWeekView
+import com.example.calendar.customView.ListEventDialog
 import com.example.calendar.remove.BackPressedPresenter
 import com.example.calendar.remove.BackPressedView
 import com.example.calendar.remove.OpenCreateEventPresenter
@@ -53,7 +54,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun providerWeekEventPresenter(): WeekEventPresenter {
         val resources = context!!.resources
-        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY))
+        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
         return WeekEventPresenter(
             // todo inject
             EventRoomDatabase.getInstance(context!!).eventDao(),
@@ -91,7 +92,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         initToolBar()
 
         // todo make global
-        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY))
+        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
 
         wv = v.findViewById(R.id.wvCalendar)
         wv.setOnEventClickListener(this)
@@ -112,7 +113,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbWeekCalendar.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
+        v.tbWeekCalendar.setNavigationOnClickListener { backPressedPresenter.onBackPressed() }
         v.tbWeekCalendar.inflateMenu(R.menu.menu_week_calendar)
         v.tbWeekCalendar.setOnMenuItemClickListener {
             onItemSelected(it);
@@ -131,7 +132,8 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     override fun onEventClick(data: EventWeekView, eventRect: RectF) {
         // todo need presenter ??
         if (data.isFake) {
-            // todo open fragment
+            val d = ListEventDialog.newInstance()
+            d.show(activity?.supportFragmentManager, "list-dialog")
         } else {
             openFragment(EditEventFragment.newInstance(data.event.id))
         }
