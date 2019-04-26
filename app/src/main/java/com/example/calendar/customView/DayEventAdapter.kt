@@ -6,7 +6,7 @@ import android.view.View
 import com.example.calendar.R
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.*
-import kotlinx.android.synthetic.main.view_event_day_calendar.view.*
+import kotlinx.android.synthetic.main.view_day_event_holder.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,7 +66,7 @@ class DayEventAdapter(
         parent: ViewGroup,
         viewType: Int
     ): DayEventViewHolder {
-        val view = parent.inflate(R.layout.view_event_day_calendar, false)
+        val view = parent.inflate(R.layout.view_day_event_holder, false)
         return DayEventViewHolder(view, onClickListener)
     }
 
