@@ -98,10 +98,10 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         outState.putLong(END_LIST_EVENT_KEY, end.timeInMillis)
     }
 
-    // todo add open
     private fun onClickEvent(pos : Int) {
         val id = listEventPresenter.getId(pos)
         router.navigateTo(Screens.EventScreen(id))
+        dismiss()
     }
 
     override fun showError(e: String) {
