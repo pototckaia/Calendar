@@ -13,15 +13,13 @@ import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.EVENT_ID_KEY
-import com.example.calendar.remove.BackPressedPresenter
-import com.example.calendar.remove.BackPressedView
+import com.example.calendar.navigation.CiceroneApplication
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import java.util.Calendar
 
 
 class EditEventFragment : MvpAppCompatFragment(),
-    BackPressedView, DateClickView,
-    EditEventView {
+    DateClickView, EditEventView {
 
     companion object {
         fun newInstance(id: String): EditEventFragment {
@@ -36,9 +34,6 @@ class EditEventFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var backPressedPresenter: BackPressedPresenter
-
-    @InjectPresenter
     lateinit var dateClickPresenter: DateClickPresenter
 
     @InjectPresenter
@@ -48,11 +43,14 @@ class EditEventFragment : MvpAppCompatFragment(),
     fun provideEditEventPresenter(): EditEventPresenter {
         return EditEventPresenter(
             // todo inject
+            router,
             EventRoomDatabase.getInstance(context!!).eventDao(),
             arguments!!.getString(EVENT_ID_KEY)!!
         )
     }
 
+    // todo inject
+    private val router = CiceroneApplication.instance.router
 
     private lateinit var v: View
 
@@ -78,7 +76,7 @@ class EditEventFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbNoteCreate.setNavigationOnClickListener() { backPressedPresenter.onBackPressed() }
+        v.tbNoteCreate.setNavigationOnClickListener() { router.exit() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_event_edit)
         v.tbNoteCreate.setOnMenuItemClickListener {
             onItemSelected(it);
@@ -95,8 +93,7 @@ class EditEventFragment : MvpAppCompatFragment(),
                     dateClickPresenter.endEvent)
             }
             R.id.actionDelete -> {
-                editEventPresenter.onDelete(
-                    backPressedPresenter)
+                editEventPresenter.onDelete()
             }
         }
     }
@@ -131,9 +128,4 @@ class EditEventFragment : MvpAppCompatFragment(),
         )
         tpd.show()
     }
-
-    override fun finishView() {
-        activity!!.supportFragmentManager.popBackStack()
-    }
-
 }

@@ -24,6 +24,8 @@ v.archLifecycleVersion = "2.0.0"
 v.rxJavaVersion = "2.1.3"
 v.rxAndroidVersion = "2.0.1"
 
+v.ciceroneVersion = "5.0.0"
+
 v.jUnitVersion = "4.12"
 v.testRunnerVersion = "1.1.0"
 v.testEspressoCoreVersion = "3.1.0"
@@ -72,4 +74,8 @@ ext.deps.test = [
         junit       : "junit:junit:$v.jUnitVersion",
         testRunner  : "androidx.test:runner:$v.testRunnerVersion",
         testEspresso: "androidx.test.espresso:espresso-core:$v.testEspressoCoreVersion",
+]
+
+ext.deps.navigation = [
+        cicerone: "ru.terrakok.cicerone:cicerone:$v.ciceroneVersion"
 ]

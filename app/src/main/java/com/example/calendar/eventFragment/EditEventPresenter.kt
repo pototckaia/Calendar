@@ -4,13 +4,14 @@ import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.BaseMvpSubscribe
-import com.example.calendar.remove.BackPressedPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import ru.terrakok.cicerone.Router
 import java.util.*
 
 @InjectViewState
 class EditEventPresenter(
+    private val router: Router,
     private val eventRepository: EventRepository,
     private val id: String
 ) : BaseMvpSubscribe<EditEventView>() {
@@ -23,6 +24,7 @@ class EditEventPresenter(
 
     private fun loadEvent() {
         val subscription = eventRepository.getUserById(id)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
@@ -55,13 +57,13 @@ class EditEventPresenter(
         unsubscribeOnDestroy(sub)
     }
 
-    fun onDelete(back: BackPressedPresenter) {
+    fun onDelete() {
         val sub = eventRepository.delete(event)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    back.onBackPressed()
+                    router.exit()
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -75,7 +77,7 @@ class EditEventPresenter(
 
     private fun onLoadingSuccess(rep: List<EventTable>) {
         if (rep.isEmpty()) {
-            onLoadingFailed("Event not exist")
+
         } else {
             event = rep.first()
             viewState.updateEventInfo(event)

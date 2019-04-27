@@ -1,20 +1,19 @@
-package com.example.calendar.remove
+package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.helpers.*
+import com.example.calendar.navigation.Screens
+import ru.terrakok.cicerone.Router
 import java.util.Calendar
 
 
 @InjectViewState
-class OpenCreateEventPresenter : MvpPresenter<OpenView>() {
+class OpenNewEventPresenter(private val router: Router) : MvpPresenter<OpenNewEventView>() {
 
     fun openFromTo(begin: Calendar, end: Calendar) {
-        val fragment = CreateEventFragment.newInstance(begin, end)
-        viewState.openFragment(fragment)
+        router.navigateTo(Screens.NewEventScreen(begin, end))
     }
-
 
     fun openOnDay(day: Calendar) {
         val start = day.cloneWithDefaultTimeZone()

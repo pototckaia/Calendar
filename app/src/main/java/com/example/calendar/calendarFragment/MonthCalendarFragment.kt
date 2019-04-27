@@ -11,7 +11,6 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
-import com.example.calendar.remove.OpenView
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -25,12 +24,12 @@ import java.text.SimpleDateFormat
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.calendar.eventFragment.EditEventFragment
-import com.example.calendar.remove.OpenCreateEventPresenter
+import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.navigation.Screens
 
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
-    OpenView, CurrentDateView,
+    OpenNewEventView, CurrentDateView,
     ListEventView, MonthDotView,
     OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener {
 
@@ -40,8 +39,16 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         }
     }
 
+    // todo inject
+    private val router = CiceroneApplication.instance.router
+
     @InjectPresenter
-    lateinit var openCreateEventPresenter: OpenCreateEventPresenter
+    lateinit var openNewEventPresenter: OpenNewEventPresenter
+
+    @ProvidePresenter
+    fun provideOpenNewEventPresenter(): OpenNewEventPresenter {
+        return OpenNewEventPresenter(router)
+    }
 
     @InjectPresenter
     lateinit var currentDatePresenter: CurrentDatePresenter
@@ -71,7 +78,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     private lateinit var v: View
 
     private val decorator = MonthDotDecorator()
-
     private val fmtCurDay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreateView(
@@ -117,9 +123,9 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickAdfAddNote() {
         if (v.cvMonthCalendar.selectedDate == null) {
-            openCreateEventPresenter.openOnTodayDay()
+            openNewEventPresenter.openOnTodayDay()
         } else {
-            openCreateEventPresenter.openOnDay(
+            openNewEventPresenter.openOnDay(
                 v.cvMonthCalendar.selectedDate.calendar
             )
         }
@@ -128,7 +134,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     private fun onClickEvent(pos: Int) {
         val id = listEventPresenter.getId(pos)
         // todo need presenter ???
-        openFragment(EditEventFragment.newInstance(id))
+        router.navigateTo(Screens.EventScreen(id))
     }
 
     override fun onDateSelected(
@@ -138,20 +144,12 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     override fun onDateLongClick(
         widget: MaterialCalendarView, date: CalendarDay) {
-        openCreateEventPresenter.openOnDay(date.calendar)
+        openNewEventPresenter.openOnDay(date.calendar)
     }
 
     override fun onMonthChanged(
         widget: MaterialCalendarView, date: CalendarDay) {
         monthDotPresenter.onMonthChange(date.calendar)
-    }
-
-    override fun openFragment(f: androidx.fragment.app.Fragment) {
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.clMainContainer, f)
-            ?.addToBackStack(null)
-            ?.commit()
     }
 
     override fun showError(e: String) {

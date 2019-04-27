@@ -5,26 +5,27 @@ import com.example.calendar.data.EventRepository
 import com.example.calendar.data.EventTable
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.eventFragment.CreateEventInfoView
-import com.example.calendar.remove.BackPressedPresenter
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import ru.terrakok.cicerone.Router
 import java.util.*
 
 @InjectViewState
 class CreateEventPresenter(
+    private val router: Router,
     private val eventRepository: EventRepository
 ) : BaseMvpSubscribe<CreateEventInfoView>() {
 
     fun onSaveEvent(
-        title: String, startEvent: Calendar, endEvent: Calendar,
-        // todo remove
-        back: BackPressedPresenter
+        title: String, startEvent: Calendar, endEvent: Calendar
     ) {
         val event = EventTable(name = title, started_at = startEvent, ended_at = endEvent)
 
         val subscription = eventRepository.insert(event)
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                back.onBackPressed()
+                router.exit()
             }
         unsubscribeOnDestroy(subscription)
     }

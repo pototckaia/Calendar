@@ -55,6 +55,8 @@ dependencies {
     implementation deps.rx.rxJava2
     implementation deps.rx.rxAndroid
 
+    implementation deps.navigation.cicerone
+
     testImplementation deps.test.junit
     androidTestImplementation deps.test.testRunner
     androidTestImplementation deps.test.testEspresso

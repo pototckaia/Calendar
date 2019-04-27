@@ -1,12 +1,12 @@
-package com.example.calendar.remove
+package com.example.calendar.calendarFragment
 
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.MvpView
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
-interface BackPressedView : MvpView {
+interface OpenNewEventView : MvpView {}
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
-    fun finishView()
-}
+

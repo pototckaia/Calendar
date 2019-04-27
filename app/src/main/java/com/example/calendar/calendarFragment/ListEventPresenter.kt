@@ -25,7 +25,7 @@ class ListEventPresenter(
         loadEvents()
     }
 
-    // todo not work on two click
+    // todo not work on two click ???
     fun onDateSelected(date: Calendar) {
         start.setYearMonthDay(date)
         end.setYearMonthDay(date)

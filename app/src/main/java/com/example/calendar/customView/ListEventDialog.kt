@@ -18,12 +18,14 @@ import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
 import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.helpers.*
-import com.example.calendar.remove.OpenView
+import com.example.calendar.calendarFragment.OpenNewEventView
+import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
 import java.util.*
 
 class ListEventDialog : MvpAppCompatDialogFragment(),
-    ListEventView, OpenView {
+    ListEventView {
 
     companion object {
         fun newInstance(start: Calendar, end: Calendar) : ListEventDialog {
@@ -49,6 +51,8 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         )
     }
 
+    // todo inject
+    private val router = CiceroneApplication.instance.router
 
     lateinit var v: View
     private val start = getCalendarWithDefaultTimeZone()
@@ -97,7 +101,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
     // todo add open
     private fun onClickEvent(pos : Int) {
         val id = listEventPresenter.getId(pos)
-        openFragment(EditEventFragment.newInstance(id))
+        router.navigateTo(Screens.EventScreen(id))
     }
 
     override fun showError(e: String) {
@@ -108,15 +112,6 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         v.rvEvents.adapter.run {
             (this as DurationEventAdapter).setEvents(it, start, end)
         }
-    }
-
-    override fun openFragment(f: Fragment) {
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.clMainContainer, f)
-            ?.addToBackStack(null)
-            ?.commit()
-        dismiss()
     }
 
     private fun setDuration(start: Calendar, end: Calendar) {

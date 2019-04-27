@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
+import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_navigation.view.*
+import ru.terrakok.cicerone.Cicerone
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.Screen
 
 class NavigationFragment : MvpAppCompatFragment() {
+
 
     companion object {
         fun newInstance() : NavigationFragment {
@@ -29,35 +35,20 @@ class NavigationFragment : MvpAppCompatFragment() {
         )
 
         v.bMonth.setOnClickListener {
-            activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(
-                    R.id.clMainContainer,
-                    MonthCalendarFragment.newInstance())
-                ?.addToBackStack(null)
-                ?.commit()
+            // todo inject
+            CiceroneApplication.instance.router.navigateTo(Screens.MonthCalendarScreen())
         }
 
         v.bWeek.setOnClickListener {
-            activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(
-                    R.id.clMainContainer,
-                    WeekCalendarFragment.newInstance(WeekCalendarFragment.TypeView.WEEK)
-                )
-                ?.addToBackStack(null)
-                ?.commit()
+            // todo inject
+            CiceroneApplication.instance.router.navigateTo(
+                Screens.WeekCalendarScreen(WeekCalendarFragment.TypeView.WEEK))
         }
 
         v.bDay.setOnClickListener {
-            activity?.supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(
-                    R.id.clMainContainer,
-                    WeekCalendarFragment.newInstance(WeekCalendarFragment.TypeView.DAY)
-                )
-                ?.addToBackStack(null)
-                ?.commit()
+            // todo inject
+            CiceroneApplication.instance.router.navigateTo(
+                Screens.WeekCalendarScreen(WeekCalendarFragment.TypeView.DAY))
         }
 
         return v

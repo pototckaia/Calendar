@@ -3,12 +3,10 @@ package com.example.calendar.calendarFragment
 import android.widget.Toast
 import android.graphics.RectF
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.alamkanak.weekview.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -21,14 +19,12 @@ import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import java.util.Calendar
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.customView.ListEventDialog
-import com.example.calendar.remove.BackPressedPresenter
-import com.example.calendar.remove.BackPressedView
-import com.example.calendar.remove.OpenCreateEventPresenter
-import com.example.calendar.remove.OpenView
+import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.navigation.Screens
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
     WeekEventView,
-    OpenView, BackPressedView, WeekSaveStateView,
+    OpenNewEventView, WeekSaveStateView,
     EventClickListener<EventWeekView>, MonthChangeListener<EventWeekView>,
     EmptyViewLongPressListener, EmptyViewClickListener,
     ScrollListener {
@@ -70,14 +66,18 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var backPressedPresenter: BackPressedPresenter
+    lateinit var openNewEventPresenter: OpenNewEventPresenter
 
-    @InjectPresenter
-    lateinit var openCreateEventPresenter: OpenCreateEventPresenter
+    @ProvidePresenter
+    fun provideOpenNewEventPresenter(): OpenNewEventPresenter {
+        return OpenNewEventPresenter(router)
+    }
 
     @InjectPresenter
     lateinit var weekSaveStatePresenter: WeekSaveStatePresenter
 
+    // todo inject
+    private val router = CiceroneApplication.instance.router
 
     private lateinit var v: View
     private lateinit var wv: WeekView<EventWeekView>
@@ -94,7 +94,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         )
         initToolBar()
 
-        // todo make global
+        // todo make global ???
         val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
 
         // todo header fix
@@ -118,7 +118,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbWeekCalendar.setNavigationOnClickListener { backPressedPresenter.onBackPressed() }
+        v.tbWeekCalendar.setNavigationOnClickListener { router.exit() }
         v.tbWeekCalendar.inflateMenu(R.menu.menu_week_calendar)
         v.tbWeekCalendar.setOnMenuItemClickListener {
             onItemSelected(it);
@@ -140,16 +140,16 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
             val d = ListEventDialog.newInstance(data.event.started_at, data.event.ended_at)
             d.show(activity?.supportFragmentManager, "list-dialog")
         } else {
-            openFragment(EditEventFragment.newInstance(data.event.id))
+            router.navigateTo(Screens.EventScreen(data.event.id))
         }
     }
 
     override fun onEmptyViewLongPress(time: Calendar) {
-        openCreateEventPresenter.openOnTime(time)
+        openNewEventPresenter.openOnTime(time)
     }
 
     override fun onEmptyViewClicked(time: Calendar) {
-        openCreateEventPresenter.openOnTime(time)
+        openNewEventPresenter.openOnTime(time)
     }
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
@@ -177,14 +177,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         wv.notifyDataSetChanged()
     }
 
-    override fun openFragment(f: Fragment) {
-        activity?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.clMainContainer, f)
-            ?.addToBackStack(null)
-            ?.commit()
-    }
-
     override fun updateState() {
         wv.hourHeight = weekSaveStatePresenter.hourHeight
         wv.goToHour(weekSaveStatePresenter.firstVisibleHour)
@@ -195,9 +187,5 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         weekSaveStatePresenter.firstVisibleHour = kotlin.math.floor(wv.firstVisibleHour).toInt()
         weekSaveStatePresenter.firstVisibleDay.timeInMillis = wv.firstVisibleDay.timeInMillis
         weekSaveStatePresenter.hourHeight = wv.hourHeight
-    }
-
-    override fun finishView() {
-        activity!!.supportFragmentManager.popBackStack()
     }
 }

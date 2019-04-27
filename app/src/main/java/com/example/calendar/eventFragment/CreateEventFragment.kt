@@ -13,14 +13,12 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.remove.BackPressedPresenter
-import com.example.calendar.remove.BackPressedView
+import com.example.calendar.navigation.CiceroneApplication
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfoView, BackPressedView,
-    DateClickView {
+    CreateEventInfoView, DateClickView {
 
     companion object {
         fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
@@ -42,12 +40,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
     fun provideCreateEventPresenter(): CreateEventPresenter {
         return CreateEventPresenter(
             // todo inject
+            router,
             EventRoomDatabase.getInstance(context!!).eventDao()
         )
     }
-
-    @InjectPresenter
-    lateinit var backPressedPresenter: BackPressedPresenter
 
     @InjectPresenter
     lateinit var dateClickPresenter: DateClickPresenter
@@ -60,6 +56,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
         )
     }
 
+    // todo inject
+    private val router = CiceroneApplication.instance.router
 
     private lateinit var v: View
 
@@ -84,14 +82,13 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     private fun initToolBar() {
-        v.tbNoteCreate.setNavigationOnClickListener { backPressedPresenter.onBackPressed() }
+        v.tbNoteCreate.setNavigationOnClickListener { router.exit() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_enent_create)
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
             createEventPresenter.onSaveEvent(
                 view!!.etTextEvent.text.toString(),
                 dateClickPresenter.startEvent,
-                dateClickPresenter.endEvent,
-                backPressedPresenter)
+                dateClickPresenter.endEvent)
             true
         }
     }
@@ -115,9 +112,4 @@ class CreateEventFragment : MvpAppCompatFragment(),
         )
         tpd.show()
     }
-
-    override fun finishView() {
-        activity!!.supportFragmentManager.popBackStack()
-    }
-
 }
