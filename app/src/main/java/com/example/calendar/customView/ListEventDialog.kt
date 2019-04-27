@@ -102,6 +102,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
     private fun onClickEvent(pos : Int) {
         val id = listEventPresenter.getId(pos)
         router.navigateTo(Screens.EventScreen(id))
+        dismiss()
     }
 
     override fun showError(e: String) {
