@@ -28,28 +28,28 @@ v.testRunnerVersion = "1.1.0-alpha4"
 v.testEspressoCoreVersion = "3.1.0-alpha4"
 
 ext.deps.support = [
-            appCompat       : "androidx.appcompat:appcompat:$v.supportXLibraryVersion",
-            design          : "com.google.android.material:material:$v.supportXLibraryVersion",
-            recyclerview    : "androidx.recyclerview:recyclerview:$v.supportXLibraryVersion",
-            constraintLayout: "androidx.constraintlayout:constraintlayout:$v.constraintLayoutVersion",
-    ]
+        appCompat       : "androidx.appcompat:appcompat:$v.supportXLibraryVersion",
+        design          : "com.google.android.material:material:$v.supportXLibraryVersion",
+        recyclerview    : "androidx.recyclerview:recyclerview:$v.supportXLibraryVersion",
+        constraintLayout: "androidx.constraintlayout:constraintlayout:$v.constraintLayoutVersion",
+]
 
 ext.deps.room = [
-            runTime : "androidx.room:room-runtime:$v.roomVersion",
-            compiler: "androidx.room:room-compiler:$v.roomVersion",
-            rxJava2  : "androidx.room:room-rxjava2:$v.roomVersion",
-            test    : "androidx.room:room-testing:$v.roomVersion",
-    ]
+        runTime : "androidx.room:room-runtime:$v.roomVersion",
+        compiler: "androidx.room:room-compiler:$v.roomVersion",
+        rxJava2 : "androidx.room:room-rxjava2:$v.roomVersion",
+        test    : "androidx.room:room-testing:$v.roomVersion",
+]
 
 ext.deps.lifeCycle = [
-            runTime : "androidx.lifecycle:lifecycle-extensions:$v.archLifecycleVersion",
-            compiler: "androidx.lifecycle:lifecycle-compiler:$v.archLifecycleVersion",
-    ]
+        runTime : "androidx.lifecycle:lifecycle-extensions:$v.archLifecycleVersion",
+        compiler: "androidx.lifecycle:lifecycle-compiler:$v.archLifecycleVersion",
+]
 
 ext.deps.rx = [
-            rxJava2  : "io.reactivex.rxjava2:rxjava:$v.rxJavaVersion",
-            rxAndroid: "io.reactivex.rxjava2:rxandroid:$v.rxAndroidVersion",
-    ]
+        rxJava2  : "io.reactivex.rxjava2:rxjava:$v.rxJavaVersion",
+        rxAndroid: "io.reactivex.rxjava2:rxandroid:$v.rxAndroidVersion",
+]
 
 ext.deps.moxy = [
         core    : "tech.schoolhelper:moxy-x:$v.moxyVersion",
@@ -63,12 +63,12 @@ ext.deps.calendar = [
 ]
 
 ext.deps.kotlin = [
-            stdlib       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-            serialization: "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$ext.deps.kotlinxSerializationVersion",
-    ]
+        stdlib       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+        serialization: "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$ext.deps.kotlinxSerializationVersion",
+]
 
 ext.deps.test = [
-            junit       : "junit:junit:$v.jUnitVersion",
-            testRunner  : "androidx.test:runner:$v.testRunnerVersion",
-            testEspresso: "androidx.test.espresso:espresso-core:$v.testEspressoCoreVersion",
-    ]
+        junit       : "junit:junit:$v.jUnitVersion",
+        testRunner  : "androidx.test:runner:$v.testRunnerVersion",
+        testEspresso: "androidx.test.espresso:espresso-core:$v.testEspressoCoreVersion",
+]
