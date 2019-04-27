@@ -8,8 +8,8 @@ ext.deps.androidCompileSdkVersion = 28
 
 ext.deps.kotlinxSerializationVersion = "0.10.0"
 
-v.supportLibraryVersion = "28.0.0-rc01"
-v.supportXLibraryVersion = "1.0.0-beta01"
+v.supportLibraryVersion = "28.0.0"
+v.supportXLibraryVersion = "1.0.0"
 v.constraintLayoutVersion = "1.1.3"
 
 v.materialCalendarviewVersion = "1.6.0"
@@ -17,15 +17,16 @@ v.androidWeekViewVersion = "3.3"
 
 v.moxyVersion = "1.7.0"
 
+// room + rxjava
 v.roomVersion = "2.1.0-alpha06"
-v.archLifecycleVersion = "2.0.0-beta01"
+v.archLifecycleVersion = "2.0.0"
 
 v.rxJavaVersion = "2.1.3"
 v.rxAndroidVersion = "2.0.1"
 
 v.jUnitVersion = "4.12"
-v.testRunnerVersion = "1.1.0-alpha4"
-v.testEspressoCoreVersion = "3.1.0-alpha4"
+v.testRunnerVersion = "1.1.0"
+v.testEspressoCoreVersion = "3.1.0"
 
 ext.deps.support = [
         appCompat       : "androidx.appcompat:appcompat:$v.supportXLibraryVersion",
