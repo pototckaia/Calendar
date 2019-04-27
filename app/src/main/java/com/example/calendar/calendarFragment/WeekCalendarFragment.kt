@@ -3,6 +3,7 @@ package com.example.calendar.calendarFragment
 import android.widget.Toast
 import android.graphics.RectF
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -28,7 +29,8 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     WeekEventView,
     OpenView, BackPressedView, WeekSaveStateView,
     EventClickListener<EventWeekView>, MonthChangeListener<EventWeekView>,
-    EmptyViewLongPressListener, EmptyViewClickListener {
+    EmptyViewLongPressListener, EmptyViewClickListener,
+    ScrollListener {
 
     enum class TypeView(val dayVisible: Int, val maxIntersection: Int) {
         DAY(1, 4),
@@ -100,6 +102,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         wv.setMonthChangeListener(this)
         wv.emptyViewLongPressListener = this
         wv.emptyViewClickListener = this
+        wv.scrollListener = this
         if (savedInstanceState == null) {
             wv.numberOfVisibleDays = typeView.dayVisible
         }
@@ -151,9 +154,14 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
             List<WeekViewDisplayable<EventWeekView>> {
         // todo remove flickering events
-        // todo not work in 2018
         weekSaveStatePresenter.onMonthChange()
         return weekEventPresenter.onMonthChange(startDate)
+    }
+
+    // todo update only on month change
+    override fun onFirstVisibleDayChanged(
+        newFirstVisibleDay: Calendar, oldFirstVisibleDay: Calendar?) {
+        wv.notifyDataSetChanged()
     }
 
     override fun showLoading() {}

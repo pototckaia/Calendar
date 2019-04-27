@@ -1,5 +1,6 @@
 package com.example.calendar.calendarFragment
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.R
 import com.example.calendar.data.EventRepository
