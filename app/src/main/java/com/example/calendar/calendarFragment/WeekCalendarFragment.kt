@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.alamkanak.weekview.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -176,7 +177,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         wv.notifyDataSetChanged()
     }
 
-    override fun openFragment(f: androidx.fragment.app.Fragment) {
+    override fun openFragment(f: Fragment) {
         activity?.supportFragmentManager
             ?.beginTransaction()
             ?.replace(R.id.clMainContainer, f)

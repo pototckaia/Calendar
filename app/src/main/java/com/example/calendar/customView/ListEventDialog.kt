@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.MvpAppCompatDialogFragment
@@ -15,11 +16,14 @@ import com.example.calendar.calendarFragment.ListEventPresenter
 import com.example.calendar.calendarFragment.ListEventView
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.EventTable
+import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.helpers.*
+import com.example.calendar.remove.OpenView
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
 import java.util.*
 
-class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
+class ListEventDialog : MvpAppCompatDialogFragment(),
+    ListEventView, OpenView {
 
     companion object {
         fun newInstance(start: Calendar, end: Calendar) : ListEventDialog {
@@ -91,7 +95,10 @@ class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
     }
 
     // todo add open
-    private fun onClickEvent(pos : Int) {}
+    private fun onClickEvent(pos : Int) {
+        val id = listEventPresenter.getId(pos)
+        openFragment(EditEventFragment.newInstance(id))
+    }
 
     override fun showError(e: String) {
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
@@ -101,6 +108,15 @@ class ListEventDialog : MvpAppCompatDialogFragment(), ListEventView {
         v.rvEvents.adapter.run {
             (this as DurationEventAdapter).setEvents(it, start, end)
         }
+    }
+
+    override fun openFragment(f: Fragment) {
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.clMainContainer, f)
+            ?.addToBackStack(null)
+            ?.commit()
+        dismiss()
     }
 
     private fun setDuration(start: Calendar, end: Calendar) {
