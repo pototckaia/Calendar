@@ -21,6 +21,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // conflict rxjava and retrofit rxjava adapter
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -34,7 +44,7 @@ dependencies {
 
     implementation deps.support.appCompat
     implementation deps.support.constraintLayout
-    implementation deps.support.recyclerview
+    implementation deps.support.recyclerView
     implementation deps.support.design
 
     implementation deps.moxy.core
@@ -44,18 +54,23 @@ dependencies {
     implementation deps.calendar.material
     implementation deps.calendar.week
 
-    implementation deps.room.runTime
+    implementation deps.room.core
     implementation deps.room.test
     implementation deps.room.rxJava2
     kapt deps.room.compiler
 
-    implementation deps.lifeCycle.runTime
+    implementation deps.lifeCycle.core
     kapt deps.lifeCycle.compiler
 
     implementation deps.rx.rxJava2
     implementation deps.rx.rxAndroid
 
     implementation deps.navigation.cicerone
+
+    implementation deps.retrofit.core
+    implementation deps.retrofit.gsonConverter
+    implementation deps.retrofit.rxJava2
+    implementation deps.retrofit.logging
 
     testImplementation deps.test.junit
     androidTestImplementation deps.test.testRunner

@@ -30,22 +30,25 @@ v.jUnitVersion = "4.12"
 v.testRunnerVersion = "1.1.0"
 v.testEspressoCoreVersion = "3.1.0"
 
+v.retrofitVersion = "2.5.0"
+v.loggingVersion = "3.14.1"
+
 ext.deps.support = [
         appCompat       : "androidx.appcompat:appcompat:$v.supportXLibraryVersion",
         design          : "com.google.android.material:material:$v.supportXLibraryVersion",
-        recyclerview    : "androidx.recyclerview:recyclerview:$v.supportXLibraryVersion",
+        recyclerView    : "androidx.recyclerview:recyclerview:$v.supportXLibraryVersion",
         constraintLayout: "androidx.constraintlayout:constraintlayout:$v.constraintLayoutVersion",
 ]
 
 ext.deps.room = [
-        runTime : "androidx.room:room-runtime:$v.roomVersion",
+        core    : "androidx.room:room-runtime:$v.roomVersion",
         compiler: "androidx.room:room-compiler:$v.roomVersion",
         rxJava2 : "androidx.room:room-rxjava2:$v.roomVersion",
         test    : "androidx.room:room-testing:$v.roomVersion",
 ]
 
 ext.deps.lifeCycle = [
-        runTime : "androidx.lifecycle:lifecycle-extensions:$v.archLifecycleVersion",
+        core    : "androidx.lifecycle:lifecycle-extensions:$v.archLifecycleVersion",
         compiler: "androidx.lifecycle:lifecycle-compiler:$v.archLifecycleVersion",
 ]
 
@@ -66,7 +69,7 @@ ext.deps.calendar = [
 ]
 
 ext.deps.kotlin = [
-        stdlib       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+        stdlib       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
         serialization: "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$ext.deps.kotlinxSerializationVersion",
 ]
 
@@ -78,4 +81,11 @@ ext.deps.test = [
 
 ext.deps.navigation = [
         cicerone: "ru.terrakok.cicerone:cicerone:$v.ciceroneVersion"
+]
+
+ext.deps.retrofit = [
+        core         : "com.squareup.retrofit2:retrofit:$v.retrofitVersion",
+        gsonConverter: "com.squareup.retrofit2:converter-gson:$v.retrofitVersion",
+        rxJava2      : "com.squareup.retrofit2:adapter-rxjava:$v.retrofitVersion",
+        logging      : "com.squareup.okhttp3:logging-interceptor:$v.loggingVersion",
 ]

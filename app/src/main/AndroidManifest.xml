@@ -4,6 +4,8 @@
           package="com.example.calendar">
 
     <dist:module dist:instant="true"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 
     <application
             android:name=".navigation.CiceroneApplication"
