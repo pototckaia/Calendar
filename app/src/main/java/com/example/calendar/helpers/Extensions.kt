@@ -25,6 +25,12 @@ fun ViewGroup.inflate(
 fun getCalendarWithDefaultTimeZone(): Calendar =
     Calendar.getInstance(TimeZone.getDefault());
 
+fun Calendar.cloneWithTimeZone() : Calendar {
+    val c = this.clone() as Calendar
+    c.timeZone = this.timeZone
+    return c
+}
+
 fun Calendar.cloneWithDefaultTimeZone(): Calendar {
     val c = this.clone() as Calendar
     c.timeZone = TimeZone.getDefault()

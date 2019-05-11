@@ -4,6 +4,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Cicerone
 import android.app.Application
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 
 class CiceroneApplication : Application() {
@@ -24,5 +25,6 @@ class CiceroneApplication : Application() {
         super.onCreate()
         cicerone = Cicerone.create()
         instance = this
+        AndroidThreeTen.init(this);
     }
 }

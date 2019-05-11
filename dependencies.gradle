@@ -33,6 +33,10 @@ v.testEspressoCoreVersion = "3.1.0"
 v.retrofitVersion = "2.5.0"
 v.loggingVersion = "3.14.1"
 
+v.libRecuvVersion = "0.11.2"
+
+v.threetenVersion = "1.2.0"
+
 ext.deps.support = [
         appCompat       : "androidx.appcompat:appcompat:$v.supportXLibraryVersion",
         design          : "com.google.android.material:material:$v.supportXLibraryVersion",
@@ -88,4 +92,12 @@ ext.deps.retrofit = [
         gsonConverter: "com.squareup.retrofit2:converter-gson:$v.retrofitVersion",
         rxJava2      : "com.squareup.retrofit2:adapter-rxjava:$v.retrofitVersion",
         logging      : "com.squareup.okhttp3:logging-interceptor:$v.loggingVersion",
+]
+
+ext.deps.rrule = [
+        libRecur: "org.dmfs:lib-recur:$v.libRecuvVersion"
+]
+
+ext.deps.time = [
+        threeten: "com.jakewharton.threetenabp:threetenabp:$v.threetenVersion"
 ]

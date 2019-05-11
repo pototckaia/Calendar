@@ -8,7 +8,10 @@ import com.example.calendar.data.oldEvent.EventDao
 import com.example.calendar.data.oldEvent.EventTable
 
 
-@Database(entities = [EventTable::class], version = 1, exportSchema = false)
+@Database(
+    entities = [EventRecurrence::class, EventRecurrenceException::class, EventTable::class],
+    version = 1, exportSchema = false
+)
 abstract class EventRoomDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
 
@@ -19,7 +22,8 @@ abstract class EventRoomDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): EventRoomDatabase =
             instant ?: synchronized(this) {
-                instant ?: buildDatabase(context).also { instant = it }
+                instant
+                    ?: buildDatabase(context).also { instant = it }
             }
 
         private fun buildDatabase(context: Context) =
