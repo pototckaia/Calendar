@@ -1,10 +1,9 @@
 package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventRepository
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventRepository
+import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.helpers.BaseMvpSubscribe
-import com.example.calendar.eventFragment.CreateEventInfoView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
@@ -19,7 +18,8 @@ class CreateEventPresenter(
     fun onSaveEvent(
         title: String, startEvent: Calendar, endEvent: Calendar
     ) {
-        val event = EventTable(name = title, started_at = startEvent, ended_at = endEvent)
+        val event =
+            EventTable(name = title, started_at = startEvent, ended_at = endEvent)
 
         val subscription = eventRepository.insert(event)
             .subscribeOn(Schedulers.io())

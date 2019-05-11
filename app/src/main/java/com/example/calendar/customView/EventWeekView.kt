@@ -2,7 +2,7 @@ package com.example.calendar.customView
 
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventTable
 
 class EventWeekView (
     var event: EventTable,

@@ -11,7 +11,6 @@ import com.alamkanak.weekview.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.R
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.helpers.TYPE_VIEW_KEY

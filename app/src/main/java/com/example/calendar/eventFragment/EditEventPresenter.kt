@@ -1,8 +1,8 @@
 package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventRepository
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventRepository
+import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

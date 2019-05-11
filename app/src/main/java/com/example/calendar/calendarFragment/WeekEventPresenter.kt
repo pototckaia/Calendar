@@ -1,10 +1,8 @@
 package com.example.calendar.calendarFragment
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.R
-import com.example.calendar.data.EventRepository
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventRepository
+import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.helpers.cloneWithDefaultTimeZone
@@ -12,7 +10,6 @@ import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.helpers.setHourOfDayAndMinute
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.*
-import javax.security.auth.login.LoginException
 import kotlin.collections.ArrayList
 
 

@@ -19,7 +19,7 @@ import com.example.calendar.customView.DayEventAdapter
 import com.example.calendar.customView.MonthDotDecorator
 import com.example.calendar.customView.TodayDecorator
 import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventTable
 import java.text.SimpleDateFormat
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*

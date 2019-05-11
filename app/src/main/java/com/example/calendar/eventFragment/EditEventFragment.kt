@@ -11,7 +11,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.helpers.EVENT_ID_KEY
 import com.example.calendar.navigation.CiceroneApplication
 import kotlinx.android.synthetic.main.fragment_create_event.view.*

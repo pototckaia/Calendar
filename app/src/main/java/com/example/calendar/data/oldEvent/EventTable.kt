@@ -1,9 +1,10 @@
-package com.example.calendar.data
+package com.example.calendar.data.oldEvent
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.example.calendar.data.CalendarConverter
 import java.util.*
 
 @Entity(tableName = "events")

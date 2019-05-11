@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.example.calendar.R
-import com.example.calendar.data.EventTable
+import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.view_day_event_holder.view.*
 import java.text.SimpleDateFormat
