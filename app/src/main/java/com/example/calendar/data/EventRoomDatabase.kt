@@ -14,6 +14,7 @@ import com.example.calendar.data.oldEvent.EventTable
 )
 abstract class EventRoomDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
+    abstract fun eventRecurrenceDao() : EventRecurrenceDao
 
     companion object {
 

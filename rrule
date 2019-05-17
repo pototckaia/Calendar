@@ -1,0 +1,104 @@
+recur-rule-part = 
+( "FREQ" "=" freq )
+/ ( "UNTIL" "=" enddate )
+/ ( "COUNT" "=" 1*DIGIT )
+/ ( "INTERVAL" "=" 1*DIGIT )
+/ ( "BYSECOND" "=" byseclist )
+/ ( "BYMINUTE" "=" byminlist )
+/ ( "BYHOUR" "=" byhrlist )
+/ ( "BYDAY" "=" bywdaylist )
+/ ( "BYMONTHDAY" "=" bymodaylist )
+/ ( "BYYEARDAY" "=" byyrdaylist )
+/ ( "BYWEEKNO" "=" bywknolist )
+/ ( "BYMONTH" "=" bymolist )
+/ ( "BYSETPOS" "=" bysplist )
+/ ( "WKST" "=" weekday )
+
+freq        = 
+"SECONDLY" / "MINUTELY" / "HOURLY" 
+/ "DAILY"/ "WEEKLY" / "MONTHLY" / "YEARLY"
+
+Interval - positive integer representin at which intervals the recurrence rule repeats. default value is 1, meaning every freq.
+
+Until defines a Date value that bounds the recurrence rrule. 
+
+Count defines the number of occurrences at with to range-bound the recurrence.
+
+
+BYSECOND - list of seconds within a minute.
+Valid values are  0 to 23.
+BYMINUTE - The minutes on which the event recurs.
+The value must be a list of integers in the range 0 to 59.
+BYHOUR - The hours on which the event recurs.
+The value must be a list of integers in the range 0 to 23.
+The BYSECOND, BYMINUTE, BYHOUR must not be specified when the associated btstart property has a date value type.
+
+BYDAY - list of days of the week;
+sunday, monday, tuesday, wednesday, thursday, friday, saturday.
+Each BYDAY value can also be preceded by a positive (+n) or (-n) integer.
+This indicates the nth occurrence of a specific day within the MONTHLY or YEARLY rrule.
+MONTHLY:
++1MO - the first Monday within the month
+-1MO - the last Monday of the month
+YEARLY:
+not valid if ByWeekNo is specified.
+an offset within the month when the ByMonth rule part is present 
+If an integer modifier is not present, it means all days of this type within the specified frequency.
+
+BYMONTHDAY - list of days of the month.
+Valid values are 1 to 31 or -31 to -1.
+-10 - the thenth to the last day of the month.
+Not valid FREQ = WEEKLY.
+
+BYYEARDDAY - list of days of the year.
+Valid values are 1 to 366 or -366 to -1.
+-1 the last day of the year (December 31st)
+-306 the 306th to the last day of the year (March 1st)
+Not valid FREQ = DAILY, WEEKLY, MONTHLT.
+
+BYWEEKNO - list of ordinals specifying week of the year in which weeks the instances recur.
+Valid valus are 1 to 53 or -53 to -1.
+A weeks is defined as a seven day period, starting on the day of the week defined to be the week start (WKST).
+Week number on the calendar year is the first week that contains at least four(4) days in that calendar year.
+Valid only FREQ = YEARLY
+
+BYMONTH - list of months of the year that specify in which months the instances recur.
+Valid values are 1 to 12.
+
+WKST - The start day of a week.
+MO, TU, WE, TH, FR, SA, SU.
+This is relevant if any of BYDAY or BYWEEKNO are present.
+
+BYSETPOS - list of values that corresponds to the nth occurrence within the set of recurrence instances specified by the rule. Operates on a set of recurrence instances in one interval of the recurrence rule. Valid with BYxxx rule part.
+For example "the last work day of the month" could be represented as:
+FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1
+
++----------+--------+--------+-------+-------+------+-------+------+
+|          |SECONDLY|MINUTELY|HOURLY |DAILY  |WEEKLY|MONTHLY|YEARLY|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYMONTH   |Limit   |Limit   |Limit  |Limit  |Limit |Limit  |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYWEEKNO  |N/A     |N/A     |N/A    |N/A    |N/A   |N/A    |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYYEARDAY |Limit   |Limit   |Limit  |N/A    |N/A   |N/A    |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYMONTHDAY|Limit   |Limit   |Limit  |Limit  |N/A   |Expand |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYDAY     |Limit   |Limit   |Limit  |Limit  |Expand|Note 1 |Note 2|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYHOUR    |Limit   |Limit   |Limit  |Expand |Expand|Expand |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYMINUTE  |Limit   |Limit   |Expand |Expand |Expand|Expand |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYSECOND  |Limit   |Expand  |Expand |Expand |Expand|Expand |Expand|
++----------+--------+--------+-------+-------+------+-------+------+
+|BYSETPOS  |Limit   |Limit   |Limit  |Limit  |Limit |Limit  |Limit |
++----------+--------+--------+-------+-------+------+-------+------+
+
+Note 1:  Limit if BYMONTHDAY is present; otherwise, special expand
+         for MONTHLY.
+
+Note 2:  Limit if BYYEARDAY or BYMONTHDAY is present; otherwise,
+         special expand for WEEKLY if BYWEEKNO present; otherwise,
+         special expand for MONTHLY if BYMONTH present; otherwise,
+         special expand for YEARLY.

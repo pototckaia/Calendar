@@ -11,7 +11,11 @@ import java.text.SimpleDateFormat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
+import org.dmfs.rfc5545.DateTime
 import org.reactivestreams.Subscriber
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 import java.util.*
 
 
@@ -21,6 +25,25 @@ fun ViewGroup.inflate(
 ): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
+
+
+fun max(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
+    return if (d1.isAfter(d2)) d1 else d2
+}
+
+fun min(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
+    return if (d1.isBefore(d2)) d1 else d2
+}
+
+fun fromDateTimeUTC(d: DateTime): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), ZoneOffset.UTC)
+}
+
+fun toDateTimeUTC(z: ZonedDateTime): DateTime {
+    return DateTime(TimeZone.getTimeZone("UTC"), z.toInstant().toEpochMilli())
+}
+
+// todo remove
 
 fun getCalendarWithDefaultTimeZone(): Calendar =
     Calendar.getInstance(TimeZone.getDefault());

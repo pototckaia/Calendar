@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
+import com.example.calendar.RecurrenceFragmentTest
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
 import com.example.calendar.eventFragment.CreateEventFragment
@@ -52,6 +53,11 @@ class Screens {
     class NavigationScreen : SupportAppScreen() {
         override fun getFragment() : Fragment =
             NavigationFragment.newInstance()
+    }
+
+    class TestDelete : SupportAppScreen() {
+        override fun getFragment() : Fragment =
+            RecurrenceFragmentTest()
     }
 
 //    class GithubScreen : SupportAppScreen() {

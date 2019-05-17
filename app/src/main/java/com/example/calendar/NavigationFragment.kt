@@ -51,6 +51,12 @@ class NavigationFragment : MvpAppCompatFragment() {
                 Screens.WeekCalendarScreen(WeekCalendarFragment.TypeView.DAY))
         }
 
+        v.bTest.setOnClickListener {
+            CiceroneApplication.instance.router.navigateTo(
+                Screens.TestDelete()
+            )
+        }
+
         return v
     }
 }
