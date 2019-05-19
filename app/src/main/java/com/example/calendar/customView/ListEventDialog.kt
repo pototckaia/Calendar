@@ -16,7 +16,7 @@ import com.example.calendar.calendarFragment.ListEventView
 import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.helpers.*
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
 import java.util.*
@@ -49,7 +49,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
     }
 
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    private val router = InjectApplication.inject.router
 
     lateinit var v: View
     private val start = getCalendarWithDefaultTimeZone()
@@ -112,7 +112,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
     }
 
     private fun setDuration(start: Calendar, end: Calendar) {
-        v.tvHour.text = getDiff(start, end, "HH:mm")
+        v.tvHour.text = getStringDiff(start, end, "HH:mm")
         v.tvDay.text = getDayDiff(start, end)
     }
 }

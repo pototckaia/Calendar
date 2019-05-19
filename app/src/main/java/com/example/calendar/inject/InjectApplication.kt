@@ -1,16 +1,19 @@
-package com.example.calendar.navigation
+package com.example.calendar.inject
 
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Cicerone
 import android.app.Application
+import com.example.calendar.data.EventRecurrenceDao
+import com.example.calendar.data.EventRecurrenceRepository
+import com.example.calendar.data.EventRoomDatabase
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 
-class CiceroneApplication : Application() {
+class InjectApplication : Application() {
 
     companion object {
-        lateinit var instance: CiceroneApplication
+        lateinit var inject: InjectApplication
     }
 
     private lateinit var cicerone: Cicerone<Router>
@@ -21,10 +24,15 @@ class CiceroneApplication : Application() {
     val router: Router
         get() = cicerone.router
 
+    lateinit var dao: EventRecurrenceDao
+    lateinit var repository: EventRecurrenceRepository
+
     override fun onCreate() {
         super.onCreate()
         cicerone = Cicerone.create()
-        instance = this
+        inject = this
+        dao = EventRoomDatabase.getInstance(applicationContext).eventRecurrenceDao()
+        repository = EventRecurrenceRepository(dao)
         AndroidThreeTen.init(this);
     }
 }

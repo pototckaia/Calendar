@@ -1,12 +1,9 @@
 package com.example.calendar.data
 
-import android.database.Cursor
 import androidx.room.*
-import com.example.calendar.data.oldEvent.EventTable
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.threeten.bp.ZonedDateTime
-import java.util.*
 
 const val queryFromTo = "SELECT * FROM eventsRecurrence " +
         "WHERE " +

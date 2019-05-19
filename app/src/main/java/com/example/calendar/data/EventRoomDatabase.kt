@@ -4,16 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.calendar.data.oldEvent.EventDao
-import com.example.calendar.data.oldEvent.EventTable
 
 
 @Database(
-    entities = [EventRecurrence::class, EventRecurrenceException::class, EventTable::class],
+    entities = [EventRecurrence::class, EventRecurrenceException::class],
     version = 1, exportSchema = false
 )
 abstract class EventRoomDatabase : RoomDatabase() {
-    abstract fun eventDao(): EventDao
     abstract fun eventRecurrenceDao() : EventRecurrenceDao
 
     companion object {

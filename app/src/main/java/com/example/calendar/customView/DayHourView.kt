@@ -6,24 +6,18 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.example.calendar.R
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import kotlinx.android.synthetic.main.view_day_hour.view.*
-import java.text.SimpleDateFormat
-import java.util.*
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 class DayHourView
 @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    // TODO Local.getDefault and TimeZone.getDefault common ???
-    private val fmt_day = SimpleDateFormat(
-        "dd/MM/yyyy", Locale.getDefault()
-    )
+    private val fmt_day = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-    private val fmt_hour = SimpleDateFormat(
-        "HH:mm", Locale.getDefault()
-    )
+    private val fmt_hour = DateTimeFormatter.ofPattern("HH:mm")
 
     private var v: View = LayoutInflater.from(context).inflate(
         R.layout.view_day_hour, this, true
@@ -41,9 +35,9 @@ class DayHourView
         v.etHour.setOnClickListener { v -> onClick(v, onHourClickListener) }
     }
 
-    fun setDate(d: Calendar) {
-        v.etDay.setText(fmt_day.format(d.time))
-        v.etHour.setText(fmt_hour.format(d.time))
+    fun setDate(d: ZonedDateTime) {
+        v.etDay.setText(d.format(fmt_day))
+        v.etHour.setText(d.format(fmt_hour))
     }
 
     private fun onClick(v: View, listener: OnClickListener?) {

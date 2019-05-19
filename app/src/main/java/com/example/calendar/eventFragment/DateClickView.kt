@@ -6,16 +6,16 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import java.util.*
+import org.threeten.bp.ZonedDateTime
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface DateClickView : MvpView {
 
-    fun updateDateInfo(begin: Calendar, end: Calendar)
+    fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener)
+    fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showTimePickerDialog(c: Calendar, l: TimePickerDialog.OnTimeSetListener)
+    fun showTimePickerDialog(local: ZonedDateTime, l: TimePickerDialog.OnTimeSetListener)
 }

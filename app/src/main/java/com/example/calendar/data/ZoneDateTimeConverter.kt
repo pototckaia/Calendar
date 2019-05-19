@@ -1,6 +1,8 @@
 package com.example.calendar.data
 
 import androidx.room.TypeConverter
+import com.example.calendar.helpers.fromLongUTC
+import com.example.calendar.helpers.toLongUTC
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
@@ -11,13 +13,14 @@ class ZoneDateTimeConverter {
     @TypeConverter
     fun toZoneDateTime(date: Long?): ZonedDateTime? {
         return date?.let {
-            return ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneOffset.UTC)
+            return fromLongUTC(date)
         }
     }
 
     @TypeConverter
     fun fromZoneDateTime(date: ZonedDateTime?): Long? {
-        val utc = date?.withZoneSameInstant(ZoneOffset.UTC)
-        return utc?.toInstant()?.toEpochMilli()
+        return date?.let {
+            return toLongUTC(date)
+        }
     }
 }

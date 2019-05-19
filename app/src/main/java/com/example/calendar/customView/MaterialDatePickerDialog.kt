@@ -7,11 +7,11 @@ import android.view.View
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
 import com.example.calendar.R
 import android.app.DatePickerDialog
-import com.example.calendar.helpers.DIALOG_DATE_KEY
+import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.dialog_date_picker.view.*
+import org.threeten.bp.ZonedDateTime
 import java.util.*
 
 class MaterialDatePickerDialog : AppCompatDialogFragment() {
@@ -20,12 +20,12 @@ class MaterialDatePickerDialog : AppCompatDialogFragment() {
 
     companion object {
         fun newInstance(
-            date: Calendar,
+            date: ZonedDateTime,
             l: DatePickerDialog.OnDateSetListener
         ): MaterialDatePickerDialog {
             val pickerFragment = MaterialDatePickerDialog()
             val bundle = Bundle()
-            bundle.putLong(DIALOG_DATE_KEY, date.timeInMillis)
+            bundle.putString(DIALOG_DATE_KEY, toStringFromZoned(date))
             pickerFragment.onDateSet = l
             pickerFragment.arguments = bundle
             return pickerFragment
@@ -43,9 +43,11 @@ class MaterialDatePickerDialog : AppCompatDialogFragment() {
         widget = v.calendarView
         retainInstance = true
 
-        val curDate = getCalendarWithDefaultTimeZone()
-        curDate.timeInMillis = arguments!!.getLong(DIALOG_DATE_KEY)
-        widget.selectedDate = CalendarDay.from(curDate)
+        val stringDate = arguments!!.getString(DIALOG_DATE_KEY)!!
+        val curDate : ZonedDateTime = fromStringToZoned(stringDate)
+
+        // todo check month
+        widget.selectedDate = CalendarDay.from(curDate.year, curDate.monthValue, curDate.dayOfMonth)
         widget.currentDate = widget.selectedDate
         widget.addDecorators(
             TodayDecorator(
@@ -67,7 +69,7 @@ class MaterialDatePickerDialog : AppCompatDialogFragment() {
         onDateSet.onDateSet(
             null,
             c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
+            c.get(Calendar.MONTH) + 1, // todo check month
             c.get(Calendar.DAY_OF_MONTH)
         )
     }

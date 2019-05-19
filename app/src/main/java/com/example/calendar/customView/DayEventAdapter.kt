@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.example.calendar.R
-import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.view_day_event_holder.view.*
 import java.text.SimpleDateFormat
@@ -22,8 +21,7 @@ class DayEventViewHolder(
     }
 
     private val fmtHour = SimpleDateFormat(
-        "HH:mm", Locale.getDefault()
-    )
+        "HH:mm", Locale.getDefault())
 
     // todo hard text
     private val rangeOut = "---"

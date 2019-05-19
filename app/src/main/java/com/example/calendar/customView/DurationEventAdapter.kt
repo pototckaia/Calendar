@@ -28,7 +28,7 @@ class DurationEventViewHolder(
         } else {
             view.tvEventTitle.text = e.name
         }
-        view.tvEventHourDuration.text = getDiff(e.started_at, e.ended_at, "HH:mm")
+        view.tvEventHourDuration.text = getStringDiff(e.started_at, e.ended_at, "HH:mm")
         if (start.eqDay(end)) {
             view.tvEventDay.height = 0
         } else {

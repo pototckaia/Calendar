@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import java.util.Calendar
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.customView.ListEventDialog
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
@@ -76,7 +76,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     lateinit var weekSaveStatePresenter: WeekSaveStatePresenter
 
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    private val router = InjectApplication.inject.router
 
     private lateinit var v: View
     private lateinit var wv: WeekView<EventWeekView>

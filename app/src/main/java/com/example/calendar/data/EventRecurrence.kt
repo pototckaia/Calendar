@@ -23,6 +23,7 @@ data class EventRecurrence(
     // in UTF
     @ColumnInfo(name = "started_at") var startedAt: ZonedDateTime,
     // in minute
+    // [start, end)
     @ColumnInfo(name = "duration") var duration: Duration,
     // for all recurrence event or endOutRecurrence for single event
     @ColumnInfo(name = "end_out_of_range") var endOutRecurrence: ZonedDateTime,

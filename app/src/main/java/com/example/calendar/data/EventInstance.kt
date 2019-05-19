@@ -1,30 +1,80 @@
 package com.example.calendar.data
 
+import android.os.Parcel
+import android.os.Parcelable
+import com.example.calendar.helpers.fromLongUTC
+import com.example.calendar.helpers.toLongUTC
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 
-class EventInstance(
+data class EventInstance(
     val idEventRecurrence: String,
     var nameEventRecurrence: String,
     var noteEventRecurrence: String,
-
     // UTF
-    start: ZonedDateTime,
+    var startedAtInstance: ZonedDateTime,
+    var startedAtNotUpdate: ZonedDateTime,
+    // min minute
     var duration: Duration,
     var rrule: String = ""
-) {
-    var startedAtInstance: ZonedDateTime = start.withZoneSameInstant(ZoneOffset.UTC)
-    val startAtNotUpdate: ZonedDateTime = start.withZoneSameInstant(ZoneOffset.UTC)
+) : Parcelable {
+
+    init {
+        startedAtInstance = startedAtInstance.withZoneSameInstant(ZoneOffset.UTC)
+        startedAtNotUpdate = startedAtNotUpdate.withZoneSameInstant(ZoneOffset.UTC)
+    }
 
 
     constructor(e: EventRecurrence, start: ZonedDateTime) :
-            this(idEventRecurrence = e.id,
-                nameEventRecurrence =  e.name,
-                noteEventRecurrence =  e.note,
-                start = start,
+            this(
+                idEventRecurrence = e.id,
+                nameEventRecurrence = e.name,
+                noteEventRecurrence = e.note,
+                startedAtInstance = start,
+                startedAtNotUpdate = start,
                 duration = e.duration,
-                rrule = e.rrule)
+                rrule = e.rrule
+            )
+
+    constructor(parcel: Parcel) :
+            this(
+                idEventRecurrence = parcel.readString()!!,
+                nameEventRecurrence = parcel.readString()!!,
+                noteEventRecurrence = parcel.readString()!!,
+                startedAtInstance = fromLongUTC(parcel.readLong()),
+                startedAtNotUpdate = fromLongUTC(parcel.readLong()),
+                duration = DurationConverter().toDuration(parcel.readLong())!!,
+                rrule = parcel.readString()!!
+            )
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        if (dest == null) return
+
+        val dz = DurationConverter()
+
+        dest.writeString(idEventRecurrence)
+        dest.writeString(nameEventRecurrence)
+        dest.writeString(noteEventRecurrence)
+        dest.writeLong(toLongUTC(startedAtInstance))
+        dest.writeLong(toLongUTC(startedAtNotUpdate))
+        dest.writeLong(dz.fromDuration(duration)!!)
+        dest.writeString(rrule)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EventInstance> {
+        override fun createFromParcel(parcel: Parcel): EventInstance {
+            return EventInstance(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EventInstance?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
 
 

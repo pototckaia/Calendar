@@ -3,7 +3,6 @@ package com.example.calendar.eventFragment;
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import java.util.*
 import android.view.*
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.helpers.START_EVENT_KEY
@@ -12,20 +11,27 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.helpers.fromLongUTC
+import com.example.calendar.helpers.toLongUTC
+import com.example.calendar.inject.InjectApplication
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
+import org.dmfs.rfc5545.recur.Freq
+import org.dmfs.rfc5545.recur.RecurrenceRule
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
     CreateEventInfoView, DateClickView {
 
     companion object {
-        fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
+        fun newInstance(
+            startEvent: ZonedDateTime, endEvent: ZonedDateTime
+        ): CreateEventFragment {
             val args = Bundle()
             args.run {
-                this.putLong(START_EVENT_KEY, startEvent.timeInMillis)
-                this.putLong(END_EVENT_KEY, endEvent.timeInMillis)
+                this.putLong(START_EVENT_KEY, toLongUTC(startEvent))
+                this.putLong(END_EVENT_KEY, toLongUTC(endEvent))
             }
             val f = CreateEventFragment()
             f.arguments = args
@@ -41,7 +47,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
         return CreateEventPresenter(
             // todo inject
             router,
-            EventRoomDatabase.getInstance(context!!).eventDao()
+            InjectApplication.inject.repository
         )
     }
 
@@ -51,13 +57,14 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideDateClickPresenter(): DateClickPresenter {
         return DateClickPresenter(
-            arguments!!.getLong(START_EVENT_KEY),
-            arguments!!.getLong(END_EVENT_KEY)
+            fromLongUTC(arguments!!.getLong(START_EVENT_KEY)),
+            fromLongUTC(arguments!!.getLong(END_EVENT_KEY))
         )
     }
 
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    // todo onDelete
+    private val router = InjectApplication.inject.router
 
     private lateinit var v: View
 
@@ -69,7 +76,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
         super.onCreateView(inflater, container, savedInstanceState)
         v = inflater.inflate(
             R.layout.fragment_create_event,
-            container, false)
+            container, false
+        )
 
         initToolBar()
 
@@ -85,29 +93,39 @@ class CreateEventFragment : MvpAppCompatFragment(),
         v.tbNoteCreate.setNavigationOnClickListener { router.exit() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_enent_create)
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
-            createEventPresenter.onSaveEvent(
-                view!!.etTextEvent.text.toString(),
-                dateClickPresenter.startEvent,
-                dateClickPresenter.endEvent)
+            onSave()
             true
         }
     }
 
-    override fun updateDateInfo(begin: Calendar, end: Calendar) {
-        v.vBegin.setDate(begin)
-        v.vEnd.setDate(end)
+    private fun onSave() {
+        val rule_daily = RecurrenceRule(Freq.DAILY)
+        rule_daily.count = 5
+
+        createEventPresenter.onSaveEvent(
+            view!!.etTextEvent.text.toString(),
+            "TODO",
+            dateClickPresenter.startLocal.withZoneSameInstant(ZoneOffset.UTC),
+            dateClickPresenter.endLocal.withZoneSameInstant(ZoneOffset.UTC),
+            rule_daily
+            )
     }
 
-    override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(c, l)
+    override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
+        v.vBegin.setDate(startLocal)
+        v.vEnd.setDate(endLocal)
+    }
+
+    override fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
+        val dpd = MaterialDatePickerDialog.newInstance(local, l)
         dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 
-    override fun showTimePickerDialog(c: Calendar, l: TimePickerDialog.OnTimeSetListener) {
+    override fun showTimePickerDialog(local: ZonedDateTime, l: TimePickerDialog.OnTimeSetListener) {
         val tpd = TimePickerDialog(
             context, l,
-            c.get(Calendar.HOUR_OF_DAY),
-            c.get(Calendar.MINUTE),
+            local.hour,
+            local.minute,
             true
         )
         tpd.show()

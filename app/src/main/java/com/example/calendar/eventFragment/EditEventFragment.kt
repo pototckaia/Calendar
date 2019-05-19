@@ -10,22 +10,21 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.data.oldEvent.EventTable
-import com.example.calendar.helpers.EVENT_ID_KEY
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.data.EventInstance
+import com.example.calendar.helpers.EVENT_INSTANCE_KEY
+import com.example.calendar.inject.InjectApplication
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
-import java.util.Calendar
+import org.threeten.bp.ZonedDateTime
 
 
 class EditEventFragment : MvpAppCompatFragment(),
     DateClickView, EditEventView {
 
     companion object {
-        fun newInstance(id: String): EditEventFragment {
+        fun newInstance(event: EventInstance): EditEventFragment {
             val args = Bundle()
             args.run {
-                this.putString(EVENT_ID_KEY, id)
+                this.putParcelable(EVENT_INSTANCE_KEY, event)
             }
             val f = EditEventFragment()
             f.arguments = args
@@ -44,13 +43,13 @@ class EditEventFragment : MvpAppCompatFragment(),
         return EditEventPresenter(
             // todo inject
             router,
-            EventRoomDatabase.getInstance(context!!).eventDao(),
-            arguments!!.getString(EVENT_ID_KEY)!!
+            InjectApplication.inject.repository,
+            arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)!!
         )
     }
 
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    private val router = InjectApplication.inject.router
 
     private lateinit var v: View
 
@@ -87,43 +86,44 @@ class EditEventFragment : MvpAppCompatFragment(),
     private fun onItemSelected(item: MenuItem?) {
         when (item?.itemId) {
             R.id.actionUpdate -> {
-                editEventPresenter.onUpdate(
-                    view!!.etTextEvent.text.toString(),
-                    dateClickPresenter.startEvent,
-                    dateClickPresenter.endEvent)
+//                editEventPresenter.onUpdate(
+//                    view!!.etTextEvent.text.toString(),
+//                    "TODO",
+//                    dateClickPresenter.startLocal.withZoneSameInstant(ZoneOffset.UTC),
+//                    dateClickPresenter.endLocal)
             }
             R.id.actionDelete -> {
-                editEventPresenter.onDelete()
+//                editEventPresenter.onDelete()
             }
         }
     }
 
 
 
-    override fun updateEventInfo(e: EventTable) {
-        v.etTextEvent.setText(e.name)
-        dateClickPresenter.setDate(e.started_at, e.ended_at)
+    override fun updateEventInfo(e: EventInstance) {
+        v.etTextEvent.setText(e.nameEventRecurrence)
+        dateClickPresenter.setDate(e.startedAtInstance, e.startedAtInstance.plus(e.duration))
     }
 
-    override fun updateDateInfo(begin: Calendar, end: Calendar) {
-        v.vBegin.setDate(begin)
-        v.vEnd.setDate(end)
+    override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
+        v.vBegin.setDate(startLocal)
+        v.vEnd.setDate(endLocal)
     }
 
     override fun showError(e: String) {
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(c, l)
+    override fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
+        val dpd = MaterialDatePickerDialog.newInstance(local, l)
         dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 
-    override fun showTimePickerDialog(c: Calendar, l: TimePickerDialog.OnTimeSetListener) {
+    override fun showTimePickerDialog(local: ZonedDateTime, l: TimePickerDialog.OnTimeSetListener) {
         val tpd = TimePickerDialog(
             context, l,
-            c.get(Calendar.HOUR_OF_DAY),
-            c.get(Calendar.MINUTE),
+            local.hour,
+            local.minute,
             true
         )
         tpd.show()

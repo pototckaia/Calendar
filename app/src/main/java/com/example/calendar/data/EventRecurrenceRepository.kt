@@ -8,11 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.dmfs.rfc5545.DateTime
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
-import io.reactivex.internal.operators.single.SingleInternalHelper.toObservable
 
 
 class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
@@ -158,8 +154,8 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 //
 //    fun updateEventAll(dao: EventRecurrenceDao, event: EventInstance) {
 //        val eventRec = dao.getEventById(event.idEventRecurrence)
-//        if (event.startAtNotUpdate != event.startedAtInstance) {
-//            val d = Duration.between(event.startAtNotUpdate, event.startedAtInstance)
+//        if (event.startedAtNotUpdate != event.startedAtInstance) {
+//            val d = Duration.between(event.startedAtNotUpdate, event.startedAtInstance)
 //            eventRec.startedAt = eventRec.startedAt.plus(d)
 //        }
 //        eventRec.name = event.nameEventRecurrence

@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 
 
@@ -40,7 +40,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     }
 
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    private val router = InjectApplication.inject.router
 
     @InjectPresenter
     lateinit var openNewEventPresenter: OpenNewEventPresenter
