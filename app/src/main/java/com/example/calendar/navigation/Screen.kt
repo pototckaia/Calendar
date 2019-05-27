@@ -8,24 +8,26 @@ import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
+import com.example.calendar.data.EventInstance
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
+import org.threeten.bp.ZonedDateTime
 import java.util.Calendar
 
 class Screens {
 
-    class EventScreen(private val id: String) : SupportAppScreen() {
+    class EventScreen(private val event: EventInstance) : SupportAppScreen() {
         init {
-            screenKey = "${javaClass.simpleName}_$id"
+            screenKey = "${javaClass.simpleName}_${event.idEventRecurrence}"
         }
 
         override fun getFragment(): Fragment =
-            EditEventFragment.newInstance(id)
+            EditEventFragment.newInstance(event)
     }
 
     class NewEventScreen(
-        private val s: Calendar,
-        private val e: Calendar
+        private val s: ZonedDateTime,
+        private val e: ZonedDateTime
     ) : SupportAppScreen() {
         override fun getFragment(): Fragment =
             CreateEventFragment.newInstance(s, e)

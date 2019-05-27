@@ -12,14 +12,14 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
-import com.example.calendar.data.EventRoomDatabase
 import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
-import java.util.Calendar
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.customView.ListEventDialog
+import com.example.calendar.helpers.fromCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import java.util.Calendar
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
     WeekEventView,
@@ -55,7 +55,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
         return WeekEventPresenter(
             // todo inject
-            EventRoomDatabase.getInstance(context!!).eventDao(),
+            InjectApplication.inject.repository,
             typeView.maxIntersection,
             resources.getColor(R.color.event),
             resources.getColor(R.color.intersection_event),
@@ -93,9 +93,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         )
         initToolBar()
 
-        // todo make global ???
-        val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
-
         // todo header fix
         wv = v.findViewById(R.id.wvCalendar)
         wv.setOnEventClickListener(this)
@@ -104,6 +101,8 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         wv.emptyViewClickListener = this
         wv.scrollListener = this
         if (savedInstanceState == null) {
+            // todo make global ???
+            val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
             wv.numberOfVisibleDays = typeView.dayVisible
         }
         weekSaveStatePresenter.onCreateView()
@@ -136,26 +135,26 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     override fun onEventClick(data: EventWeekView, eventRect: RectF) {
         // todo need presenter ??
         if (data.isFake) {
-            val d = ListEventDialog.newInstance(data.event.started_at, data.event.ended_at)
+            val d = ListEventDialog.newInstance(data.event.startedAtLocal, data.event.endedAtLocal)
             d.show(activity?.supportFragmentManager, "list-dialog")
         } else {
-            router.navigateTo(Screens.EventScreen(data.event.id))
+            router.navigateTo(Screens.EventScreen(data.event))
         }
     }
 
     override fun onEmptyViewLongPress(time: Calendar) {
-        openNewEventPresenter.openOnTime(time)
+        openNewEventPresenter.openOnTime(fromCalendar(time))
     }
 
     override fun onEmptyViewClicked(time: Calendar) {
-        openNewEventPresenter.openOnTime(time)
+        openNewEventPresenter.openOnTime(fromCalendar(time))
     }
 
     override fun onMonthChange(startDate: Calendar, endDate: Calendar):
             List<WeekViewDisplayable<EventWeekView>> {
         // todo remove flickering events
         weekSaveStatePresenter.onMonthChange()
-        return weekEventPresenter.onMonthChange(startDate)
+        return weekEventPresenter.onMonthChange(fromCalendar(startDate))
     }
 
     // todo update only on month change

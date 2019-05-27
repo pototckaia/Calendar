@@ -46,8 +46,8 @@ class MaterialDatePickerDialog : AppCompatDialogFragment() {
         val stringDate = arguments!!.getString(DIALOG_DATE_KEY)!!
         val curDate : ZonedDateTime = fromStringToZoned(stringDate)
 
-        // todo check month
-        widget.selectedDate = CalendarDay.from(curDate.year, curDate.monthValue, curDate.dayOfMonth)
+        val temp = toCalendar(curDate)
+        widget.selectedDate = CalendarDay.from(temp)
         widget.currentDate = widget.selectedDate
         widget.addDecorators(
             TodayDecorator(
@@ -69,7 +69,7 @@ class MaterialDatePickerDialog : AppCompatDialogFragment() {
         onDateSet.onDateSet(
             null,
             c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH) + 1, // todo check month
+            c.get(Calendar.MONTH) + 1,
             c.get(Calendar.DAY_OF_MONTH)
         )
     }

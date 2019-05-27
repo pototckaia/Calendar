@@ -35,6 +35,15 @@ class EditEventFragment : MvpAppCompatFragment(),
     @InjectPresenter
     lateinit var dateClickPresenter: DateClickPresenter
 
+    @ProvidePresenter
+    fun provideDateClickPresenter(): DateClickPresenter {
+        val event = arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)
+        return DateClickPresenter(
+            event.startedAtLocal,
+            event.endedAtLocal
+        )
+    }
+
     @InjectPresenter
     lateinit var editEventPresenter: EditEventPresenter
 
@@ -102,7 +111,7 @@ class EditEventFragment : MvpAppCompatFragment(),
 
     override fun updateEventInfo(e: EventInstance) {
         v.etTextEvent.setText(e.nameEventRecurrence)
-        dateClickPresenter.setDate(e.startedAtInstance, e.startedAtInstance.plus(e.duration))
+        dateClickPresenter.setDate(e.startedAtInstance, e.endedAtInstance)
     }
 
     override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {

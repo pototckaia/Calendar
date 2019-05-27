@@ -1,46 +1,43 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.oldEvent.EventRepository
-import com.example.calendar.data.oldEvent.EventTable
+import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
-import com.example.calendar.helpers.setHourOfDayAndMinute
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.*
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.temporal.TemporalAdjusters
 import kotlin.collections.HashSet
 
 
 @InjectViewState
 class MonthDotPresenter(
-    private val eventRepository: EventRepository,
-    private val curMonth: Calendar = getCalendarWithDefaultTimeZone()
+    private val eventRepository: EventRecurrenceRepository,
+    private var curMonth: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
 ) :
     BaseMvpSubscribe<MonthDotView>() {
 
-    private val dates = HashSet<Calendar>()
+    private val dates = HashSet<ZonedDateTime>()
 
     init {
         loadEvents()
     }
 
-    fun onMonthChange(month: Calendar) {
-        curMonth.timeInMillis = month.timeInMillis
+    fun onMonthChange(month: ZonedDateTime) {
+        curMonth = month
         loadEvents()
     }
 
     // TODO how work unsubsribe
     private fun loadEvents() {
-        val monthStart = getCalendarWithDefaultTimeZone()
-        monthStart.timeInMillis = curMonth.timeInMillis
-        monthStart.set(Calendar.DAY_OF_MONTH, 1)
-        monthStart.setHourOfDayAndMinute(0, 0)
+        val monthStart = curMonth.with(TemporalAdjusters.firstDayOfMonth())
+            .truncatedTo(ChronoUnit.DAYS)
+        val monthEnd = curMonth.with(TemporalAdjusters.lastDayOfMonth())
+            .truncatedTo(ChronoUnit.DAYS)
+            .plusDays(1)
 
-        val monthEnd = monthStart.clone() as Calendar
-        monthEnd.set(Calendar.DATE, monthStart.getActualMaximum(Calendar.DATE))
-        monthEnd.setHourOfDayAndMinute(24, 0)
-
-        val subscription = eventRepository.fromTo(monthStart, monthEnd)
+        val subscription = eventRepository.fromToSetLocal(monthStart, monthEnd)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
@@ -48,7 +45,8 @@ class MonthDotPresenter(
                 },
                 { error ->
                     onLoadingFailed(error)
-                });
+                })
+        // todo unsubscribe on change month
         unsubscribeOnDestroy(subscription)
     }
 
@@ -56,16 +54,9 @@ class MonthDotPresenter(
         viewState.showError(error.toString());
     }
 
-    private fun onLoadingSuccess(rep: List<EventTable>) {
+    private fun onLoadingSuccess(rep: HashSet<ZonedDateTime>) {
         dates.clear()
-        rep.forEach {
-            val c = it.started_at.clone() as Calendar
-            while (c < it.ended_at) {
-                dates.add(c.clone() as Calendar)
-                c.add(Calendar.DAY_OF_MONTH, 1)
-                c.setHourOfDayAndMinute(0, 0)
-            }
-        }
+        dates.addAll(rep)
         viewState.setMonthDots(dates)
     }
 

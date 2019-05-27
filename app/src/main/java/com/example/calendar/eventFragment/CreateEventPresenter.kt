@@ -6,7 +6,6 @@ import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.Router
@@ -21,12 +20,13 @@ class CreateEventPresenter(
     fun onSaveEvent(
         title: String,
         note: String,
-        startEvent: ZonedDateTime,
-        endEvent: ZonedDateTime,
-        rule: RecurrenceRule
+        start: ZonedDateTime,
+        end: ZonedDateTime,
+        rule: String
     ) {
         val event =
-            EventRecurrence(title, note, startEvent, Duration.between(startEvent, endEvent), rule.toString())
+            EventRecurrence(title, note,
+                start, Duration.between(start, end), rule)
 
         val subscription = eventRepository.insertEvent(event)
             .subscribeOn(Schedulers.io())

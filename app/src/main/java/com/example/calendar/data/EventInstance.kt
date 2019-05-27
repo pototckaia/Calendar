@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.example.calendar.helpers.fromLongUTC
 import com.example.calendar.helpers.toLongUTC
 import org.threeten.bp.Duration
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 
@@ -24,6 +25,15 @@ data class EventInstance(
         startedAtInstance = startedAtInstance.withZoneSameInstant(ZoneOffset.UTC)
         startedAtNotUpdate = startedAtNotUpdate.withZoneSameInstant(ZoneOffset.UTC)
     }
+
+    val endedAtInstance: ZonedDateTime
+            get() =   startedAtInstance.plus(duration)
+
+    val startedAtLocal: ZonedDateTime
+        get() = startedAtInstance.withZoneSameInstant(ZoneId.systemDefault())
+
+    val endedAtLocal: ZonedDateTime
+        get() = endedAtInstance.withZoneSameInstant(ZoneId.systemDefault())
 
 
     constructor(e: EventRecurrence, start: ZonedDateTime) :

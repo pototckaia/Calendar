@@ -4,10 +4,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.example.calendar.R
+import com.example.calendar.data.EventInstance
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.view_day_event_holder.view.*
-import java.text.SimpleDateFormat
-import java.util.*
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 
 class DayEventViewHolder(
@@ -20,31 +22,30 @@ class DayEventViewHolder(
         view.setOnClickListener { v -> onClick(v, adapterPosition) }
     }
 
-    private val fmtHour = SimpleDateFormat(
-        "HH:mm", Locale.getDefault())
+    private val fmtHour =  DateTimeFormatter.ofPattern("HH:mm")
 
     // todo hard text
     private val rangeOut = "---"
     private val allDay = "Весь день"
     private val emptyTitle = "< Нет названия >"
 
-    fun bind(e: EventTable, day: Calendar) {
-        if (e.name.isEmpty()) {
+    fun bind(e: EventInstance, day: ZonedDateTime) {
+        if (e.nameEventRecurrence.isEmpty()) {
             view.tvEventTitle.text = emptyTitle
         } else {
-            view.tvEventTitle.text = e.name
+            view.tvEventTitle.text = e.nameEventRecurrence
         }
 
-        var first = fmtHour.format(e.started_at.time)
-        var second = fmtHour.format(e.ended_at.time)
+        var first = e.startedAtLocal.format(fmtHour)
+        var second = e.endedAtLocal.format(fmtHour)
 
-        if (e.started_at.lessDay(day) && e.ended_at.greaterDay(day)) {
+        if (lessDay(e.startedAtLocal, day) && moreDay(e.endedAtLocal, day)) {
             view.tvEventHourDuration.text = allDay
         } else {
-            if (e.started_at.lessDay(day)) { first = rangeOut}
-            if (e.ended_at.greaterDay(day)) { second = rangeOut }
+            if (lessDay(e.startedAtLocal, day)) { first = rangeOut}
+            if (moreDay(e.endedAtLocal, day)) { second = rangeOut }
 
-            view.tvEventHourDuration.text = "${first} - ${second}"
+            view.tvEventHourDuration.text = "$first - $second"
         }
 
     }
@@ -55,13 +56,13 @@ class DayEventAdapter(
 ) :
     RecyclerView.Adapter<DayEventViewHolder>() {
 
-    private val events = ArrayList<EventTable>()
-    private val dayEvent = getCalendarWithDefaultTimeZone()
+    private val events = ArrayList<EventInstance>()
+    private var dayEvent = ZonedDateTime.now(ZoneId.systemDefault())
 
-    fun setEvents(d: List<EventTable>, day: Calendar) {
+    fun setEvents(d: List<EventInstance>, day: ZonedDateTime) {
         events.clear()
         events.addAll(d)
-        dayEvent.timeInMillis = day.timeInMillis
+        dayEvent = ZonedDateTime.from(day)
         notifyDataSetChanged()
     }
 

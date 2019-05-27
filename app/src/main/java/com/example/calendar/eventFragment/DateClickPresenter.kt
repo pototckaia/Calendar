@@ -13,35 +13,34 @@ import java.util.*
 
 @InjectViewState
 class DateClickPresenter(
-    start: ZonedDateTime,
-    end: ZonedDateTime
+    var start: ZonedDateTime,
+    var end: ZonedDateTime
 ) : MvpPresenter<DateClickView>() {
-
-    var startLocal: ZonedDateTime = start.withZoneSameInstant(ZoneId.systemDefault())
-    var endLocal: ZonedDateTime = end.withZoneSameInstant(ZoneId.systemDefault())
 
     init {
         updateView()
     }
 
     private fun updateView() {
-        viewState.updateDateInfo(startLocal, endLocal)
+        viewState.updateDateInfo(start, end)
     }
 
     fun setDate(s: ZonedDateTime, e: ZonedDateTime) {
-        startLocal = s.withZoneSameInstant(ZoneId.systemDefault())
-        endLocal= e.withZoneSameInstant(ZoneId.systemDefault())
+        start = ZonedDateTime.from(s)
+        end = ZonedDateTime.from(e)
     }
 
     // todo how remove this shit
     fun onClickBeginDay() {
         viewState.showDatePickerDialog(
-            startLocal,
+            start,
+            // month start from 1
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 // TODO check it work
-                startLocal = withYearMonthDay(startLocal, year, monthOfYear, dayOfMonth)
-                if (startLocal > endLocal) {
-                    endLocal = withYearMonthDay(endLocal, year, monthOfYear, dayOfMonth)
+                // todo check month
+                start = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
+                if (start > end) {
+                    end = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
                 }
                 updateView()
             })
@@ -49,11 +48,11 @@ class DateClickPresenter(
 
     fun onClickBeginHour() {
         viewState.showTimePickerDialog(
-            startLocal,
+            start,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                startLocal = withHourMinuteTruncate(startLocal, hourOfDay, minute)
-                if (startLocal >= endLocal) {
-                    endLocal = startLocal.plusHours(1)
+                start = withHourMinuteTruncate(start, hourOfDay, minute)
+                if (start >= end) {
+                    end = start.plusHours(1)
                 }
                 updateView()
             })
@@ -61,11 +60,11 @@ class DateClickPresenter(
 
     fun onClickEndDay() {
         viewState.showDatePickerDialog(
-            endLocal,
+            end,
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                endLocal = withYearMonthDay(endLocal, year, monthOfYear, dayOfMonth)
-                if (endLocal < startLocal) {
-                    startLocal = withYearMonthDay(startLocal, year, monthOfYear, dayOfMonth)
+                end = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
+                if (end < start) {
+                    start = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
                 }
                 updateView()
             })
@@ -74,11 +73,11 @@ class DateClickPresenter(
 
     fun onClickEndHour() {
         viewState.showTimePickerDialog(
-            endLocal,
+            end,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                endLocal = withHourMinuteTruncate(endLocal, hourOfDay, minute)
-                if (endLocal <= startLocal) {
-                    startLocal = endLocal.minusHours(1)
+                end = withHourMinuteTruncate(end, hourOfDay, minute)
+                if (end <= start) {
+                    start = end.minusHours(1)
                 }
                 updateView()
             })

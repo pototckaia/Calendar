@@ -5,19 +5,15 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.*
 import com.arellomobile.mvp.MvpAppCompatFragment
-import com.example.calendar.helpers.START_EVENT_KEY
-import com.example.calendar.helpers.END_EVENT_KEY
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.helpers.fromLongUTC
-import com.example.calendar.helpers.toLongUTC
+import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import org.dmfs.rfc5545.recur.Freq
 import org.dmfs.rfc5545.recur.RecurrenceRule
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 
 
@@ -26,12 +22,13 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     companion object {
         fun newInstance(
-            startEvent: ZonedDateTime, endEvent: ZonedDateTime
+            startEvent: ZonedDateTime,
+            endEvent: ZonedDateTime
         ): CreateEventFragment {
             val args = Bundle()
             args.run {
-                this.putLong(START_EVENT_KEY, toLongUTC(startEvent))
-                this.putLong(END_EVENT_KEY, toLongUTC(endEvent))
+                this.putString(START_EVENT_KEY, toStringFromZoned(startEvent))
+                this.putString(END_EVENT_KEY, toStringFromZoned(endEvent))
             }
             val f = CreateEventFragment()
             f.arguments = args
@@ -57,8 +54,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideDateClickPresenter(): DateClickPresenter {
         return DateClickPresenter(
-            fromLongUTC(arguments!!.getLong(START_EVENT_KEY)),
-            fromLongUTC(arguments!!.getLong(END_EVENT_KEY))
+            fromStringToZoned(arguments!!.getString(START_EVENT_KEY)),
+            fromStringToZoned(arguments!!.getString(END_EVENT_KEY))
         )
     }
 
@@ -105,9 +102,9 @@ class CreateEventFragment : MvpAppCompatFragment(),
         createEventPresenter.onSaveEvent(
             view!!.etTextEvent.text.toString(),
             "TODO",
-            dateClickPresenter.startLocal.withZoneSameInstant(ZoneOffset.UTC),
-            dateClickPresenter.endLocal.withZoneSameInstant(ZoneOffset.UTC),
-            rule_daily
+            dateClickPresenter.start,
+            dateClickPresenter.end,
+            ""
             )
     }
 

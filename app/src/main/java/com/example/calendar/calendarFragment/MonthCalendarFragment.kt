@@ -18,14 +18,15 @@ import com.example.calendar.R
 import com.example.calendar.customView.DayEventAdapter
 import com.example.calendar.customView.MonthDotDecorator
 import com.example.calendar.customView.TodayDecorator
-import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.data.oldEvent.EventTable
-import java.text.SimpleDateFormat
 import androidx.recyclerview.widget.LinearLayoutManager
-import java.util.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.example.calendar.data.EventInstance
+import com.example.calendar.helpers.fromCalendar
+import com.example.calendar.helpers.toCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 
 
 class MonthCalendarFragment : MvpAppCompatFragment(),
@@ -60,7 +61,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     fun provideListEventPresenter(): ListEventPresenter {
         return ListEventPresenter(
             // todo inject
-            EventRoomDatabase.getInstance(context!!).eventDao()
+            InjectApplication.inject.repository
         )
     }
 
@@ -71,14 +72,14 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     fun provideMonthEventPresenter(): MonthDotPresenter {
         return MonthDotPresenter(
             // todo inject
-            EventRoomDatabase.getInstance(context!!).eventDao()
+            InjectApplication.inject.repository
         )
     }
 
     private lateinit var v: View
 
     private val decorator = MonthDotDecorator()
-    private val fmtCurDay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val fmtCurDay = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,50 +127,56 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
             openNewEventPresenter.openOnTodayDay()
         } else {
             openNewEventPresenter.openOnDay(
-                v.cvMonthCalendar.selectedDate.calendar
+                fromCalendar(v.cvMonthCalendar.selectedDate.calendar)
             )
         }
     }
 
     private fun onClickEvent(pos: Int) {
-        val id = listEventPresenter.getId(pos)
+        val event = listEventPresenter.getEvent(pos)
         // todo need presenter ???
-        router.navigateTo(Screens.EventScreen(id))
+        router.navigateTo(Screens.EventScreen(event))
     }
 
     override fun onDateSelected(
-        widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
-        currentDatePresenter.setCurrentDate(date.calendar)
+        widget: MaterialCalendarView, date: CalendarDay, selected: Boolean
+    ) {
+        currentDatePresenter.setCurrentDate(fromCalendar(date.calendar))
     }
 
     override fun onDateLongClick(
-        widget: MaterialCalendarView, date: CalendarDay) {
-        openNewEventPresenter.openOnDay(date.calendar)
+        widget: MaterialCalendarView, date: CalendarDay
+    ) {
+        openNewEventPresenter.openOnDay(fromCalendar(date.calendar))
     }
 
     override fun onMonthChanged(
-        widget: MaterialCalendarView, date: CalendarDay) {
-        monthDotPresenter.onMonthChange(date.calendar)
+        widget: MaterialCalendarView, date: CalendarDay
+    ) {
+        monthDotPresenter.onMonthChange(fromCalendar(date.calendar))
     }
 
     override fun showError(e: String) {
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
-    override fun setMonthDots(it: HashSet<Calendar>) {
+    override fun setMonthDots(it: HashSet<ZonedDateTime>) {
         decorator.setDates(it)
         v.cvMonthCalendar.invalidateDecorators();
     }
 
-    override fun setEvents(it: List<EventTable>) {
+    override fun setEvents(it: List<EventInstance>) {
         v.rvEvents.adapter.run {
-            (this as DayEventAdapter).setEvents(it, v.cvMonthCalendar.selectedDate.calendar)
+            (this as DayEventAdapter).setEvents(
+                it,
+                fromCalendar(v.cvMonthCalendar.selectedDate.calendar)
+            )
         }
     }
 
-    override fun setCurrentDate(date: Calendar) {
-        v.cvMonthCalendar.selectedDate = CalendarDay.from(date)
-        v.tvSelectDate.text = fmtCurDay.format(date.time)
-        listEventPresenter.onDateSelected(date)
+    override fun setCurrentDate(dateLocal: ZonedDateTime) {
+        v.cvMonthCalendar.selectedDate = CalendarDay.from(toCalendar(dateLocal))
+        v.tvSelectDate.text = dateLocal.format(fmtCurDay)
+        listEventPresenter.onDateSelected(dateLocal)
     }
 }

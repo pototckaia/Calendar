@@ -2,14 +2,14 @@ package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
+import java.util.Calendar
 
 @InjectViewState
 class WeekSaveStatePresenter: MvpPresenter<WeekSaveStateView>() {
 
     var firstVisibleHour : Int = 0
-    val firstVisibleDay = getCalendarWithDefaultTimeZone()
-    var hourHeight = 12.toFloat()
+    val firstVisibleDay = Calendar.getInstance()
+    var hourHeight : Float = 12f
 
     private var isUpdateState = false
 

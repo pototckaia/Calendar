@@ -1,21 +1,22 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.oldEvent.EventRepository
-import com.example.calendar.data.oldEvent.EventTable
 import com.example.calendar.customView.EventWeekView
+import com.example.calendar.data.EventInstance
+import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
-import com.example.calendar.helpers.cloneWithDefaultTimeZone
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
-import com.example.calendar.helpers.setHourOfDayAndMinute
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.*
+import org.threeten.bp.Duration
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.temporal.TemporalAdjusters
 import kotlin.collections.ArrayList
 
 
 @InjectViewState
 class WeekEventPresenter(
-    private val eventRepository: EventRepository,
+    private val eventRepository: EventRecurrenceRepository,
     private val maxIntersection: Int,
     private val colorEvent: Int,
     private val colorIntersection: Int,
@@ -25,20 +26,18 @@ class WeekEventPresenter(
 
     private val events : ArrayList<EventWeekView> = arrayListOf()
 
+    // todo period
     private val monthsLoad = HashSet<Pair<Int, Int>>()
     private var isFirstUpdate = true;
 
-    fun onMonthChange(month: Calendar) : List<EventWeekView> {
-        val pair = Pair(month.get(Calendar.YEAR), month.get(Calendar.MONTH))
+    fun onMonthChange(month: ZonedDateTime) : List<EventWeekView> {
+        val pair = Pair(month.year, month.monthValue)
 
-        val monthStart = getCalendarWithDefaultTimeZone()
-        monthStart.timeInMillis = month.timeInMillis
-        monthStart.set(Calendar.DAY_OF_MONTH, 1)
-        monthStart.setHourOfDayAndMinute(0, 0)
-
-        val monthEnd = monthStart.clone() as Calendar
-        monthEnd.set(Calendar.DATE, monthStart.getActualMaximum(Calendar.DATE))
-        monthEnd.setHourOfDayAndMinute(24, 0)
+        val monthStart = month.with(TemporalAdjusters.firstDayOfMonth())
+            .truncatedTo(ChronoUnit.DAYS)
+        val monthEnd = month.with(TemporalAdjusters.lastDayOfMonth())
+            .truncatedTo(ChronoUnit.DAYS)
+            .plusDays(1)
 
         if (isFirstUpdate || !isLoad(pair)) {
             isFirstUpdate = false
@@ -53,13 +52,13 @@ class WeekEventPresenter(
         return monthsLoad.contains(yearAndMonth)
     }
 
-    private fun isFromPeriod(it: EventWeekView, start: Calendar, end: Calendar) : Boolean {
+    private fun isFromPeriod(it: EventWeekView, start: ZonedDateTime, end: ZonedDateTime) : Boolean {
         // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
-        return (it.event.started_at >= start && it.event.ended_at < end) ||
-                (it.event.started_at < end && it.event.ended_at > start)
+        return (it.event.startedAtLocal >= start && it.event.endedAtLocal < end) ||
+                (it.event.startedAtLocal < end && it.event.endedAtLocal > start)
     }
 
-    private fun loadEvents(monthStart: Calendar, monthEnd: Calendar) {
+    private fun loadEvents(monthStart: ZonedDateTime, monthEnd: ZonedDateTime) {
         onLoadingStart()
         val subscription = eventRepository.fromTo(monthStart, monthEnd)
             .observeOn(AndroidSchedulers.mainThread())
@@ -87,43 +86,43 @@ class WeekEventPresenter(
         viewState.showError(error.toString());
     }
 
-    private fun onLoadingSuccess(rep: List<EventTable>, startDuration: Calendar, endDuration: Calendar) {
+    private fun onLoadingSuccess(rep: List<EventInstance>, startDuration: ZonedDateTime, endDuration: ZonedDateTime) {
         // remove all what load from with period
         events.removeAll { isFromPeriod(it, startDuration, endDuration) }
 
-        val sortEvent = rep.sortedWith(compareBy({ it.started_at }, { it.ended_at }))
+        val sortEvent = rep.sortedWith(compareBy({ it.startedAtLocal }, { it.endedAtLocal }))
 
-        val startIntersection = getCalendarWithDefaultTimeZone()
-        val endIntersection = getCalendarWithDefaultTimeZone()
-        val intersection = arrayListOf<EventTable>()
+        var startIntersection = ZonedDateTime.now(ZoneId.systemDefault())
+        var endIntersection = ZonedDateTime.now(ZoneId.systemDefault())
+        val intersection = arrayListOf<EventInstance>()
 
         for (i in 0 until sortEvent.size) {
             if (i == 0) {
-                startIntersection.timeInMillis = sortEvent[i].started_at.timeInMillis
-                endIntersection.timeInMillis = sortEvent[i].ended_at.timeInMillis
+                startIntersection = ZonedDateTime.from(sortEvent[i].startedAtLocal)
+                endIntersection = ZonedDateTime.from(sortEvent[i].endedAtLocal)
                 intersection.add(sortEvent[i])
             } else {
                 // if intersection
-                if (sortEvent[i].started_at < endIntersection) {
+                if (sortEvent[i].startedAtLocal < endIntersection) {
                     intersection.add(sortEvent[i])
                     // max end
-                    if (sortEvent[i].ended_at > endIntersection) {
-                        endIntersection.timeInMillis = sortEvent[i].ended_at.timeInMillis
+                    if (sortEvent[i].endedAtLocal > endIntersection) {
+                        endIntersection = ZonedDateTime.from(sortEvent[i].endedAtLocal)
                     }
                 }
                 // not intersection
                 else {
-                    events.addAll(filterIntersection(intersection, startIntersection, endIntersection))
+                    events.addAll( filterIntersection(intersection, startIntersection, endIntersection) )
                     // clear
                     intersection.clear()
                     intersection.add(sortEvent[i])
-                    startIntersection.timeInMillis = sortEvent[i].started_at.timeInMillis
-                    endIntersection.timeInMillis = sortEvent[i].ended_at.timeInMillis
+                    startIntersection = ZonedDateTime.from(sortEvent[i].startedAtLocal)
+                    endIntersection = ZonedDateTime.from(sortEvent[i].endedAtLocal)
                 }
             }
         }
 
-        if (!intersection.isEmpty()) {
+        if (intersection.isNotEmpty()) {
             events.addAll(filterIntersection(intersection, startIntersection, endIntersection))
         }
 
@@ -131,8 +130,8 @@ class WeekEventPresenter(
     }
 
     private fun filterIntersection(
-        inter: List<EventTable>,
-        startIntersection: Calendar, endIntersection: Calendar): List<EventWeekView>
+        inter: List<EventInstance>,
+        startIntersection: ZonedDateTime, endIntersection: ZonedDateTime): List<EventWeekView>
     {
         val res = arrayListOf<EventWeekView>()
 
@@ -141,28 +140,32 @@ class WeekEventPresenter(
         } else if (inter.size <= maxIntersection) {
             inter.forEach { res.add(EventWeekView(it, false, colorIntersection)) }
         } else {
-            val ends = arrayListOf<Calendar>()
+            val ends = arrayListOf<ZonedDateTime>()
             var isAddFake = false;
             for (j in 0 until inter.size) {
                 if (ends.size == maxIntersection - 1) {
-                    val iMin = ends.withIndex().minBy { it.value }?.index
-                    if (inter[j].started_at < ends[iMin!!]) {
+                    val iMin = ends.withIndex().minBy { it.value }?.index!!
+                    if (inter[j].startedAtLocal < ends[iMin]) {
                         isAddFake = true
                     } else {
-                        ends[iMin].timeInMillis = inter[j].ended_at.timeInMillis
+                        ends[iMin] = ZonedDateTime.from(inter[j].endedAtLocal)
                         res.add(EventWeekView(inter[j], false, colorIntersection))
                     }
                 } else {
-                    ends.add(inter[j].ended_at.cloneWithDefaultTimeZone())
+                    ends.add(ZonedDateTime.from(inter[j].endedAtLocal))
                     res.add(EventWeekView(inter[j], false, colorIntersection))
                 }
             }
 
             if (isAddFake) {
-                val eventFake = EventTable(
-                    started_at = startIntersection.cloneWithDefaultTimeZone(),
-                    ended_at = endIntersection.cloneWithDefaultTimeZone(),
-                    name = titleFake
+                val eventFake = EventInstance(
+                    idEventRecurrence = "",
+                    nameEventRecurrence= titleFake,
+                    noteEventRecurrence = "",
+                    startedAtInstance = startIntersection,
+                    startedAtNotUpdate = startIntersection,
+                    duration = Duration.between(startIntersection, endIntersection),
+                    rrule = ""
                 )
                 res.add(EventWeekView(eventFake, true, colorFake))
             }

@@ -4,11 +4,8 @@ import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import java.text.SimpleDateFormat
 import org.dmfs.rfc5545.DateTime
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
-import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
@@ -57,6 +54,14 @@ fun fromStringToZoned(s: String): ZonedDateTime {
     return ZonedDateTime.parse(s, f)
 }
 
+fun toCalendar(s: ZonedDateTime): Calendar {
+    return DateTimeUtils.toGregorianCalendar(s)
+}
+
+fun fromCalendar(s: Calendar): ZonedDateTime {
+    return DateTimeUtils.toZonedDateTime(s)
+}
+
 fun withYearMonthDay(
     d: ZonedDateTime,
     year: Int, monthOfYear: Int, dayOfMonth: Int
@@ -64,6 +69,14 @@ fun withYearMonthDay(
     return d.withYear(year)
         .withMonth(monthOfYear)
         .withDayOfMonth(dayOfMonth)
+}
+
+fun withYearMonthDayTruncate(
+    d: ZonedDateTime,
+    year: Int, monthOfYear: Int, dayOfMonth: Int
+): ZonedDateTime {
+    return withYearMonthDay(d, year, monthOfYear, dayOfMonth)
+        .truncatedTo(ChronoUnit.DAYS)
 }
 
 fun withHourMinuteTruncate(

@@ -8,7 +8,9 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.dmfs.rfc5545.DateTime
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
 
 
 class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
@@ -17,8 +19,8 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
     private fun getEventInstances(
         event: EventRecurrence,
-        start: ZonedDateTime,
-        end: ZonedDateTime
+        startUTC: ZonedDateTime,
+        endUTC: ZonedDateTime
     ): List<EventInstance> {
 
         val instances = arrayListOf<EventInstance>()
@@ -27,17 +29,17 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         dao.getExceptionByEventId(event.id).forEach {
             exceptionsList.add(toDateTimeUTC(it.exceptionDate))
         }
-        val exceptions = exceptionsList.toSet()
+        val exceptionsSet = exceptionsList.toSet()
 
         if (!event.isRecurrence()) {
             val eventInstance = EventInstance(event, event.startedAt)
-            instances.plus(eventInstance)
+            instances.add(eventInstance)
             return instances
         }
 
         // todo time
-        val startRange = toDateTimeUTC(max(event.startedAt, start))
-        val endRange = toDateTimeUTC(min(event.endOutRecurrence, end))
+        val startRange = toDateTimeUTC(max(event.startedAt, startUTC))
+        val endRange = toDateTimeUTC(min(event.endOutRecurrence, endUTC))
 
         val recurrence = RecurrenceRule(event.rrule)
         val startRecurrence = toDateTimeUTC(event.startedAt)
@@ -52,40 +54,61 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
             } else if (startInstance.after(endRange)) {
                 break;
             }
-            if (exceptions.contains(startInstance)) {
+            if (exceptionsSet.contains(startInstance)) {
                 continue
             }
             val eventInstance = EventInstance(event, fromDateTimeUTC(startInstance))
-            instances.plus(eventInstance)
+            instances.add(eventInstance)
             counter++
         }
         return instances
     }
 
-    fun fromTo(start: ZonedDateTime, end: ZonedDateTime): Flowable<List<EventInstance>> {
-        return dao.fromToRx(start, end)
+    private fun daysInEventLocal(event: EventInstance): List<ZonedDateTime> {
+        val dates = arrayListOf<ZonedDateTime>()
+        dates.add(event.startedAtLocal)
+        var s = ZonedDateTime.from(event.startedAtLocal)
+        for (i in 1..event.duration.toDays()) {
+            s = s.plusDays(1)
+                .truncatedTo(ChronoUnit.DAYS)
+            dates.add(ZonedDateTime.from(s))
+        }
+        return dates
+    }
+
+    fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<List<EventInstance>> {
+        val startUTC = startLocal.withZoneSameInstant(ZoneOffset.UTC)
+        val endUTC = endLocal.withZoneSameInstant(ZoneOffset.UTC)
+        return dao.fromToRx(startUTC, endUTC)
             .flatMap { list ->
                 Flowable.fromIterable(list)
-                    .map { getEventInstances(it, start, end) }
+                    .map { getEventInstances(it, startUTC, endUTC) }
                     .flatMapIterable { it }
                     .toList()
                     .toFlowable()
             }
     }
 
-    fun fromToRec(start: ZonedDateTime, end: ZonedDateTime): Flowable<List<EventRecurrence>> {
-        return dao.fromToRx(start, end)
+    fun fromToSetLocal(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<HashSet<ZonedDateTime>> {
+        return fromTo(startLocal, endLocal)
+            .flatMap { list ->
+                Flowable.fromIterable(list)
+                    .map { daysInEventLocal(it) }
+                    .flatMapIterable { it }
+                    .collect({ hashSetOf<ZonedDateTime>() }, { set, z -> set.add(z) })
+                    .toFlowable()
+            }
     }
 
-        fun getEventById(eventId: String): List<EventRecurrence> {
-        return dao.getEventById(eventId)
+    fun getEventById(eventId: String): Flowable<List<EventRecurrence>> {
+        return dao.getEventByIdRx(eventId)
     }
 
     fun insertEvent(event: EventRecurrence): Completable {
         return dao.insertRx(event)
     }
 
-    fun insertEvents(event: List<EventRecurrence>): Completable {
+    fun insertListEvents(event: List<EventRecurrence>): Completable {
         return dao.insertRx(event)
     }
 
