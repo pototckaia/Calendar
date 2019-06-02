@@ -58,9 +58,9 @@ class Screens {
             NavigationFragment.newInstance()
     }
 
-    class FreqScreen : SupportAppScreen() {
+    class FreqScreen(private val start: ZonedDateTime, private val rule:String="") : SupportAppScreen() {
         override fun getFragment(): Fragment =
-                FreqFragment.newInstance()
+                FreqFragment.newInstance(start, rule)
     }
 
 //    class GithubScreen : SupportAppScreen() {

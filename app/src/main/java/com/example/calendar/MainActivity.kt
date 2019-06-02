@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             // todo inject
-            InjectApplication.inject.router.newRootScreen(Screens.NavigationScreen())
+            InjectApplication.inject.router.newRootScreen(Screens.FreqScreen(ZonedDateTime.now(), ""))
         }
     }
 

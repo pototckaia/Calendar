@@ -6,73 +6,56 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.helpers.fromDateTimeUTC
-import com.example.calendar.helpers.withYearMonthDay
+import com.example.calendar.helpers.*
+import com.example.calendar.inject.InjectApplication
+import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import kotlinx.android.synthetic.main.fragment_freq.view.*
-import org.dmfs.rfc5545.recur.Freq
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 
-enum class FreqView(val pos: Int) {
-    NEVER(0), DAILY(1), WEEKLY(2), MONTHLY(3), YEARLY(4);
+class FreqFragment: MvpAppCompatFragment(),
+    RecurrenceRuleView  {
 
     companion object {
-        fun fromPos(pos: Int) : FreqView? {
-            for (f in FreqView.values()) {
-                if (f.pos == pos) {
-                    return f
-                }
+        fun newInstance(start: ZonedDateTime, freq: String = "") : FreqFragment {
+            val args = Bundle()
+            args.run {
+                this.putString(RULE_RECURRENCE_RULE, freq)
+                this.putString(START_RECURRENCE_RULE, toStringFromZoned(start))
             }
-            return null
+
+            val f = FreqFragment()
+            f.arguments = args
+            return f
         }
-
-        fun fromFreq(f: Freq) : FreqView? =
-            when (f) {
-                Freq.DAILY -> FreqView.DAILY
-                Freq.WEEKLY -> FreqView.WEEKLY
-                Freq.MONTHLY -> FreqView.MONTHLY
-                Freq.YEARLY -> FreqView.YEARLY
-                Freq.SECONDLY, Freq.MINUTELY, Freq.HOURLY -> null
-            }
-
-
     }
-}
 
-enum class DurationView(val pos: Int) {
-    INFINITELY(0), COUNT(1), UNTIL(2);
+    @InjectPresenter
+    lateinit var freqPresenter: FreqPresenter
 
-    companion object {
-        fun fromPos(pos: Int) : DurationView? {
-            for (f in DurationView.values()) {
-                if (f.pos == pos) {
-                    return f
-                }
-            }
-            return null
-        }
-
-    }
-}
-
-
-
-class FreqFragment: MvpAppCompatFragment() {
-
-
-    companion object {
-        fun newInstance(freq: String = "") : FreqFragment {
-            return FreqFragment()
-        }
+    @ProvidePresenter
+    fun provideFreqPresenter(): FreqPresenter {
+        val args = arguments!!
+        return FreqPresenter(
+            args.getString(RULE_RECURRENCE_RULE)!!,
+            fromStringToZoned(args.getString(START_RECURRENCE_RULE)!!),
+            InjectApplication.inject.router
+        )
     }
 
     lateinit var v: View
 
+    private val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+    // todo month, week, year
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -83,7 +66,7 @@ class FreqFragment: MvpAppCompatFragment() {
             R.layout.fragment_freq,
             container, false
         )
-        setEnableGroup(true)
+        v.tbFreqFragment.setNavigationOnClickListener { freqPresenter.onBack() }
 
         v.spFreq.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -103,41 +86,21 @@ class FreqFragment: MvpAppCompatFragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         })
 
-        v.tvDate.setOnClickListener { onDateClick() }
-
-        // fromRule(RecurrenceRule("FREQ=DAILY;INTERVAL=2;COUNT=34"))
-
+        v.tvDate.setOnClickListener { freqPresenter.onUntilClick() }
         return v
     }
 
-    fun selectedFreq(selectedItemPosition: Int) {
+    private fun selectedFreq(selectedItemPosition: Int) {
         setEnableGroup(selectedItemPosition != FreqView.NEVER.pos)
+        freqPresenter.onSelectItemFreq(selectedItemPosition)
     }
 
-    fun selectedDuration(selectedItemPosition: Int) {
+    private fun selectedDuration(selectedItemPosition: Int) {
         v.etCount.visibility = getVisibility(selectedItemPosition == DurationView.COUNT.pos)
 
         v.tvDate.visibility = getVisibility(selectedItemPosition == DurationView.UNTIL.pos)
-        v.tvDate.text = until.format(formatter)
+        v.tvDate.text = freqPresenter.until.format(formatter)
     }
-
-    fun fromRule(r: RecurrenceRule) {
-        v.spFreq.setSelection(FreqView.fromFreq(r.freq)!!.pos)
-
-        v.etEach.setText(r.interval.toString())
-
-        if (r.count != null) {
-            v.spDuration.setSelection(DurationView.COUNT.pos)
-            v.etCount.setText(r.count.toString())
-        } else if (r.until != null) {
-            until = fromDateTimeUTC(r.until)
-                .withZoneSameInstant(ZoneId.systemDefault())
-            v.spDuration.setSelection(DurationView.UNTIL.pos)
-        } else {
-            v.spDuration.setSelection(DurationView.INFINITELY.pos)
-        }
-    }
-
 
     private fun setEnableGroup(enable: Boolean) {
         v.etEach.isEnabled = enable
@@ -149,19 +112,63 @@ class FreqFragment: MvpAppCompatFragment() {
     private fun getVisibility(b: Boolean)
             =  if (b) View.VISIBLE else View.INVISIBLE
 
-    private var until = ZonedDateTime.now(ZoneId.systemDefault())
-    private val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
 
-    private fun onDateClick() {
-        val dpd = MaterialDatePickerDialog.newInstance(
-            until,
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                until = withYearMonthDay(until, year, monthOfYear, dayOfMonth)
-                    .truncatedTo(ChronoUnit.DAYS)
-                v.tvDate.text = until.format(formatter)
-            })
+    override fun openCalendar(until: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
+        val dpd = MaterialDatePickerDialog.newInstance(until, l)
         dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 
+
+    override fun setViewRule(it: RecurrenceRule) {
+        v.spFreq.setSelection(FreqView.fromFreq(it.freq)!!.pos)
+
+        v.etEach.setText(it.interval.toString())
+
+        if (it.count != null) {
+            v.spDuration.setSelection(DurationView.COUNT.pos)
+            v.etCount.setText(it.count.toString())
+        } else if (it.until != null) {
+            v.spDuration.setSelection(DurationView.UNTIL.pos)
+        } else {
+            v.spDuration.setSelection(DurationView.INFINITELY.pos)
+        }
+    }
+
+    override fun setViewNotRule() {
+        selectedFreq(FreqView.NEVER.pos)
+    }
+
+    override fun setUntil(until: ZonedDateTime) {
+        v.tvDate.text = until.format(formatter)
+    }
+
+    override fun onSave(it: RecurrenceRule) {
+        it.setFreq(FreqView.fromPos(v.spFreq.selectedItemPosition)!!.toFreq()!!, true)
+
+        var interval = v.etEach.text.toString().toInt()
+        if (interval <= 0) {
+            interval = 1
+            showToast("Интервал должен быть больше 0")
+        }
+        it.interval = interval
+
+        val durationPos = v.spDuration.selectedItemPosition
+        if (durationPos == DurationView.COUNT.pos) {
+            var count = v.etCount.text.toString().toInt()
+            if (count <= 0) {
+                count = 1
+                showToast("Заданное колличество раз должен быть больше 0")
+            }
+            it.count = count
+
+        } else if (durationPos == DurationView.UNTIL.pos) {
+            it.until = toDateTimeUTC(freqPresenter.untilUTC)
+        }
+    }
+
+    override fun showToast(s: String) {
+        v.debug.setText(s)
+        Toast.makeText(context, s, Toast.LENGTH_LONG).show()
+    }
 }
