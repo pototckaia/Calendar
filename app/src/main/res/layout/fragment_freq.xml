@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbFreqFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/toolbarBackground"
+            android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="?attr/homeAsUpIndicator">
+
+        <TextView
+                android:id="@+id/tvTitle"
+                android:text="Повторять"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:textSize="18sp"
+                android:textColor="@color/colorWhite"
+                android:gravity="center|start"
+        />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+            android:id="@+id/tvTitleFreq"
+            android:text="Интервал повторения"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tbFreqFragment"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+
+    <Spinner
+            android:id="@+id/spFreq"
+            android:entries="@array/freq_list"
+
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleFreq"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <TextView
+            android:id="@+id/tvEvery"
+            android:text="Каждый"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.2"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/etEach"
+            app:layout_constraintTop_toTopOf="@+id/etEach"
+            app:layout_constraintBottom_toBottomOf="@+id/etEach"
+    />
+
+    <EditText
+            android:id="@+id/etEach"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:inputType="number"
+            android:ems="10"
+            android:text="1"
+            android:layout_marginTop="5dp"
+
+            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintStart_toEndOf="@+id/tvEvery"
+            app:layout_constraintEnd_toStartOf="@+id/tvEach"
+            app:layout_constraintTop_toBottomOf="@id/spFreq"
+    />
+
+    <TextView
+            android:id="@+id/tvEach"
+            android:text="раз"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintStart_toEndOf="@+id/etEach"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etEach"
+            app:layout_constraintBottom_toBottomOf="@+id/etEach"
+    />
+
+    <TextView
+            android:id="@+id/tvTitleDuration"
+            android:text="Длительность"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etEach"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+    <Spinner
+            android:id="@+id/spDuration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/duration_list"
+            android:layout_marginTop="5dp"
+
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleDuration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/etCount"
+    />
+
+    <EditText
+            android:id="@+id/etCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:text="1"
+
+            android:visibility="invisible"
+
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/spDuration"
+            app:layout_constraintBottom_toBottomOf="@+id/spDuration"
+            app:layout_constraintTop_toTopOf="@+id/spDuration"
+            />
+
+    <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="08/06/2019"
+
+            android:visibility="invisible"
+
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/spDuration"
+            app:layout_constraintBottom_toBottomOf="@+id/spDuration"
+            app:layout_constraintTop_toTopOf="@+id/spDuration"/>
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/grFreq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:constraint_referenced_ids="" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

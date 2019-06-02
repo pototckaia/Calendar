@@ -4,6 +4,7 @@ import android.content.Context
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import android.content.Intent
 import androidx.fragment.app.Fragment
+import com.example.calendar.FreqFragment
 import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
@@ -55,6 +56,11 @@ class Screens {
     class NavigationScreen : SupportAppScreen() {
         override fun getFragment(): Fragment =
             NavigationFragment.newInstance()
+    }
+
+    class FreqScreen : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+                FreqFragment.newInstance()
     }
 
 //    class GithubScreen : SupportAppScreen() {
