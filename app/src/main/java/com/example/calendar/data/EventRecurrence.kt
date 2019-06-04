@@ -37,8 +37,11 @@ data class EventRecurrence(
         endOutRecurrence = endOutRecurrence.withZoneSameInstant(ZoneOffset.UTC)
     }
 
-    constructor(name: String, note: String, startedAt: ZonedDateTime, duration: Duration, rrule: String) :
+    constructor(name: String, note: String,
+                startedAt: ZonedDateTime, duration: Duration, rrule: String,
+                id: String = UUID.randomUUID().toString()) :
             this(
+                id = id,
                 name = name,
                 note = note,
                 startedAt = startedAt,

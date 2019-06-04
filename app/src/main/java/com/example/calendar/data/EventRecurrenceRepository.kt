@@ -8,9 +8,11 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.dmfs.rfc5545.DateTime
+import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
+import javax.security.auth.login.LoginException
 
 
 class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
@@ -108,8 +110,32 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         return dao.insertRx(event)
     }
 
-    fun insertListEvents(event: List<EventRecurrence>): Completable {
-        return dao.insertRx(event)
+    fun updateAllEvent(event: EventInstance) : Completable {
+        return Completable.fromRunnable()
+        {
+            val eventRecList = dao.getEventById(event.idEventRecurrence)
+            if (eventRecList.isEmpty()) {
+                throw LoginException("Event doesn't exist")
+            }
+            val eventRecurrence = eventRecList[0]
+
+            var startedAt = eventRecurrence.startedAt
+            if (event.startedAtNotUpdate != event.startedAtInstance) {
+                val d = Duration.between(event.startedAtNotUpdate, event.startedAtInstance)
+                startedAt = eventRecurrence.startedAt.plus(d)
+            }
+
+            val eventRec = EventRecurrence(
+                event.nameEventRecurrence,
+                event.noteEventRecurrence,
+                startedAt,
+                event.duration,
+                event.rrule,
+                event.idEventRecurrence)
+            dao.update(eventRec)
+        }
+
+
     }
 
 //
@@ -175,17 +201,5 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 //        insertEvent(dao, event) // originEndDAte
 //    }
 //
-//    fun updateEventAll(dao: EventRecurrenceDao, event: EventInstance) {
-//        val eventRec = dao.getEventById(event.idEventRecurrence)
-//        if (event.startedAtNotUpdate != event.startedAtInstance) {
-//            val d = Duration.between(event.startedAtNotUpdate, event.startedAtInstance)
-//            eventRec.startedAt = eventRec.startedAt.plus(d)
-//        }
-//        eventRec.name = event.nameEventRecurrence
-//        eventRec.note = event.noteEventRecurrence
-//        eventRec.duration = event.duration
-//        eventRec.rrule = event.rrule
-//        eventRec.endOutRecurrence = calculateEndOutOfRange(eventRec.startedAt, eventRec.duration, eventRec.rrule)
-//        dao.update(eventRec)
-//    }
+
 }

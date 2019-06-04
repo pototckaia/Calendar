@@ -18,6 +18,7 @@ class DateClickPresenter(
 ) : MvpPresenter<DateClickView>() {
 
     init {
+        setDate(start, end)
         updateView()
     }
 
@@ -26,8 +27,10 @@ class DateClickPresenter(
     }
 
     fun setDate(s: ZonedDateTime, e: ZonedDateTime) {
-        start = ZonedDateTime.from(s)
-        end = ZonedDateTime.from(e)
+        start = s
+            .withZoneSameInstant(ZoneId.systemDefault())
+        end = e
+            .withZoneSameInstant(ZoneId.systemDefault())
     }
 
     // todo how remove this shit

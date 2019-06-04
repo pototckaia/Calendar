@@ -8,6 +8,8 @@ import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.dmfs.rfc5545.recur.RecurrenceRule
+import org.threeten.bp.Duration
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.Router
 
@@ -15,27 +17,26 @@ import ru.terrakok.cicerone.Router
 class EditEventPresenter(
     private val router: Router,
     private val eventRepository: EventRecurrenceRepository,
-    private val eventInstance: EventInstance
+    private var eventInstance: EventInstance
 ) : BaseMvpSubscribe<EditEventView>() {
 
 
     init {
-        loadEvent()
+        loadEvent(eventInstance.idEventRecurrence)
     }
 
-    private fun loadEvent() {
-//        val subscription = eventRepository.getUserById(id)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                { repositories ->
-//                    onLoadingSuccess(repositories)
-//                },
-//                { error ->
-//                    // todo when not exist
-//                    onLoadingFailed(error.toString())
-//                });
-//        unsubscribeOnDestroy(subscription)
+    private fun loadEvent(id: String) {
+        val subscription = eventRepository.getEventById(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { repositories ->
+                    onLoadingSuccess(repositories)
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                });
+        unsubscribeOnDestroy(subscription)
     }
 
     fun onUpdate(
@@ -43,25 +44,35 @@ class EditEventPresenter(
         note: String,
         startEvent: ZonedDateTime,
         endEvent: ZonedDateTime,
-        rule: RecurrenceRule
+        rule: String
     ) {
-//        event.run {
-//            this.name = test
-//            this.started_at.timeInMillis = start.timeInMillis
-//            this.ended_at.timeInMillis = end.timeInMillis
-//        }
-//
-//        val sub = eventRepository.update(event)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                {
-//                    viewState.updateEventInfo(event)
-//                },
-//                { error ->
-//                    onLoadingFailed(error.toString())
-//                })
-//        unsubscribeOnDestroy(sub)
+
+        val newEventInstance = EventInstance(
+            idEventRecurrence = eventInstance.idEventRecurrence,
+            nameEventRecurrence = title,
+            noteEventRecurrence = note,
+            startedAtInstance = startEvent,
+            startedAtNotUpdate = eventInstance.startedAtNotUpdate,
+            duration = Duration.between(
+                startEvent.withZoneSameInstant(ZoneOffset.UTC),
+                endEvent.withZoneSameInstant(ZoneOffset.UTC)),
+            rrule = rule
+        )
+
+        val sub = eventRepository.updateAllEvent(newEventInstance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    newEventInstance.startedAtNotUpdate = newEventInstance.startedAtInstance
+                    eventInstance = newEventInstance
+
+                    viewState.updateEventInfo(eventInstance)
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
+        unsubscribeOnDestroy(sub)
     }
 
     fun onDelete() {
@@ -84,10 +95,9 @@ class EditEventPresenter(
 
     private fun onLoadingSuccess(rep: List<EventRecurrence>) {
         if (rep.isEmpty()) {
-
+            // todo when not exist
         } else {
-//            event = rep.first()
-//            viewState.updateEventInfo(event)
+            viewState.updateEventInfo(eventInstance)
         }
     }
 
