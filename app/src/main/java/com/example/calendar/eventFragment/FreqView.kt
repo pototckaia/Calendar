@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.eventFragment
 
 import android.app.DatePickerDialog
 import com.arellomobile.mvp.MvpView
@@ -34,10 +34,10 @@ enum class FreqView(val pos: Int) {
 
         fun fromFreq(f: Freq) : FreqView? =
             when (f) {
-                Freq.DAILY -> FreqView.DAILY
-                Freq.WEEKLY -> FreqView.WEEKLY
-                Freq.MONTHLY -> FreqView.MONTHLY
-                Freq.YEARLY -> FreqView.YEARLY
+                Freq.DAILY -> DAILY
+                Freq.WEEKLY -> WEEKLY
+                Freq.MONTHLY -> MONTHLY
+                Freq.YEARLY -> YEARLY
                 Freq.SECONDLY, Freq.MINUTELY, Freq.HOURLY -> null
             }
 
@@ -80,4 +80,6 @@ interface RecurrenceRuleView : MvpView {
     @StateStrategyType(SkipStrategy::class)
     fun onSave(it: RecurrenceRule)
 
+    @StateStrategyType(SkipStrategy::class)
+    fun onExit(r: String)
 }

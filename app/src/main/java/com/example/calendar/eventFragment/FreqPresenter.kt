@@ -1,4 +1,4 @@
-package com.example.calendar
+package com.example.calendar.eventFragment
 
 import android.app.DatePickerDialog
 import com.arellomobile.mvp.InjectViewState
@@ -14,10 +14,9 @@ import ru.terrakok.cicerone.Router
 
 @InjectViewState
 class FreqPresenter(
-    private val ruleString: String,
-    start_: ZonedDateTime,
-    private val router: Router) :
-    BaseMvpSubscribe<RecurrenceRuleView >() {
+    ruleString: String,
+    start_: ZonedDateTime) :
+    BaseMvpSubscribe<RecurrenceRuleView>() {
 
     private val start = start_.withZoneSameInstant(ZoneId.systemDefault())
 
@@ -30,10 +29,14 @@ class FreqPresenter(
     init {
         if (isNotRule) {
             viewState.setViewNotRule()
+            viewState.setUntil(start)
         } else {
             val rule = RecurrenceRule(ruleString)
             if (rule.until != null) {
                 untilUTC = fromDateTimeUTC(rule.until)
+                viewState.setUntil(until)
+            } else {
+                viewState.setUntil(start)
             }
             viewState.setViewRule(rule)
         }
@@ -41,15 +44,16 @@ class FreqPresenter(
 
     fun onUntilClick() {
         val l = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            untilUTC = withYearMonthDay(until, year, monthOfYear, dayOfMonth)
+            val until_ = withYearMonthDay(until, year, monthOfYear, dayOfMonth)
                 .truncatedTo(ChronoUnit.DAYS)
                 .withZoneSameInstant(ZoneId.systemDefault())
-            if (until < start) {
+            if (until_ < start) {
                 untilUTC = start.withZoneSameInstant(ZoneOffset.UTC)
                 // todo hard
                 viewState.showToast("Дата оконачания должна быть позже даты начала")
+            } else {
+                untilUTC = until_.withZoneSameInstant(ZoneOffset.UTC)
             }
-
             viewState.setUntil(until)
         }
         viewState.openCalendar(start, l)
@@ -62,11 +66,11 @@ class FreqPresenter(
 
     fun onBack() {
         if (isNotRule) {
-
+            viewState.onExit("")
         } else {
             val r = RecurrenceRule("FREQ=DAILY;")
             viewState.onSave(r)
-            viewState.showToast(r.toString())
+            viewState.onExit(r.toString())
         }
     }
 }

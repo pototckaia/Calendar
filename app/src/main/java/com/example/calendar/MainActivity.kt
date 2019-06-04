@@ -2,12 +2,16 @@ package com.example.calendar
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 
+class RecurrenceViewModel: ViewModel() {
+    val recurrence = MutableLiveData<String>()
+}
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             // todo inject
-            InjectApplication.inject.router.newRootScreen(Screens.FreqScreen(ZonedDateTime.now(), ""))
+            InjectApplication.inject.router.newRootScreen(Screens.NavigationScreen())
         }
     }
 

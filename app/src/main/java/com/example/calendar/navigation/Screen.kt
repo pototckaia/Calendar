@@ -4,7 +4,7 @@ import android.content.Context
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import android.content.Intent
 import androidx.fragment.app.Fragment
-import com.example.calendar.FreqFragment
+import com.example.calendar.eventFragment.FreqFragment
 import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
@@ -13,7 +13,6 @@ import com.example.calendar.data.EventInstance
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
 import org.threeten.bp.ZonedDateTime
-import java.util.Calendar
 
 class Screens {
 

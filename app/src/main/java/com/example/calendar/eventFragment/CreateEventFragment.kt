@@ -3,22 +3,25 @@ package com.example.calendar.eventFragment;
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
+import com.example.calendar.RecurrenceViewModel
 import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
+import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
-import org.dmfs.rfc5545.recur.Freq
-import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZonedDateTime
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfoView, DateClickView {
+    CreateEventInfoView, DateClickView, RecurrenceEventView {
 
     companion object {
         fun newInstance(
@@ -59,11 +62,14 @@ class CreateEventFragment : MvpAppCompatFragment(),
         )
     }
 
+    @InjectPresenter
+    lateinit var recurrenceEventPresenter: RecurrenceEventPresenter
+
     // todo inject
-    // todo onDelete
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View
+    lateinit var recurrenceViewModel: RecurrenceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,12 +82,24 @@ class CreateEventFragment : MvpAppCompatFragment(),
             container, false
         )
 
+        recurrenceViewModel = activity?.run {
+            ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
+        } ?: throw Exception("Invalid scope to ViewModel")
+
+        recurrenceViewModel.recurrence.observe(this, Observer<String> { r ->
+            recurrenceEventPresenter.onRuleChange(r)
+        })
+
         initToolBar()
 
         v.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
         v.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
         v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
         v.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
+
+        v.etRecurrenceRule.inputType = InputType.TYPE_NULL
+        v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
+        v.etRecurrenceRule.setOnFocusChangeListener { view, b -> if (b) onRecurrenceRuleClick() }
 
         return v
     }
@@ -96,16 +114,19 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     private fun onSave() {
-        val rule_daily = RecurrenceRule(Freq.DAILY)
-        rule_daily.count = 5
-
         createEventPresenter.onSaveEvent(
             view!!.etTextEvent.text.toString(),
             "TODO",
             dateClickPresenter.start,
             dateClickPresenter.end,
-            ""
-            )
+            recurrenceEventPresenter.getRule()
+        )
+    }
+
+    private fun onRecurrenceRuleClick() {
+        router.navigateTo(Screens.FreqScreen(
+            dateClickPresenter.start,
+            recurrenceEventPresenter.getRule()))
     }
 
     override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
@@ -127,4 +148,13 @@ class CreateEventFragment : MvpAppCompatFragment(),
         )
         tpd.show()
     }
+
+    override fun setRecurrenceViw(r: String) {
+        v.etRecurrenceRule.setText(r)
+    }
+
+    override fun postRecurrence(r: String) {
+        recurrenceViewModel.recurrence.postValue(r)
+    }
+
 }

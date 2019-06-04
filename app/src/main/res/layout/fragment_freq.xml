@@ -166,17 +166,5 @@
             app:layout_constraintBottom_toBottomOf="@+id/spDuration"
             app:layout_constraintTop_toTopOf="@+id/spDuration"/>
 
-    <TextView
-            android:id="@+id/debug"
-            android:text="TextView"
-            android:layout_width="274dp"
-            android:layout_height="87dp"
-            android:layout_marginBottom="4dp"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
