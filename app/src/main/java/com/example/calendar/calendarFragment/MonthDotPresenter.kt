@@ -25,11 +25,12 @@ class MonthDotPresenter(
     }
 
     fun onMonthChange(month: ZonedDateTime) {
+        unsubscribeOnAll()
         curMonth = month
         loadEvents()
     }
 
-    // TODO how work unsubsribe
+
     private fun loadEvents() {
         val monthStart = curMonth.with(TemporalAdjusters.firstDayOfMonth())
             .truncatedTo(ChronoUnit.DAYS)
