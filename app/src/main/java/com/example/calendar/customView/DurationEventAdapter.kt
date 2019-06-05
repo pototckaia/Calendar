@@ -35,7 +35,7 @@ class DurationEventViewHolder(
         if (isSameDay(start, end)) {
             view.tvEventDay.height = 0
         } else {
-            view.tvEventDay.text = getStringDayDiff(e.startedAtLocal, e.startedAtLocal)
+            view.tvEventDay.text = getStringDayDiff(e.startedAtLocal, e.endedAtLocal)
         }
     }
 }
