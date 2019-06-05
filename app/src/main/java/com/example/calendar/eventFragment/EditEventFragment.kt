@@ -138,7 +138,7 @@ class EditEventFragment : MvpAppCompatFragment(),
                     recurrenceEventPresenter.getRule())
             }
             R.id.actionDelete -> {
-//                editEventPresenter.onDelete()
+                editEventPresenter.onDelete()
             }
         }
     }

@@ -19,7 +19,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
     private val maxInstances = 1000
 
-    private fun isFromPeriod(it: EventInstance, start: ZonedDateTime, end: ZonedDateTime) : Boolean {
+    private fun isFromPeriod(it: EventInstance, start: ZonedDateTime, end: ZonedDateTime): Boolean {
         // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
         return (it.startedAtInstance >= start && it.endedAtInstance < end) ||
                 (it.startedAtInstance < end && it.endedAtInstance > start)
@@ -59,7 +59,8 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
             val startInstance = it.nextDateTime()
 
             if (recurrence.until != null &&
-                (startInstance.after(recurrence.until) || startInstance == recurrence.until)) {
+                (startInstance.after(recurrence.until) || startInstance == recurrence.until)
+            ) {
                 break
             }
 
@@ -123,7 +124,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         return dao.insertRx(event)
     }
 
-    fun updateAllEvent(event: EventInstance) : Completable {
+    fun updateAllEvent(event: EventInstance): Completable {
         return Completable.fromRunnable()
         {
             val eventRecList = dao.getEventById(event.idEventRecurrence)
@@ -144,11 +145,23 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
                 startedAt,
                 event.duration,
                 event.rrule,
-                event.idEventRecurrence)
+                event.idEventRecurrence
+            )
             dao.update(eventRec)
         }
 
 
+    }
+
+    fun deleteAllEvent(event: EventInstance) : Completable {
+        return Completable.fromRunnable() {
+            val eventRecList = dao.getEventById(event.idEventRecurrence)
+            if (eventRecList.isEmpty()) {
+                throw LoginException("Event doesn't exist")
+            }
+            val eventRecurrence = eventRecList[0]
+            dao.delete(eventRecurrence)
+        }
     }
 
 //

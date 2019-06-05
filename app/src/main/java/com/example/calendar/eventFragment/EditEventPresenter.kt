@@ -76,17 +76,17 @@ class EditEventPresenter(
     }
 
     fun onDelete() {
-//        val sub = eventRepository.delete(event)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                {
-//                    router.exit()
-//                },
-//                { error ->
-//                    onLoadingFailed(error.toString())
-//                })
-//        unsubscribeOnDestroy(sub)
+        val sub = eventRepository.deleteAllEvent(eventInstance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    router.exit()
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
+        unsubscribeOnDestroy(sub)
     }
 
     private fun onLoadingFailed(error: String) {
