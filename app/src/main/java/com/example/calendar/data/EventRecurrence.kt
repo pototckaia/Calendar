@@ -11,6 +11,8 @@ import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import java.util.UUID
+import com.example.calendar.helpers.max
+import com.example.calendar.helpers.min
 
 
 @Entity(tableName = "eventsRecurrence")
@@ -66,18 +68,20 @@ data class EventRecurrence(
 
     private fun calculateEndOutOfRange(startedAt: ZonedDateTime, duration: Duration, rrule: String): ZonedDateTime {
         val maxDate = ZonedDateTime.of(9999, 12, 31, 0, 0, 0, 0, ZoneOffset.UTC)
+        var endEvent = startedAt.plus(duration)
+
         if (!isRecurrence()) {
-            return startedAt.plus(duration)
+            return endEvent
         }
+
 
         val recurrence = RecurrenceRule(rrule)
         if (recurrence.isInfinite) {
-            return maxDate
+            endEvent = maxDate
         }
-
-        if (recurrence.until != null) {
+        else if (recurrence.until != null) {
             // the RRULE includes an UNTIL
-            return fromDateTimeUTC(recurrence.until)
+            endEvent = max(fromDateTimeUTC(recurrence.until), endEvent)
         }
 
         if (recurrence.count != null) {
@@ -89,10 +93,11 @@ data class EventRecurrence(
                 startRec = it.nextDateTime()
             }
             val startZone = fromDateTimeUTC(startRec)
-            return startZone.plus(duration)
+
+            endEvent = max(startZone.plus(duration), endEvent)
         }
 
-        return startedAt.plus(duration)
+        return endEvent
 
     }
 }

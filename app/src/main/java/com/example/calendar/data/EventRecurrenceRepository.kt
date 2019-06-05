@@ -17,8 +17,15 @@ import javax.security.auth.login.LoginException
 
 class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
-    private val maxInstances = 1000;
+    private val maxInstances = 1000
 
+    private fun isFromPeriod(it: EventInstance, start: ZonedDateTime, end: ZonedDateTime) : Boolean {
+        // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
+        return (it.startedAtInstance >= start && it.endedAtInstance < end) ||
+                (it.startedAtInstance < end && it.endedAtInstance > start)
+    }
+
+    // [startUTC, endUTC)
     private fun getEventInstances(
         event: EventRecurrence,
         startUTC: ZonedDateTime,
@@ -40,28 +47,33 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         }
 
         // todo time
-        val startRange = toDateTimeUTC(max(event.startedAt, startUTC))
-        val endRange = toDateTimeUTC(min(event.endOutRecurrence, endUTC))
+        val startRange = toDateTimeUTC(startUTC)
+        val endRange = toDateTimeUTC(endUTC)
 
         val recurrence = RecurrenceRule(event.rrule)
         val startRecurrence = toDateTimeUTC(event.startedAt)
         val it = recurrence.iterator(startRecurrence)
-        it.fastForward(startRange) // go to a specific date
+
         var counter = 0
         while (it.hasNext() && (!recurrence.isInfinite || counter > maxInstances)) {
             val startInstance = it.nextDateTime()
 
-            if (startInstance.before(startRange)) {
-                continue;
-            } else if (startInstance.after(endRange)) {
+            if (recurrence.until != null &&
+                (startInstance.after(recurrence.until) || startInstance == recurrence.until)) {
+                break
+            }
+
+            if (startInstance.after(endRange) || startInstance == endRange) {
                 break;
             }
             if (exceptionsSet.contains(startInstance)) {
                 continue
             }
             val eventInstance = EventInstance(event, fromDateTimeUTC(startInstance))
-            instances.add(eventInstance)
-            counter++
+            if (isFromPeriod(eventInstance, startUTC, endUTC)) {
+                instances.add(eventInstance)
+                counter++
+            }
         }
         return instances
     }
@@ -70,6 +82,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         val dates = arrayListOf<ZonedDateTime>()
         dates.add(event.startedAtLocal)
         var s = ZonedDateTime.from(event.startedAtLocal)
+
         for (i in 1..event.duration.toDays()) {
             s = s.plusDays(1)
                 .truncatedTo(ChronoUnit.DAYS)
