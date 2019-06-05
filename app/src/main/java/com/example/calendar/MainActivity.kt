@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.calendar.helpers.OnBackPressed
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
@@ -40,8 +41,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // todo inject
-        InjectApplication.inject.router.exit()
+        supportFragmentManager.executePendingTransactions()
+        val fragment = supportFragmentManager.findFragmentById(R.id.clMainContainer) as? OnBackPressed
+
+        if (fragment != null) {
+            fragment.onBackPressed()
+        } else {
+            // todo inject
+            InjectApplication.inject.router.exit()
+        }
     }
 
 }

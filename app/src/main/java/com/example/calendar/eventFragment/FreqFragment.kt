@@ -23,7 +23,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 class FreqFragment: MvpAppCompatFragment(),
-    RecurrenceRuleView {
+    RecurrenceRuleView, OnBackPressed {
 
     companion object {
         fun newInstance(start: ZonedDateTime, freq: String = "") : FreqFragment {
@@ -92,6 +92,10 @@ class FreqFragment: MvpAppCompatFragment(),
         v.tvDate.setOnClickListener { freqPresenter.onUntilClick() }
 
         return v
+    }
+
+    override fun onBackPressed() {
+        freqPresenter.onBack()
     }
 
     private fun selectedFreq(selectedItemPosition: Int) {
