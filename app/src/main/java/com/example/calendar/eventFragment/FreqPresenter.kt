@@ -10,7 +10,6 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
-import ru.terrakok.cicerone.Router
 
 @InjectViewState
 class FreqPresenter(
@@ -27,33 +26,36 @@ class FreqPresenter(
     var isNotRule : Boolean = ruleString.isEmpty()
 
     init {
+        if (!isNotRule && RecurrenceRule(ruleString).until != null) {
+            val rule = RecurrenceRule(ruleString)
+            untilUTC = fromDateTimeUTC(rule.until)
+        } else {
+            untilUTC = start
+                .plusDays(1)
+                .withZoneSameInstant(ZoneOffset.UTC)
+        }
+        viewState.setUntil(until)
+
         if (isNotRule) {
             viewState.setViewNotRule()
-            viewState.setUntil(start)
         } else {
             val rule = RecurrenceRule(ruleString)
-            if (rule.until != null) {
-                untilUTC = fromDateTimeUTC(rule.until)
-                viewState.setUntil(until)
-            } else {
-                viewState.setUntil(start)
-            }
             viewState.setViewRule(rule)
         }
     }
 
     fun onUntilClick() {
         val l = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            val until_ = withYearMonthDay(until, year, monthOfYear, dayOfMonth)
+            val newUntil = withYearMonthDay(until, year, monthOfYear, dayOfMonth)
                 .truncatedTo(ChronoUnit.DAYS)
                 .withZoneSameInstant(ZoneId.systemDefault())
-            if (until_ < start) {
-                untilUTC = start.withZoneSameInstant(ZoneOffset.UTC)
-                // todo hard
+
+            if (newUntil <= start) {
                 viewState.showToast("Дата оконачания должна быть позже даты начала")
             } else {
-                untilUTC = until_.withZoneSameInstant(ZoneOffset.UTC)
+                untilUTC = newUntil.withZoneSameInstant(ZoneOffset.UTC)
             }
+
             viewState.setUntil(until)
         }
         viewState.openCalendar(start, l)
