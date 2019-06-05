@@ -55,7 +55,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         val it = recurrence.iterator(startRecurrence)
 
         var counter = 0
-        while (it.hasNext() && (!recurrence.isInfinite || counter > maxInstances)) {
+        while (it.hasNext() && (!recurrence.isInfinite || counter < maxInstances)) {
             val startInstance = it.nextDateTime()
 
             if (recurrence.until != null &&
