@@ -36,6 +36,7 @@ class ListEventPresenter(
         start = dayLocal.truncatedTo(ChronoUnit.DAYS)
         end = start.plusDays(1)
 
+        unsubscribeOnAll()
         loadEvents()
     }
 
