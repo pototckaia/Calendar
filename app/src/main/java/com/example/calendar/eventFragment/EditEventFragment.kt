@@ -20,10 +20,19 @@ import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import org.threeten.bp.ZonedDateTime
+import androidx.appcompat.app.AlertDialog
 
+
+enum class ModifyView {
+    Update, Delete
+}
+
+enum class RecurrenceModifyViw(val pos: Int) {
+    Future(0), All(1)
+}
 
 class EditEventFragment : MvpAppCompatFragment(),
-    DateClickView, EditEventView, RecurrenceEventView  {
+    DateClickView, EditEventView, RecurrenceEventView {
 
     companion object {
         fun newInstance(event: EventInstance): EditEventFragment {
@@ -124,26 +133,21 @@ class EditEventFragment : MvpAppCompatFragment(),
         router.navigateTo(
             Screens.FreqScreen(
                 dateClickPresenter.start,
-                recurrenceEventPresenter.getRule()))
+                recurrenceEventPresenter.getRule()
+            )
+        )
     }
 
     private fun onItemSelected(item: MenuItem?) {
         when (item?.itemId) {
             R.id.actionUpdate -> {
-                editEventPresenter.onUpdate(
-                    v.etTextEvent.text.toString(),
-                    "TODO",
-                    dateClickPresenter.start,
-                    dateClickPresenter.end,
-                    recurrenceEventPresenter.getRule())
+                onUpdateClick()
             }
             R.id.actionDelete -> {
-                editEventPresenter.onDelete()
+                onDeleteClick()
             }
         }
     }
-
-
 
     override fun updateEventInfo(e: EventInstance) {
         v.etTextEvent.setText(e.nameEventRecurrence)
@@ -182,4 +186,70 @@ class EditEventFragment : MvpAppCompatFragment(),
     override fun postRecurrence(r: String) {
         recurrenceViewModel.recurrence.postValue(r)
     }
+
+    private fun onUpdateClick() {
+        if (editEventPresenter.isEventRecurrence()) {
+            showChoice(ModifyView.Update)
+            return
+        }
+        editEventPresenter.onUpdateAll(
+            v.etTextEvent.text.toString(),
+            "TODO",
+            dateClickPresenter.start,
+            dateClickPresenter.end,
+            recurrenceEventPresenter.getRule()
+        )
+    }
+
+    private fun onDeleteClick() {
+        if (editEventPresenter.isEventRecurrence()) {
+            showChoice(ModifyView.Delete)
+            return
+        }
+        editEventPresenter.onDeleteAll()
+    }
+
+    private fun showChoice(m: ModifyView) {
+        val builder = AlertDialog.Builder(context!!)
+        when (m) {
+            ModifyView.Update -> builder.setTitle(R.string.title_choice_update)
+            ModifyView.Delete -> builder.setTitle(R.string.title_choice_delete)
+        }
+
+        builder.setItems(
+            R.array.choice_variance
+        )
+        { _, pos -> onRecurrenceModifyModeView(m, pos) }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun onRecurrenceModifyModeView(m: ModifyView, pos: Int) =
+        when (pos) {
+            RecurrenceModifyViw.Future.pos -> {
+                when (m) {
+                    ModifyView.Update ->
+                        Toast.makeText(context, "Not work until", Toast.LENGTH_SHORT).show()
+                    ModifyView.Delete ->
+                        Toast.makeText(context, "Not work until", Toast.LENGTH_SHORT).show()
+                }
+            }
+            RecurrenceModifyViw.All.pos -> {
+                when (m) {
+                    ModifyView.Update ->
+                        editEventPresenter.onUpdateAll(
+                            v.etTextEvent.text.toString(),
+                            "TODO",
+                            dateClickPresenter.start,
+                            dateClickPresenter.end,
+                            recurrenceEventPresenter.getRule()
+                        )
+                    ModifyView.Delete ->
+                        editEventPresenter.onDeleteAll()
+                }
+            }
+            else -> {
+            }
+        }
 }

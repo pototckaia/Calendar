@@ -7,7 +7,6 @@ import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
@@ -31,7 +30,7 @@ class EditEventPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
-                    onLoadingSuccess(repositories)
+                    onFirstLoading(repositories)
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -39,7 +38,7 @@ class EditEventPresenter(
         unsubscribeOnDestroy(subscription)
     }
 
-    fun onUpdate(
+    fun onUpdateAll(
         title: String,
         note: String,
         startEvent: ZonedDateTime,
@@ -64,10 +63,7 @@ class EditEventPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    newEventInstance.startedAtNotUpdate = newEventInstance.startedAtInstance
-                    eventInstance = newEventInstance
-
-                    viewState.updateEventInfo(eventInstance)
+                    onUpdateLoading(newEventInstance)
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -75,13 +71,13 @@ class EditEventPresenter(
         unsubscribeOnDestroy(sub)
     }
 
-    fun onDelete() {
+    fun onDeleteAll() {
         val sub = eventRepository.deleteAllEvent(eventInstance)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    router.exit()
+                    onDeleteLoading()
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -93,7 +89,7 @@ class EditEventPresenter(
         viewState.showError(error);
     }
 
-    private fun onLoadingSuccess(rep: List<EventRecurrence>) {
+    private fun onFirstLoading(rep: List<EventRecurrence>) {
         if (rep.isEmpty()) {
             // todo when not exist
         } else {
@@ -101,4 +97,16 @@ class EditEventPresenter(
         }
     }
 
+    fun isEventRecurrence() = eventInstance.isRecurrence()
+
+    private fun onUpdateLoading(newEventInstance: EventInstance) {
+        newEventInstance.startedAtNotUpdate = newEventInstance.startedAtInstance
+        eventInstance = newEventInstance
+
+        viewState.updateEventInfo(eventInstance)
+    }
+
+    private fun onDeleteLoading() {
+        router.exit()
+    }
 }

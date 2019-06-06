@@ -24,4 +24,15 @@
         <item>Заданное количество раз</item>
         <item>До</item>
     </string-array>
+
+    <string name="title_choice_update">Сохранить</string>
+    <string name="title_choice_delete">Удалить</string>
+
+    <string-array name="choice_variance">
+        <item>Это и последующие события</item>
+        <item>Все события в последовательности</item>
+    </string-array>
+
+
+
 </resources>
