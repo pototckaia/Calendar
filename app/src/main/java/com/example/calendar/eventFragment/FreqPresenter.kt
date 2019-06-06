@@ -32,6 +32,7 @@ class FreqPresenter(
         } else {
             untilUTC = start
                 .plusDays(1)
+                .truncatedTo(ChronoUnit.DAYS)
                 .withZoneSameInstant(ZoneOffset.UTC)
         }
         viewState.setUntil(until)

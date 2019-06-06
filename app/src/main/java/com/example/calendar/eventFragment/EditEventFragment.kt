@@ -21,6 +21,9 @@ import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import org.threeten.bp.ZonedDateTime
 import androidx.appcompat.app.AlertDialog
+import com.example.calendar.helpers.fromDateTimeUTC
+import org.dmfs.rfc5545.recur.RecurrenceRule
+import org.threeten.bp.ZoneOffset
 
 
 enum class ModifyView {
@@ -54,7 +57,9 @@ class EditEventFragment : MvpAppCompatFragment(),
         val event = arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)
         return DateClickPresenter(
             event.startedAtLocal,
-            event.endedAtLocal
+            event.endedAtLocal,
+            { d: ZonedDateTime -> validateStartEvent(d) },
+            { true }
         )
     }
 
@@ -209,6 +214,25 @@ class EditEventFragment : MvpAppCompatFragment(),
         editEventPresenter.onDeleteAll()
     }
 
+    private fun validateStartEvent(start: ZonedDateTime): Boolean {
+        val rule = recurrenceEventPresenter.getRule()
+        if (rule.isNotEmpty() && RecurrenceRule(rule).until != null) {
+            val until = fromDateTimeUTC(RecurrenceRule(rule).until)
+            val startUTC = start.withZoneSameInstant(ZoneOffset.UTC)
+            if (startUTC >= until) {
+                Toast
+                    .makeText(
+                        context,
+                        "Дата начала события не может быть позже даты ДО в правиле переодичности",
+                        Toast.LENGTH_SHORT)
+                    .show()
+            }
+            return startUTC < until
+        }
+        return true
+    }
+
+
     private fun showChoice(m: ModifyView) {
         val builder = AlertDialog.Builder(context!!)
         when (m) {
@@ -230,9 +254,15 @@ class EditEventFragment : MvpAppCompatFragment(),
             RecurrenceModifyViw.Future.pos -> {
                 when (m) {
                     ModifyView.Update ->
-                        Toast.makeText(context, "Not work until", Toast.LENGTH_SHORT).show()
+                        editEventPresenter.onUpdateFuture(
+                            v.etTextEvent.text.toString(),
+                            "TODO",
+                            dateClickPresenter.start,
+                            dateClickPresenter.end,
+                            recurrenceEventPresenter.getRule()
+                        )
                     ModifyView.Delete ->
-                        Toast.makeText(context, "Not work until", Toast.LENGTH_SHORT).show()
+                        editEventPresenter.onDeleteFuture()
                 }
             }
             RecurrenceModifyViw.All.pos -> {

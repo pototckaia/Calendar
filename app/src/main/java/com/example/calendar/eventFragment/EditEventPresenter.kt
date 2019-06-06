@@ -58,7 +58,40 @@ class EditEventPresenter(
             rrule = rule
         )
 
-        val sub = eventRepository.updateAllEvent(newEventInstance)
+        val sub = eventRepository.updateAll(newEventInstance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    onUpdateLoading(newEventInstance)
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
+        unsubscribeOnDestroy(sub)
+    }
+
+    fun onUpdateFuture(
+        title: String,
+        note: String,
+        startEvent: ZonedDateTime,
+        endEvent: ZonedDateTime,
+        rule: String
+    ) {
+
+        val newEventInstance = EventInstance(
+            idEventRecurrence = eventInstance.idEventRecurrence,
+            nameEventRecurrence = title,
+            noteEventRecurrence = note,
+            startedAtInstance = startEvent,
+            startedAtNotUpdate = eventInstance.startedAtNotUpdate,
+            duration = Duration.between(
+                startEvent.withZoneSameInstant(ZoneOffset.UTC),
+                endEvent.withZoneSameInstant(ZoneOffset.UTC)),
+            rrule = rule
+        )
+
+        val sub = eventRepository.updateFuture(newEventInstance)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -72,7 +105,21 @@ class EditEventPresenter(
     }
 
     fun onDeleteAll() {
-        val sub = eventRepository.deleteAllEvent(eventInstance)
+        val sub = eventRepository.deleteAll(eventInstance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    onDeleteLoading()
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
+        unsubscribeOnDestroy(sub)
+    }
+
+    fun onDeleteFuture() {
+        val sub = eventRepository.deleteFuture(eventInstance)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -104,6 +151,7 @@ class EditEventPresenter(
         eventInstance = newEventInstance
 
         viewState.updateEventInfo(eventInstance)
+        router.exit()
     }
 
     private fun onDeleteLoading() {

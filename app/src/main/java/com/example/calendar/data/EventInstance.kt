@@ -49,7 +49,6 @@ data class EventInstance(
 
     fun isRecurrence() = rrule.isNotEmpty()
 
-
     constructor(parcel: Parcel) :
             this(
                 idEventRecurrence = parcel.readString()!!,

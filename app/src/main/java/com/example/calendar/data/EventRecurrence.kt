@@ -58,14 +58,6 @@ data class EventRecurrence(
         return rrule.isNotEmpty()
     }
 
-    fun addUntil(until: ZonedDateTime) {
-        if (isRecurrence()) {
-            val recurrence = RecurrenceRule(rrule)
-            recurrence.until = toDateTimeUTC(until)
-            rrule = recurrence.toString()
-        }
-    }
-
     private fun calculateEndOutOfRange(startedAt: ZonedDateTime, duration: Duration, rrule: String): ZonedDateTime {
         val maxDate = ZonedDateTime.of(9999, 12, 31, 0, 0, 0, 0, ZoneOffset.UTC)
         var endEvent = startedAt.plus(duration)

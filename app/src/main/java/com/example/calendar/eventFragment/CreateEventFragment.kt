@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.arellomobile.mvp.MvpAppCompatFragment
@@ -17,6 +18,8 @@ import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
+import org.dmfs.rfc5545.recur.RecurrenceRule
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 
 
@@ -58,7 +61,9 @@ class CreateEventFragment : MvpAppCompatFragment(),
     fun provideDateClickPresenter(): DateClickPresenter {
         return DateClickPresenter(
             fromStringToZoned(arguments!!.getString(START_EVENT_KEY)),
-            fromStringToZoned(arguments!!.getString(END_EVENT_KEY))
+            fromStringToZoned(arguments!!.getString(END_EVENT_KEY)),
+            { d: ZonedDateTime -> validateStartEvent(d) },
+            { true }
         )
     }
 
@@ -124,9 +129,12 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     private fun onRecurrenceRuleClick() {
-        router.navigateTo(Screens.FreqScreen(
-            dateClickPresenter.start,
-            recurrenceEventPresenter.getRule()))
+        router.navigateTo(
+            Screens.FreqScreen(
+                dateClickPresenter.start,
+                recurrenceEventPresenter.getRule()
+            )
+        )
     }
 
     override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
@@ -155,6 +163,24 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     override fun postRecurrence(r: String) {
         recurrenceViewModel.recurrence.postValue(r)
+    }
+
+    private fun validateStartEvent(start: ZonedDateTime): Boolean {
+        val rule = recurrenceEventPresenter.getRule()
+        if (rule.isNotEmpty() && RecurrenceRule(rule).until != null) {
+            val until = fromDateTimeUTC(RecurrenceRule(rule).until)
+            val startUTC = start.withZoneSameInstant(ZoneOffset.UTC)
+            if (startUTC >= until) {
+                Toast
+                    .makeText(
+                        context,
+                        "Дата начала события не может быть позже даты ДО в правиле переодичности",
+                        Toast.LENGTH_SHORT)
+                    .show()
+            }
+            return startUTC < until
+        }
+        return true
     }
 
 }

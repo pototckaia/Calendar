@@ -14,7 +14,9 @@ import java.util.*
 @InjectViewState
 class DateClickPresenter(
     var start: ZonedDateTime,
-    var end: ZonedDateTime
+    var end: ZonedDateTime,
+    private val validateStart: (ZonedDateTime) -> Boolean,
+    private val validateEnd: (ZonedDateTime) -> Boolean
 ) : MvpPresenter<DateClickView>() {
 
     init {
@@ -40,8 +42,10 @@ class DateClickPresenter(
             // month start from 1
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 // TODO check it work
-                // todo check month
-                start = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
+                val newStart = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
+                if (!validateStart(newStart)) { return@OnDateSetListener }
+
+                start = newStart
                 if (start > end) {
                     end = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
                 }
@@ -53,7 +57,10 @@ class DateClickPresenter(
         viewState.showTimePickerDialog(
             start,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                start = withHourMinuteTruncate(start, hourOfDay, minute)
+                val newStart = withHourMinuteTruncate(start, hourOfDay, minute)
+                if (!validateStart(newStart)) { return@OnTimeSetListener }
+
+                start = newStart
                 if (start >= end) {
                     end = start.plusHours(1)
                 }
@@ -65,7 +72,10 @@ class DateClickPresenter(
         viewState.showDatePickerDialog(
             end,
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                end = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
+                val newEnd = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
+                if (!validateEnd(newEnd)) { return@OnDateSetListener }
+
+                end = newEnd
                 if (end < start) {
                     start = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
                 }
@@ -78,7 +88,10 @@ class DateClickPresenter(
         viewState.showTimePickerDialog(
             end,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                end = withHourMinuteTruncate(end, hourOfDay, minute)
+                val newEnd = withHourMinuteTruncate(end, hourOfDay, minute)
+                if (!validateEnd(newEnd)) { return@OnTimeSetListener }
+
+                end = newEnd
                 if (end <= start) {
                     start = end.minusHours(1)
                 }

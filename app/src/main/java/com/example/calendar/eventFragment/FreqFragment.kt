@@ -53,7 +53,7 @@ class FreqFragment: MvpAppCompatFragment(),
 
     lateinit var v: View
     lateinit var recurrenceViewModel: RecurrenceViewModel
-    private val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    private val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")
 
     // todo month, week, year
     override fun onCreateView(
