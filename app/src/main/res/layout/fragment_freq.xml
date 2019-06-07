@@ -150,7 +150,7 @@
             app:layout_constraintStart_toEndOf="@+id/spDuration"
             app:layout_constraintBottom_toBottomOf="@+id/spDuration"
             app:layout_constraintTop_toTopOf="@+id/spDuration"
-            />
+    />
 
     <TextView
             android:id="@+id/tvDate"
@@ -164,7 +164,48 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/spDuration"
             app:layout_constraintBottom_toBottomOf="@+id/spDuration"
-            app:layout_constraintTop_toTopOf="@+id/spDuration"/>
+            app:layout_constraintTop_toTopOf="@+id/spDuration"
+    />
+
+    <TextView
+            android:id="@+id/tvTitleAdd"
+            android:text="Дополнительно"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etCount"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+    <com.example.calendar.customView.WeekView
+            android:id="@+id/wvWekSelected"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleAdd"
+    />
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/gWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:visibility="invisible"
+            app:constraint_referenced_ids="tvTitleAdd, wvWekSelected"
+    />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

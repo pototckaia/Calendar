@@ -39,6 +39,7 @@ class FreqPresenter(
 
         if (isNotRule) {
             viewState.setViewNotRule()
+            viewState.setDayOfWeek(start.dayOfWeek)
         } else {
             val rule = RecurrenceRule(ruleString)
             viewState.setViewRule(rule)
@@ -64,7 +65,7 @@ class FreqPresenter(
     }
 
     fun onSelectItemFreq(pos: Int) {
-        isNotRule = pos == FreqView.NEVER.pos
+        isNotRule = pos == eFreqView.NEVER.pos
     }
 
     fun onBack() {

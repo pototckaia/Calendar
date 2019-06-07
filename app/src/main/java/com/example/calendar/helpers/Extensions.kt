@@ -31,8 +31,16 @@ fun fromDateTimeUTC(d: DateTime): ZonedDateTime {
     return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), ZoneOffset.UTC)
 }
 
+fun fromDateTime(d: DateTime): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), DateTimeUtils.toZoneId(d.timeZone))
+}
+
 fun toDateTimeUTC(z: ZonedDateTime): DateTime {
     return DateTime(TimeZone.getTimeZone("UTC"), z.toInstant().toEpochMilli())
+}
+
+fun toDateTime(z: ZonedDateTime, idTimeZone: String): DateTime {
+    return DateTime(TimeZone.getTimeZone(idTimeZone), z.toInstant().toEpochMilli())
 }
 
 fun toLongUTC(z: ZonedDateTime): Long {

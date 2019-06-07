@@ -33,6 +33,16 @@
         <item>Все события в последовательности</item>
     </string-array>
 
+    <string-array name="week">
+        <item>MO</item>
+        <item>TU</item>
+        <item>WE</item>
+        <item>TH</item>
+        <item>FR</item>
+        <item>SA</item>
+        <item>SU</item>
+    </string-array>
+
 
 
 </resources>
