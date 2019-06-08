@@ -27,20 +27,28 @@ fun min(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
     return if (d1.isBefore(d2)) d1 else d2
 }
 
-fun fromDateTimeUTC(d: DateTime): ZonedDateTime {
-    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), ZoneOffset.UTC)
+fun toTimeZone(id: ZoneId): TimeZone {
+    return DateTimeUtils.toTimeZone(id)
 }
 
 fun fromDateTime(d: DateTime): ZonedDateTime {
     return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), DateTimeUtils.toZoneId(d.timeZone))
 }
 
-fun toDateTimeUTC(z: ZonedDateTime): DateTime {
-    return DateTime(TimeZone.getTimeZone("UTC"), z.toInstant().toEpochMilli())
+fun toDateTime(z: ZonedDateTime, timeZone: TimeZone): DateTime {
+    return DateTime(timeZone, z.toInstant().toEpochMilli())
 }
 
-fun toDateTime(z: ZonedDateTime, idTimeZone: String): DateTime {
-    return DateTime(TimeZone.getTimeZone(idTimeZone), z.toInstant().toEpochMilli())
+fun toDateTime(z: ZonedDateTime): DateTime {
+    return DateTime(toTimeZone(z.zone), z.toInstant().toEpochMilli())
+}
+
+fun fromDateTimeUTC(d: DateTime): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), ZoneOffset.UTC)
+}
+
+fun toDateTimeUTC(z: ZonedDateTime): DateTime {
+    return DateTime(TimeZone.getTimeZone("UTC"), z.toInstant().toEpochMilli())
 }
 
 fun toLongUTC(z: ZonedDateTime): Long {

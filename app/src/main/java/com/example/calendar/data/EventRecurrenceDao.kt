@@ -42,16 +42,8 @@ interface EventRecurrenceDao {
     @Update
     fun update(event: EventRecurrence): Void
 
-    @Update
-    fun updateRx(event: EventRecurrence): Completable
-
-
     @Delete
     fun delete(event: EventRecurrence): Void
-
-    @Delete
-    fun deleteRx(event: EventRecurrence): Completable
-
 
     // [from, to)
     @TypeConverters(ZoneDateTimeConverter::class)

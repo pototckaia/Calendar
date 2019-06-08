@@ -100,4 +100,45 @@
             app:layout_constraintEnd_toEndOf="parent"
     />
 
+    <TextView
+            android:id="@+id/tvTitleTimeZone"
+            android:text="Временая зона"
+
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="10dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/background_dark"
+            android:gravity="center|end"
+
+            app:layout_constraintBottom_toBottomOf="@id/tvTimeZone"
+            app:layout_constraintTop_toTopOf="@id/tvTimeZone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvTimeZone"
+    />
+
+    <TextView
+            android:id="@+id/tvTimeZone"
+
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="10dp"
+
+            android:textColor="@android:color/background_dark"
+            android:gravity="center|start"
+
+            app:layout_constraintTop_toBottomOf="@id/etRecurrenceRule"
+            app:layout_constraintStart_toEndOf="@id/tvTitleTimeZone"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            tools:text="ddd"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

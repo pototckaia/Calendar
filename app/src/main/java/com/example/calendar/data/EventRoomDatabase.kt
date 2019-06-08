@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [EventRecurrence::class, EventRecurrenceException::class],
-    version = 2, exportSchema = false
+    version = 1, exportSchema = false
 )
 abstract class EventRoomDatabase : RoomDatabase() {
     abstract fun eventRecurrenceDao() : EventRecurrenceDao
@@ -27,7 +27,7 @@ abstract class EventRoomDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
-                EventRoomDatabase::class.java, "event_recurrence.db"
+                EventRoomDatabase::class.java, "event_recurrence_timezone.db"
             ).build()
     }
 }

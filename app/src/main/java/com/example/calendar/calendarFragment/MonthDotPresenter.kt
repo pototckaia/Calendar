@@ -26,7 +26,7 @@ class MonthDotPresenter(
 
     fun onMonthChange(month: ZonedDateTime) {
         unsubscribeOnAll()
-        curMonth = month
+        curMonth = month.withZoneSameInstant(ZoneId.systemDefault())
         loadEvents()
     }
 
@@ -38,7 +38,7 @@ class MonthDotPresenter(
             .truncatedTo(ChronoUnit.DAYS)
             .plusDays(1)
 
-        val subscription = eventRepository.fromToSetLocal(monthStart, monthEnd)
+        val subscription = eventRepository.fromToSet(monthStart, monthEnd)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
@@ -47,7 +47,6 @@ class MonthDotPresenter(
                 { error ->
                     onLoadingFailed(error)
                 })
-        // todo unsubscribe on change month
         unsubscribeOnDestroy(subscription)
     }
 

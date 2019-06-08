@@ -29,10 +29,8 @@ class DateClickPresenter(
     }
 
     fun setDate(s: ZonedDateTime, e: ZonedDateTime) {
-        start = s
-            .withZoneSameInstant(ZoneId.systemDefault())
-        end = e
-            .withZoneSameInstant(ZoneId.systemDefault())
+        start = ZonedDateTime.from(s)
+        end = ZonedDateTime.from(e)
     }
 
     // todo how remove this shit

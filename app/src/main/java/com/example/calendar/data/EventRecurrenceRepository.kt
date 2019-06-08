@@ -1,16 +1,15 @@
 package com.example.calendar.data
 
-import com.example.calendar.helpers.fromDateTimeUTC
-import com.example.calendar.helpers.toDateTimeUTC
+import com.example.calendar.helpers.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.dmfs.rfc5545.recur.RecurrenceRule
-import org.dmfs.rfc5545.DateTime
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 import javax.security.auth.login.LoginException
+import kotlin.collections.HashSet
 
 
 class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
@@ -19,39 +18,39 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
     private fun isFromPeriod(it: EventInstance, start: ZonedDateTime, end: ZonedDateTime): Boolean {
         // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
-        return (it.startedAtInstance >= start && it.endedAtInstance < end) ||
-                (it.startedAtInstance < end && it.endedAtInstance > start)
+        return (it.startedAtLocal >= start && it.endedAtLocal < end) ||
+                (it.startedAtLocal < end && it.endedAtLocal > start)
     }
 
-    // [startUTC, endUTC)
+    // [start, end)
     private fun getEventInstances(
         event: EventRecurrence,
-        startUTC: ZonedDateTime,
-        endUTC: ZonedDateTime
+        startLocal: ZonedDateTime,
+        endLocal: ZonedDateTime
     ): List<EventInstance> {
 
         val instances = arrayListOf<EventInstance>()
 
-        val exceptionsList = arrayListOf<DateTime>()
-        dao.getExceptionByEventId(event.id).forEach {
-            exceptionsList.add(toDateTimeUTC(it.exceptionDate))
-        }
-        val exceptionsSet = exceptionsList.toSet()
+//        val exceptionsList = arrayListOf<DateTime>()
+//        dao.getExceptionByEventId(event.id).forEach {
+//            exceptionsList.add(toDateTimeUTC(it.exceptionDate))
+//        }
+//        val exceptionsSet = exceptionsList.toSet()
 
         if (!event.isRecurrence()) {
-            val eventInstance = EventInstance(event, event.startedAt)
+            val eventInstance = EventInstance(event, event.startedAtLocal)
             instances.add(eventInstance)
             return instances
         }
 
         // todo time
-        val startRange = toDateTimeUTC(startUTC)
-        val endRange = toDateTimeUTC(endUTC)
+        val startRange = toDateTime(startLocal, toTimeZone(event.zoneId))
+        val endRange = toDateTime(endLocal, toTimeZone(event.zoneId))
 
-        val recurrence = RecurrenceRule(event.rrule)
-        val startRecurrence = toDateTimeUTC(event.startedAt)
+        val recurrence = event.getRecurrenceRule()!!
+        val startRecurrence = toDateTime(event.startedAtLocal, toTimeZone(event.zoneId))
+
         val it = recurrence.iterator(startRecurrence)
-
         var counter = 0
         while (it.hasNext() && (!recurrence.isInfinite || counter < maxInstances)) {
             val startInstance = it.nextDateTime()
@@ -65,11 +64,12 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
             if (startInstance.after(endRange) || startInstance == endRange) {
                 break;
             }
-            if (exceptionsSet.contains(startInstance)) {
-                continue
-            }
-            val eventInstance = EventInstance(event, fromDateTimeUTC(startInstance))
-            if (isFromPeriod(eventInstance, startUTC, endUTC)) {
+//            if (exceptionsSet.contains(startInstance)) {
+//                continue
+//            }
+            val eventInstance = EventInstance(event, fromDateTime(startInstance))
+
+            if (isFromPeriod(eventInstance, startLocal, endLocal)) {
                 instances.add(eventInstance)
                 counter++
             }
@@ -77,7 +77,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         return instances
     }
 
-    private fun daysInEventLocal(event: EventInstance): List<ZonedDateTime> {
+    private fun daysInEvent(event: EventInstance): List<ZonedDateTime> {
         val dates = arrayListOf<ZonedDateTime>()
         dates.add(event.startedAtLocal)
         var s = ZonedDateTime.from(event.startedAtLocal)
@@ -93,21 +93,27 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
     fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<List<EventInstance>> {
         val startUTC = startLocal.withZoneSameInstant(ZoneOffset.UTC)
         val endUTC = endLocal.withZoneSameInstant(ZoneOffset.UTC)
+
         return dao.fromToRx(startUTC, endUTC)
             .flatMap { list ->
                 Flowable.fromIterable(list)
-                    .map { getEventInstances(it, startUTC, endUTC) }
+                    .map {
+                        getEventInstances(
+                            it,
+                            startUTC.withZoneSameInstant(it.zoneId),
+                            endUTC.withZoneSameInstant(it.zoneId))
+                    }
                     .flatMapIterable { it }
                     .toList()
                     .toFlowable()
             }
     }
 
-    fun fromToSetLocal(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<HashSet<ZonedDateTime>> {
+    fun fromToSet(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<HashSet<ZonedDateTime>> {
         return fromTo(startLocal, endLocal)
             .flatMap { list ->
                 Flowable.fromIterable(list)
-                    .map { daysInEventLocal(it) }
+                    .map { daysInEvent(it) }
                     .flatMapIterable { it }
                     .collect({ hashSetOf<ZonedDateTime>() }, { set, z -> set.add(z) })
                     .toFlowable()
@@ -125,7 +131,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
     private fun setUntil(event: EventRecurrence, until: ZonedDateTime) {
         if (event.isRecurrence()) {
             val recurrence = RecurrenceRule(event.rrule)
-            recurrence.until = toDateTimeUTC(until)
+            recurrence.until = toDateTimeUTC(until.withZoneSameInstant(ZoneOffset.UTC))
             event.rrule = recurrence.toString()
         }
     }
@@ -137,10 +143,10 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         }
         val eventRecurrence = eventRecList[0]
 
-        var startedAt = eventRecurrence.startedAt
-        if (event.startedAtNotUpdate != event.startedAtInstance) {
-            val d = Duration.between(event.startedAtNotUpdate, event.startedAtInstance)
-            startedAt = eventRecurrence.startedAt.plus(d)
+        var startedAt = eventRecurrence.startedAtLocal
+        if (event.startedAtLocalNotUpdate != event.startedAtLocal) {
+            val d = Duration.between(event.startedAtLocalNotUpdate, event.startedAtLocal)
+            startedAt = eventRecurrence.startedAtLocal.plus(d)
         }
 
         val eventRec = EventRecurrence(
@@ -152,7 +158,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
             event.idEventRecurrence
         )
         dao.update(eventRec)
-        event.startedAtNotUpdate = event.startedAtInstance
+        event.startedAtLocalNotUpdate = event.startedAtLocal
     }
 
     private fun updateFutureSimple(event: EventInstance) {
@@ -163,7 +169,8 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         val eventRecurrence = eventRecList[0]
 
         if (!eventRecurrence.isRecurrence() ||
-            eventRecurrence.startedAt == event.startedAtNotUpdate) {
+            event.startedAtLocalNotUpdate == event.startedAtLocal
+        ) {
             updateAllSimple(event)
             return
         }
@@ -172,23 +179,23 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         val newEventRecurrence = EventRecurrence(
             event.nameEventRecurrence,
             event.noteEventRecurrence,
-            event.startedAtInstance,
+            event.startedAtLocal,
             event.duration,
             event.rrule
         )
 
         if (rule.isInfinite) {
-            setUntil(eventRecurrence, event.startedAtNotUpdate)
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
         } else if (rule.until != null) {
-            setUntil(eventRecurrence, event.startedAtNotUpdate)
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
         } else if (rule.count != null) {
             val count = rule.count
             var countRecurrence = 0
 
-            val it = rule.iterator(toDateTimeUTC(eventRecurrence.startedAt))
+            val it = rule.iterator(toDateTime(eventRecurrence.startedAtLocal))
             while (it.hasNext()) {
                 val startInstance = it.nextDateTime()
-                if (fromDateTimeUTC(startInstance) >= event.startedAtNotUpdate) {
+                if (fromDateTime(startInstance) >= event.startedAtLocalNotUpdate) {
                     break
                 }
                 countRecurrence++
@@ -202,7 +209,8 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
             // if count set
             if (event.isRecurrence() &&
-                RecurrenceRule(event.rrule).count != null) {
+                RecurrenceRule(event.rrule).count != null
+            ) {
 
                 val ruleEvent = RecurrenceRule(event.rrule)
                 ruleEvent.count = countNewRecurrence
@@ -216,7 +224,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
         dao.update(eventRecurrence)
         dao.insert(newEventRecurrence)
-        event.startedAtNotUpdate = event.startedAtInstance
+        event.startedAtLocalNotUpdate = event.startedAtLocal
     }
 
     private fun deleteAllSimple(event: EventInstance) {
@@ -236,24 +244,24 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         val eventRecurrence = eventRecList[0]
 
         if (!eventRecurrence.isRecurrence() ||
-            eventRecurrence.startedAt == event.startedAtNotUpdate) {
+            eventRecurrence.startedAtLocal == event.startedAtLocalNotUpdate) {
             deleteAllSimple(event)
             return
         }
 
         val rule = RecurrenceRule(eventRecurrence.rrule)
         if (rule.isInfinite) {
-            setUntil(eventRecurrence, event.startedAtNotUpdate)
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
         } else if (rule.until != null) {
-            setUntil(eventRecurrence, event.startedAtNotUpdate)
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
         } else if (rule.count != null) {
             val count = rule.count
             var countRecurrence = 0
 
-            val it = rule.iterator(toDateTimeUTC(eventRecurrence.startedAt))
+            val it = rule.iterator(toDateTime(eventRecurrence.startedAtLocal))
             while (it.hasNext()) {
                 val startInstance = it.nextDateTime()
-                if (fromDateTimeUTC(startInstance) >= event.startedAtNotUpdate) {
+                if (fromDateTime(startInstance) >= event.startedAtLocalNotUpdate) {
                     break
                 }
                 countRecurrence++

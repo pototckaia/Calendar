@@ -164,6 +164,7 @@ class WeekEventPresenter(
                     noteEventRecurrence = "",
                     startedAtInstance = startIntersection,
                     startedAtNotUpdate = startIntersection,
+                    zoneId = startIntersection.zone,
                     duration = Duration.between(startIntersection, endIntersection),
                     rrule = ""
                 )

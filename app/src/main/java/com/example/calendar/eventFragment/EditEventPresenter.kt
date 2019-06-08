@@ -51,7 +51,8 @@ class EditEventPresenter(
             nameEventRecurrence = title,
             noteEventRecurrence = note,
             startedAtInstance = startEvent,
-            startedAtNotUpdate = eventInstance.startedAtNotUpdate,
+            startedAtNotUpdate = eventInstance.startedAtLocalNotUpdate,
+            zoneId = eventInstance.zoneId,
             duration = Duration.between(
                 startEvent.withZoneSameInstant(ZoneOffset.UTC),
                 endEvent.withZoneSameInstant(ZoneOffset.UTC)),
@@ -84,7 +85,8 @@ class EditEventPresenter(
             nameEventRecurrence = title,
             noteEventRecurrence = note,
             startedAtInstance = startEvent,
-            startedAtNotUpdate = eventInstance.startedAtNotUpdate,
+            startedAtNotUpdate = eventInstance.startedAtLocalNotUpdate,
+            zoneId = eventInstance.zoneId,
             duration = Duration.between(
                 startEvent.withZoneSameInstant(ZoneOffset.UTC),
                 endEvent.withZoneSameInstant(ZoneOffset.UTC)),
@@ -147,7 +149,7 @@ class EditEventPresenter(
     fun isEventRecurrence() = eventInstance.isRecurrence()
 
     private fun onUpdateLoading(newEventInstance: EventInstance) {
-        newEventInstance.startedAtNotUpdate = newEventInstance.startedAtInstance
+        newEventInstance.startedAtLocalNotUpdate = newEventInstance.startedAtLocal
         eventInstance = newEventInstance
 
         viewState.updateEventInfo(eventInstance)

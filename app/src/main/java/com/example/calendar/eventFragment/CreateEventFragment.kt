@@ -19,6 +19,7 @@ import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import org.dmfs.rfc5545.recur.RecurrenceRule
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 
@@ -104,7 +105,9 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
         v.etRecurrenceRule.inputType = InputType.TYPE_NULL
         v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
-        v.etRecurrenceRule.setOnFocusChangeListener { view, b -> if (b) onRecurrenceRuleClick() }
+        v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
+
+        v.tvTimeZone.text = ZoneId.systemDefault().toString()
 
         return v
     }

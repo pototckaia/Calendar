@@ -156,8 +156,10 @@ class EditEventFragment : MvpAppCompatFragment(),
 
     override fun updateEventInfo(e: EventInstance) {
         v.etTextEvent.setText(e.nameEventRecurrence)
-        dateClickPresenter.setDate(e.startedAtInstance, e.endedAtInstance)
+        dateClickPresenter.setDate(e.startedAtLocal, e.endedAtLocal)
         recurrenceEventPresenter.onRuleChange(e.rrule)
+        v.tvTimeZone.text = e.zoneId.toString()
+
     }
 
     override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
