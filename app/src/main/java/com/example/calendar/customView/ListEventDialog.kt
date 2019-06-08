@@ -13,23 +13,24 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.calendarFragment.ListEventPresenter
 import com.example.calendar.calendarFragment.ListEventView
-import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.data.oldEvent.EventTable
+import com.example.calendar.data.EventInstance
 import com.example.calendar.helpers.*
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
-import java.util.*
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+
 
 class ListEventDialog : MvpAppCompatDialogFragment(),
     ListEventView {
 
     companion object {
-        fun newInstance(start: Calendar, end: Calendar) : ListEventDialog {
+        fun newInstance(start: ZonedDateTime, end: ZonedDateTime) : ListEventDialog {
             val f = ListEventDialog()
             val bundle = Bundle()
-            bundle.putLong(START_LIST_EVENT_KEY, start.timeInMillis)
-            bundle.putLong(END_LIST_EVENT_KEY, end.timeInMillis)
+            bundle.putString(START_LIST_EVENT_KEY, toStringFromZoned(start))
+            bundle.putString(END_LIST_EVENT_KEY, toStringFromZoned(end))
             f.arguments = bundle
             return f
         }
@@ -40,20 +41,22 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
 
     @ProvidePresenter
     fun provideListEventPresenter(): ListEventPresenter {
+        val startString = arguments!!.getString(START_LIST_EVENT_KEY)
+        val endString = arguments!!.getString(END_LIST_EVENT_KEY)
         return ListEventPresenter(
             // todo inject
-            EventRoomDatabase.getInstance(context!!).eventDao(),
-            arguments!!.getLong(START_LIST_EVENT_KEY),
-            arguments!!.getLong(END_LIST_EVENT_KEY)
+            InjectApplication.inject.repository,
+            fromStringToZoned(startString),
+            fromStringToZoned(endString)
         )
     }
 
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    private val router = InjectApplication.inject.router
 
     lateinit var v: View
-    private val start = getCalendarWithDefaultTimeZone()
-    private val end = getCalendarWithDefaultTimeZone()
+    private var start = ZonedDateTime.now(ZoneId.systemDefault())
+    private var end = ZonedDateTime.now(ZoneId.systemDefault())
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -75,11 +78,11 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
             this.layoutManager = linerLayoutManager
             this.addItemDecoration(dividerItemDecoration)
         }
-
+        // ???
         val b = savedInstanceState ?: arguments!!
 
-        start.timeInMillis = b.getLong(START_LIST_EVENT_KEY)
-        end.timeInMillis = b.getLong(END_LIST_EVENT_KEY)
+        start = fromStringToZoned(b.getString(START_LIST_EVENT_KEY))
+        end = fromStringToZoned(b.getString(END_LIST_EVENT_KEY))
         setDuration(start, end)
 
 
@@ -91,13 +94,13 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putLong(START_LIST_EVENT_KEY, start.timeInMillis)
-        outState.putLong(END_LIST_EVENT_KEY, end.timeInMillis)
+        outState.putString(START_LIST_EVENT_KEY, toStringFromZoned(start))
+        outState.putString(END_LIST_EVENT_KEY, toStringFromZoned(end))
     }
 
     private fun onClickEvent(pos : Int) {
-        val id = listEventPresenter.getId(pos)
-        router.navigateTo(Screens.EventScreen(id))
+        val event = listEventPresenter.getEvent(pos)
+        router.navigateTo(Screens.EventScreen(event))
         dismiss()
     }
 
@@ -105,14 +108,14 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 
-    override fun setEvents(it: List<EventTable>) {
+    override fun setEvents(it: List<EventInstance>) {
         v.rvEvents.adapter.run {
             (this as DurationEventAdapter).setEvents(it, start, end)
         }
     }
 
-    private fun setDuration(start: Calendar, end: Calendar) {
-        v.tvHour.text = getDiff(start, end, "HH:mm")
-        v.tvDay.text = getDayDiff(start, end)
+    private fun setDuration(start: ZonedDateTime, end: ZonedDateTime) {
+        v.tvHour.text = getStringDiff(start, end, "HH:mm")
+        v.tvDay.text = getStringDayDiff(start, end)
     }
 }

@@ -4,10 +4,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calendar.R
-import com.example.calendar.data.oldEvent.EventTable
+import com.example.calendar.data.EventInstance
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.view_duration_event_holder.view.*
-import java.util.*
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 
 
 class DurationEventViewHolder(
@@ -22,17 +24,18 @@ class DurationEventViewHolder(
 
     private val emptyTitle = "< Нет названия >"
 
-    fun bind(e: EventTable, start: Calendar, end: Calendar) {
-        if (e.name.isEmpty()) {
+    fun bind(e: EventInstance, start: ZonedDateTime, end: ZonedDateTime) {
+        if (e.nameEventRecurrence.isEmpty()) {
             view.tvEventTitle.text = emptyTitle
         } else {
-            view.tvEventTitle.text = e.name
+            view.tvEventTitle.text = e.nameEventRecurrence
         }
-        view.tvEventHourDuration.text = getDiff(e.started_at, e.ended_at, "HH:mm")
-        if (start.eqDay(end)) {
+
+        view.tvEventHourDuration.text = getStringDiff(e.startedAtLocal, e.endedAtLocal, "HH:mm")
+        if (isSameDay(start, end)) {
             view.tvEventDay.height = 0
         } else {
-            view.tvEventDay.text = getDayDiff(e.started_at, e.ended_at)
+            view.tvEventDay.text = getStringDayDiff(e.startedAtLocal, e.endedAtLocal)
         }
     }
 }
@@ -42,15 +45,15 @@ class DurationEventAdapter(
 ) :
     RecyclerView.Adapter<DurationEventViewHolder>() {
 
-    private val events = ArrayList<EventTable>()
-    private val start = getCalendarWithDefaultTimeZone()
-    private val end = getCalendarWithDefaultTimeZone()
+    private val events = ArrayList<EventInstance>()
+    private var start = ZonedDateTime.now(ZoneId.systemDefault())
+    private var end = ZonedDateTime.now(ZoneId.systemDefault())
 
-    fun setEvents(d: List<EventTable>, s: Calendar, e: Calendar) {
+    fun setEvents(d: List<EventInstance>, s: ZonedDateTime, e: ZonedDateTime) {
         events.clear()
         events.addAll(d)
-        start.timeInMillis = s.timeInMillis
-        end.timeInMillis = e.timeInMillis
+        start = ZonedDateTime.from(s)
+        end = ZonedDateTime.from(e)
         notifyDataSetChanged()
     }
 

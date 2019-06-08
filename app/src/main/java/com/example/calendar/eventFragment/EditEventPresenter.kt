@@ -1,55 +1,70 @@
 package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.oldEvent.EventRepository
-import com.example.calendar.data.oldEvent.EventTable
+import com.example.calendar.data.EventInstance
+import com.example.calendar.data.EventRecurrence
+import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.threeten.bp.Duration
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.Router
-import java.util.*
 
 @InjectViewState
 class EditEventPresenter(
     private val router: Router,
-    private val eventRepository: EventRepository,
-    private val id: String
+    private val eventRepository: EventRecurrenceRepository,
+    private var eventInstance: EventInstance
 ) : BaseMvpSubscribe<EditEventView>() {
 
-    private lateinit var event: EventTable
 
     init {
-        loadEvent()
+        loadEvent(eventInstance.idEventRecurrence)
     }
 
-    private fun loadEvent() {
-        val subscription = eventRepository.getUserById(id)
+    private fun loadEvent(id: String) {
+        val subscription = eventRepository.getEventById(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
-                    onLoadingSuccess(repositories)
+                    onFirstLoading(repositories)
                 },
                 { error ->
-                    // todo when not exist
                     onLoadingFailed(error.toString())
                 });
         unsubscribeOnDestroy(subscription)
     }
 
-    fun onUpdate(test: String, start: Calendar, end: Calendar) {
-        event.run {
-            this.name = test
-            this.started_at.timeInMillis = start.timeInMillis
-            this.ended_at.timeInMillis = end.timeInMillis
-        }
+    fun onUpdateAll(
+        title: String,
+        note: String,
+        startEvent: ZonedDateTime,
+        endEvent: ZonedDateTime,
+        rule: String
+    ) {
 
-        val sub = eventRepository.update(event)
+        val newEventInstance = EventInstance(
+            idEventRecurrence = eventInstance.idEventRecurrence,
+            nameEventRecurrence = title,
+            noteEventRecurrence = note,
+            startedAtInstance = startEvent,
+            startedAtNotUpdate = eventInstance.startedAtLocalNotUpdate,
+            zoneId = eventInstance.zoneId,
+            duration = Duration.between(
+                startEvent.withZoneSameInstant(ZoneOffset.UTC),
+                endEvent.withZoneSameInstant(ZoneOffset.UTC)),
+            rrule = rule
+        )
+
+        val sub = eventRepository.updateAll(newEventInstance)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    viewState.updateEventInfo(event)
+                    onUpdateLoading(newEventInstance)
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -57,13 +72,61 @@ class EditEventPresenter(
         unsubscribeOnDestroy(sub)
     }
 
-    fun onDelete() {
-        val sub = eventRepository.delete(event)
+    fun onUpdateFuture(
+        title: String,
+        note: String,
+        startEvent: ZonedDateTime,
+        endEvent: ZonedDateTime,
+        rule: String
+    ) {
+
+        val newEventInstance = EventInstance(
+            idEventRecurrence = eventInstance.idEventRecurrence,
+            nameEventRecurrence = title,
+            noteEventRecurrence = note,
+            startedAtInstance = startEvent,
+            startedAtNotUpdate = eventInstance.startedAtLocalNotUpdate,
+            zoneId = eventInstance.zoneId,
+            duration = Duration.between(
+                startEvent.withZoneSameInstant(ZoneOffset.UTC),
+                endEvent.withZoneSameInstant(ZoneOffset.UTC)),
+            rrule = rule
+        )
+
+        val sub = eventRepository.updateFuture(newEventInstance)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    router.exit()
+                    onUpdateLoading(newEventInstance)
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
+        unsubscribeOnDestroy(sub)
+    }
+
+    fun onDeleteAll() {
+        val sub = eventRepository.deleteAll(eventInstance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    onDeleteLoading()
+                },
+                { error ->
+                    onLoadingFailed(error.toString())
+                })
+        unsubscribeOnDestroy(sub)
+    }
+
+    fun onDeleteFuture() {
+        val sub = eventRepository.deleteFuture(eventInstance)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    onDeleteLoading()
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -75,13 +138,25 @@ class EditEventPresenter(
         viewState.showError(error);
     }
 
-    private fun onLoadingSuccess(rep: List<EventTable>) {
+    private fun onFirstLoading(rep: List<EventRecurrence>) {
         if (rep.isEmpty()) {
-
+            // todo when not exist
         } else {
-            event = rep.first()
-            viewState.updateEventInfo(event)
+            viewState.updateEventInfo(eventInstance)
         }
     }
 
+    fun isEventRecurrence() = eventInstance.isRecurrence()
+
+    private fun onUpdateLoading(newEventInstance: EventInstance) {
+        newEventInstance.startedAtLocalNotUpdate = newEventInstance.startedAtLocal
+        eventInstance = newEventInstance
+
+        viewState.updateEventInfo(eventInstance)
+        router.exit()
+    }
+
+    private fun onDeleteLoading() {
+        router.exit()
+    }
 }

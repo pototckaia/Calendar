@@ -4,48 +4,48 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.calendar.helpers.cloneWithDefaultTimeZone
-import com.example.calendar.helpers.getCalendarWithDefaultTimeZone
-import com.example.calendar.helpers.setHourOfDayAndMinute
-import com.example.calendar.eventFragment.DateClickView
+import com.example.calendar.helpers.withHourMinuteTruncate
+import com.example.calendar.helpers.withYearMonthDay
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import java.util.*
 
 
 @InjectViewState
-class DateClickPresenter () : MvpPresenter<DateClickView>() {
-
-    val startEvent = getCalendarWithDefaultTimeZone()
-    val endEvent = getCalendarWithDefaultTimeZone()
+class DateClickPresenter(
+    var start: ZonedDateTime,
+    var end: ZonedDateTime,
+    private val validateStart: (ZonedDateTime) -> Boolean,
+    private val validateEnd: (ZonedDateTime) -> Boolean
+) : MvpPresenter<DateClickView>() {
 
     init {
-        updateView()
-    }
-
-    constructor(beginTime: Long, endTime: Long) : this() {
-        startEvent.timeInMillis = beginTime
-        endEvent.timeInMillis = endTime
-        updateView()
-    }
-
-    fun setDate(start: Calendar, end: Calendar) {
-        startEvent.timeInMillis = start.timeInMillis
-        endEvent.timeInMillis = end.timeInMillis
+        setDate(start, end)
         updateView()
     }
 
     private fun updateView() {
-        viewState.updateDateInfo(startEvent, endEvent)
+        viewState.updateDateInfo(start, end)
+    }
+
+    fun setDate(s: ZonedDateTime, e: ZonedDateTime) {
+        start = ZonedDateTime.from(s)
+        end = ZonedDateTime.from(e)
     }
 
     // todo how remove this shit
     fun onClickBeginDay() {
         viewState.showDatePickerDialog(
-            startEvent,
+            start,
+            // month start from 1
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 // TODO check it work
-                startEvent.set(year, monthOfYear, dayOfMonth)
-                if (startEvent > endEvent) {
-                    endEvent.set(year, monthOfYear, dayOfMonth)
+                val newStart = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
+                if (!validateStart(newStart)) { return@OnDateSetListener }
+
+                start = newStart
+                if (start > end) {
+                    end = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
                 }
                 updateView()
             })
@@ -53,12 +53,14 @@ class DateClickPresenter () : MvpPresenter<DateClickView>() {
 
     fun onClickBeginHour() {
         viewState.showTimePickerDialog(
-            startEvent.cloneWithDefaultTimeZone(),
+            start,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                startEvent.setHourOfDayAndMinute(hourOfDay, minute)
-                if (startEvent >= endEvent) {
-                    endEvent.timeInMillis = startEvent.timeInMillis
-                    endEvent.add(Calendar.HOUR_OF_DAY, 1)
+                val newStart = withHourMinuteTruncate(start, hourOfDay, minute)
+                if (!validateStart(newStart)) { return@OnTimeSetListener }
+
+                start = newStart
+                if (start >= end) {
+                    end = start.plusHours(1)
                 }
                 updateView()
             })
@@ -66,11 +68,14 @@ class DateClickPresenter () : MvpPresenter<DateClickView>() {
 
     fun onClickEndDay() {
         viewState.showDatePickerDialog(
-            endEvent.cloneWithDefaultTimeZone(),
+            end,
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                endEvent.set(year, monthOfYear, dayOfMonth)
-                if (endEvent < startEvent) {
-                    startEvent.set(year, monthOfYear, dayOfMonth)
+                val newEnd = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
+                if (!validateEnd(newEnd)) { return@OnDateSetListener }
+
+                end = newEnd
+                if (end < start) {
+                    start = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
                 }
                 updateView()
             })
@@ -79,12 +84,14 @@ class DateClickPresenter () : MvpPresenter<DateClickView>() {
 
     fun onClickEndHour() {
         viewState.showTimePickerDialog(
-            endEvent.cloneWithDefaultTimeZone(),
+            end,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                endEvent.setHourOfDayAndMinute(hourOfDay, minute)
-                if (endEvent <= startEvent) {
-                    startEvent.timeInMillis = endEvent.timeInMillis
-                    startEvent.add(Calendar.HOUR_OF_DAY, -1)
+                val newEnd = withHourMinuteTruncate(end, hourOfDay, minute)
+                if (!validateEnd(newEnd)) { return@OnTimeSetListener }
+
+                end = newEnd
+                if (end <= start) {
+                    start = end.minusHours(1)
                 }
                 updateView()
             })

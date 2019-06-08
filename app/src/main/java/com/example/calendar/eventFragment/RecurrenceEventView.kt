@@ -1,16 +1,16 @@
-package com.example.calendar.calendarFragment
+package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.example.calendar.data.EventInstance
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface ListEventView : MvpView {
+interface RecurrenceEventView : MvpView {
 
-    fun setEvents(it: List<EventInstance>)
+    fun setRecurrenceViw(r: String)
 
-    @StateStrategyType(SkipStrategy::class)
-    fun showError(e : String)
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun postRecurrence(r: String)
 }

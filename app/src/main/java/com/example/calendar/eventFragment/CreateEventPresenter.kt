@@ -1,27 +1,34 @@
 package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.oldEvent.EventRepository
-import com.example.calendar.data.oldEvent.EventTable
+import com.example.calendar.data.EventRecurrence
+import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.threeten.bp.Duration
+import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.Router
-import java.util.*
+
 
 @InjectViewState
 class CreateEventPresenter(
     private val router: Router,
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRecurrenceRepository
 ) : BaseMvpSubscribe<CreateEventInfoView>() {
 
     fun onSaveEvent(
-        title: String, startEvent: Calendar, endEvent: Calendar
+        title: String,
+        note: String,
+        start: ZonedDateTime,
+        end: ZonedDateTime,
+        rule: String
     ) {
         val event =
-            EventTable(name = title, started_at = startEvent, ended_at = endEvent)
+            EventRecurrence(title, note,
+                start, Duration.between(start, end), rule)
 
-        val subscription = eventRepository.insert(event)
+        val subscription = eventRepository.insertEvent(event)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {

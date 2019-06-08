@@ -1,17 +1,13 @@
 package com.example.calendar.helpers
 
-import android.provider.CalendarContract
 import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import java.text.SimpleDateFormat
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
-import org.reactivestreams.Subscriber
+import org.dmfs.rfc5545.DateTime
+import org.threeten.bp.*
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
 
 
@@ -22,71 +18,134 @@ fun ViewGroup.inflate(
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
-fun getCalendarWithDefaultTimeZone(): Calendar =
-    Calendar.getInstance(TimeZone.getDefault());
 
-fun Calendar.cloneWithTimeZone() : Calendar {
-    val c = this.clone() as Calendar
-    c.timeZone = this.timeZone
-    return c
+fun max(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
+    return if (d1.isAfter(d2)) d1 else d2
 }
 
-fun Calendar.cloneWithDefaultTimeZone(): Calendar {
-    val c = this.clone() as Calendar
-    c.timeZone = TimeZone.getDefault()
-    return c
+fun min(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
+    return if (d1.isBefore(d2)) d1 else d2
 }
 
-fun Calendar.setYearMonthDay(c: Calendar) {
-    this.set(Calendar.YEAR, c.get(Calendar.YEAR))
-    this.set(Calendar.MONTH, c.get(Calendar.MONTH))
-    this.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH))
+fun toTimeZone(id: ZoneId): TimeZone {
+    return DateTimeUtils.toTimeZone(id)
 }
 
-fun Calendar.setHourOfDayAndMinute(hourOfDay: Int, minute: Int) {
-    this.set(Calendar.HOUR_OF_DAY, hourOfDay)
-    this.set(Calendar.MINUTE, minute)
-    this.set(Calendar.SECOND, 0)
-    this.set(Calendar.MILLISECOND, 0)
+fun fromDateTime(d: DateTime): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), DateTimeUtils.toZoneId(d.timeZone))
 }
 
-fun Calendar.eqDay(c: Calendar) : Boolean {
-    return this.get(Calendar.YEAR) == c.get(Calendar.YEAR) &&
-            this.get(Calendar.MONTH) == c.get(Calendar.MONTH) &&
-            this.get(Calendar.DAY_OF_MONTH) == c.get(Calendar.DAY_OF_MONTH)
+fun toDateTime(z: ZonedDateTime, timeZone: TimeZone): DateTime {
+    return DateTime(timeZone, z.toInstant().toEpochMilli())
 }
 
-fun Calendar.lessDay(day: Calendar): Boolean {
-    val d = day.cloneWithDefaultTimeZone()
-    d.setHourOfDayAndMinute(0, 0)
-    return this < d
+fun toDateTime(z: ZonedDateTime): DateTime {
+    return DateTime(toTimeZone(z.zone), z.toInstant().toEpochMilli())
 }
 
-fun Calendar.greaterDay(day: Calendar): Boolean {
-    val d = day.cloneWithDefaultTimeZone()
-    d.setHourOfDayAndMinute(24, 0)
-    return this >= d
+fun fromDateTimeUTC(d: DateTime): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), ZoneOffset.UTC)
+}
+
+fun toDateTimeUTC(z: ZonedDateTime): DateTime {
+    return DateTime(TimeZone.getTimeZone("UTC"), z.toInstant().toEpochMilli())
+}
+
+fun toLongUTC(z: ZonedDateTime): Long {
+    val utc = z.withZoneSameInstant(ZoneOffset.UTC)
+    return utc.toInstant().toEpochMilli()
+}
+
+fun fromLongUTC(l: Long): ZonedDateTime {
+    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(l), ZoneOffset.UTC)
+}
+
+fun toStringFromZoned(z: ZonedDateTime): String {
+    val f = DateTimeFormatter.ISO_ZONED_DATE_TIME
+    return z.format(f)
+}
+
+fun fromStringToZoned(s: String): ZonedDateTime {
+    val f = DateTimeFormatter.ISO_ZONED_DATE_TIME
+    return ZonedDateTime.parse(s, f)
+}
+
+fun toCalendar(s: ZonedDateTime): Calendar {
+    return DateTimeUtils.toGregorianCalendar(s)
+}
+
+fun fromCalendar(s: Calendar): ZonedDateTime {
+    return DateTimeUtils.toZonedDateTime(s)
+}
+
+fun withYearMonthDay(
+    d: ZonedDateTime,
+    year: Int, monthOfYear: Int, dayOfMonth: Int
+): ZonedDateTime {
+    return d.withYear(year)
+        .withMonth(monthOfYear)
+        .withDayOfMonth(dayOfMonth)
+}
+
+fun withYearMonthDayTruncate(
+    d: ZonedDateTime,
+    year: Int, monthOfYear: Int, dayOfMonth: Int
+): ZonedDateTime {
+    return withYearMonthDay(d, year, monthOfYear, dayOfMonth)
+        .truncatedTo(ChronoUnit.DAYS)
+}
+
+fun withHourMinuteTruncate(
+    d: ZonedDateTime,
+    hour: Int, minute: Int
+) : ZonedDateTime {
+    return d.withHour(hour)
+        .withMinute(minute)
+        .truncatedTo(ChronoUnit.MINUTES)
+}
+
+fun isSameDay(d1: ZonedDateTime, d2: ZonedDateTime): Boolean {
+    return d1.truncatedTo(ChronoUnit.DAYS) == d2.truncatedTo(ChronoUnit.DAYS)
+}
+
+fun lessDay(d1: ZonedDateTime, d2: ZonedDateTime): Boolean {
+    return d1.truncatedTo(ChronoUnit.DAYS) < d2.truncatedTo(ChronoUnit.DAYS)
+}
+
+fun moreDay(d1: ZonedDateTime, d2: ZonedDateTime): Boolean {
+    return d1.truncatedTo(ChronoUnit.DAYS) > d2.truncatedTo(ChronoUnit.DAYS)
 }
 
 //"HH:mm"
-fun getDiff(s: Calendar, e: Calendar, pattern: String, sep: String="-"): String {
-    val fmtHour = SimpleDateFormat(pattern, Locale.getDefault())
-    return "${fmtHour.format(s.time)} $sep ${fmtHour.format(e.time)}"
+fun getStringDiff(
+    d1: ZonedDateTime, d2: ZonedDateTime,
+    pattern: String, sep: String = "-"
+): String {
+    val f = DateTimeFormatter.ofPattern(pattern)
+    return "${d1.format(f)} $sep ${d2.format(f)}"
 }
 
-fun getDayDiff(s: Calendar, e: Calendar, pD: String="dd", pM: String="MMMM", pY: String="yyyy"): String {
-    val fmtYear = SimpleDateFormat(pY, Locale.getDefault())
-    val fmtMonth = SimpleDateFormat("$pM $pY", Locale.getDefault())
-    val fmtDay = SimpleDateFormat("$pD $pM $pY", Locale.getDefault())
+fun getStringDayDiff(
+    d1: ZonedDateTime, d2: ZonedDateTime,
+    pD: String = "dd", pM: String = "MMMM", pY: String = "yyyy"
+): String {
+    val fmtYear = DateTimeFormatter.ofPattern(pY)
+    val fmtMonth = DateTimeFormatter.ofPattern("$pM $pY")
+    val fmtDay = DateTimeFormatter.ofPattern("$pD $pM $pY")
 
-    if (s.get(Calendar.YEAR) != e.get(Calendar.YEAR)) {
-       return getDiff(s, e, "$pD $pM $pY")
-    } else if (s.get(Calendar.MONTH) != e.get(Calendar.MONTH)) {
-        return getDiff(s, e, "$pD $pM ") + fmtYear.format(s.time)
-    } else if (s.get(Calendar.DAY_OF_MONTH) != e.get(Calendar.DAY_OF_MONTH)) {
-        return getDiff(s, e, "$pD ") + fmtMonth.format(s.time)
-    } else {
-        return fmtDay.format(s.time)
+
+    if (d1.year != d2.year) {
+        return getStringDiff(d1, d2, "$pD $pM $pY")
     }
+
+    if (d1.month != d2.month) {
+        return getStringDiff(d1, d2, "$pD $pM ") + d1.format(fmtYear)
+    }
+
+    if (d1.dayOfMonth != d2.dayOfMonth) {
+        return getStringDiff(d1, d2, "$pD ") + d1.format(fmtMonth)
+    }
+
+    return d1.format(fmtDay)
 
 }

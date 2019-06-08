@@ -5,14 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
-import com.example.calendar.calendarFragment.MonthCalendarFragment
-import com.example.calendar.calendarFragment.WeekCalendarFragment
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.calendarFragment.WeekCalendarFragment.TypeView
+import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_navigation.view.*
-import ru.terrakok.cicerone.Cicerone
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.Screen
 
 class NavigationFragment : MvpAppCompatFragment() {
 
@@ -36,19 +32,19 @@ class NavigationFragment : MvpAppCompatFragment() {
 
         v.bMonth.setOnClickListener {
             // todo inject
-            CiceroneApplication.instance.router.navigateTo(Screens.MonthCalendarScreen())
+            InjectApplication.inject.router.navigateTo(Screens.MonthCalendarScreen())
         }
 
         v.bWeek.setOnClickListener {
             // todo inject
-            CiceroneApplication.instance.router.navigateTo(
-                Screens.WeekCalendarScreen(WeekCalendarFragment.TypeView.WEEK))
+            InjectApplication.inject.router.navigateTo(
+                Screens.WeekCalendarScreen(TypeView.WEEK))
         }
 
         v.bDay.setOnClickListener {
             // todo inject
-            CiceroneApplication.instance.router.navigateTo(
-                Screens.WeekCalendarScreen(WeekCalendarFragment.TypeView.DAY))
+            InjectApplication.inject.router.navigateTo(
+                Screens.WeekCalendarScreen(TypeView.DAY))
         }
 
         return v

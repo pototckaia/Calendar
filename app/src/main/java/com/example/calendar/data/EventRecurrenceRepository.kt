@@ -1,207 +1,354 @@
 package com.example.calendar.data
 
-import java.util.*
+import com.example.calendar.helpers.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
 import org.dmfs.rfc5545.recur.RecurrenceRule
-import org.dmfs.rfc5545.DateTime
 import org.threeten.bp.Duration
-import org.threeten.bp.Instant
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
+import javax.security.auth.login.LoginException
+import kotlin.collections.HashSet
 
 
-fun max(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
-    return if (d1.isAfter(d2)) d1 else d2
-}
+class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
 
-fun min(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
-    return if (d1.isBefore(d2)) d1 else d2
-}
+    private val maxInstances = 1000
 
-fun fromDateTimeUTC(d: DateTime): ZonedDateTime {
-    return ZonedDateTime.ofInstant(Instant.ofEpochMilli(d.timestamp), ZoneOffset.UTC)
-}
+    private fun isFromPeriod(it: EventInstance, start: ZonedDateTime, end: ZonedDateTime): Boolean {
+        // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
+        return (it.startedAtLocal >= start && it.endedAtLocal < end) ||
+                (it.startedAtLocal < end && it.endedAtLocal > start)
+    }
 
-fun toDateTimeUTC(z: ZonedDateTime): DateTime {
-    return DateTime(TimeZone.getTimeZone("UTC"), z.toInstant().toEpochMilli())
-}
-
-
-
-class EventRecurrenceRepository {
-
-    private val maxInstances = 1000;
-
-    fun generateInstances(
-        dao: EventRecurrenceDao,
+    // [start, end)
+    private fun getEventInstances(
         event: EventRecurrence,
-        start: ZonedDateTime,
-        end: ZonedDateTime
+        startLocal: ZonedDateTime,
+        endLocal: ZonedDateTime
     ): List<EventInstance> {
 
         val instances = arrayListOf<EventInstance>()
 
-        val exceptionsList = arrayListOf<DateTime>()
-        dao.getExceptionByEventId(event.id).forEach {
-            exceptionsList.add(toDateTimeUTC(it.exceptionDate))
-        }
-        val exceptions = exceptionsList.toSet()
+//        val exceptionsList = arrayListOf<DateTime>()
+//        dao.getExceptionByEventId(event.id).forEach {
+//            exceptionsList.add(toDateTimeUTC(it.exceptionDate))
+//        }
+//        val exceptionsSet = exceptionsList.toSet()
 
         if (!event.isRecurrence()) {
-            val eventInstance = EventInstance(event, event.startedAt)
-            instances.plus(eventInstance)
+            val eventInstance = EventInstance(event, event.startedAtLocal)
+            instances.add(eventInstance)
             return instances
         }
 
         // todo time
-        val startRange = toDateTimeUTC(max(event.startedAt, start))
-        val endRange = toDateTimeUTC(min(event.endOutRecurrence, end))
+        val startRange = toDateTime(startLocal, toTimeZone(event.zoneId))
+        val endRange = toDateTime(endLocal, toTimeZone(event.zoneId))
 
-        val recurrence = RecurrenceRule(event.rrule)
-        val startRecurrence = toDateTimeUTC(event.startedAt)
+        val recurrence = event.getRecurrenceRule()!!
+        val startRecurrence = toDateTime(event.startedAtLocal, toTimeZone(event.zoneId))
+
         val it = recurrence.iterator(startRecurrence)
         var counter = 0
-        while (it.hasNext() && (!recurrence.isInfinite || counter > maxInstances)) {
+        while (it.hasNext() && (!recurrence.isInfinite || counter < maxInstances)) {
             val startInstance = it.nextDateTime()
 
-            if (startInstance.before(startRange)) {
-                continue;
-            } else if (startInstance.after(endRange)) {
+            if (recurrence.until != null &&
+                (startInstance.after(recurrence.until) || startInstance == recurrence.until)
+            ) {
+                break
+            }
+
+            if (startInstance.after(endRange) || startInstance == endRange) {
                 break;
             }
-            if (exceptions.contains(startInstance)) {
-                continue
+//            if (exceptionsSet.contains(startInstance)) {
+//                continue
+//            }
+            val eventInstance = EventInstance(event, fromDateTime(startInstance))
+
+            if (isFromPeriod(eventInstance, startLocal, endLocal)) {
+                instances.add(eventInstance)
+                counter++
             }
-            val eventInstance = EventInstance(event, fromDateTimeUTC(startInstance))
-            instances.plus(eventInstance)
-            counter++
         }
         return instances
     }
 
-    fun calculateEndOutOfRange(startedAt: ZonedDateTime, duration: Duration, rrule: String) : ZonedDateTime {
-        if (rrule.isNotEmpty()) { // isRecurrence
-            val recurrence = RecurrenceRule(rrule)
-            // the RRULE includes an UNTIL
-            if (recurrence.until != null) {
-                return fromDateTimeUTC(recurrence.until)
-            } else if (recurrence.count != null) {
-                // The RRULE has a limit, so calculate
-                var startRec = toDateTimeUTC(startedAt)
-                val it = recurrence.iterator(startRec)
-                if (it.hasNext()) {
-                    it.skipAllButLast()
-                    startRec = it.nextDateTime()
-                }
-                val startZone = fromDateTimeUTC(startRec)
-                return startZone.plus(duration)
-            } else if (recurrence.isInfinite) {
-                val maxDate = ZonedDateTime.of(9999, 12, 31, 0, 0, 0, 0, ZoneOffset.UTC)
-                return maxDate
-            } else {
-                // todo not valid
-                return startedAt.plus(duration)
+    private fun daysInEvent(event: EventInstance): List<ZonedDateTime> {
+        val dates = arrayListOf<ZonedDateTime>()
+        dates.add(event.startedAtLocal)
+        var s = ZonedDateTime.from(event.startedAtLocal)
+
+        for (i in 1..event.duration.toDays()) {
+            s = s.plusDays(1)
+                .truncatedTo(ChronoUnit.DAYS)
+            dates.add(ZonedDateTime.from(s))
+        }
+        return dates
+    }
+
+    fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<List<EventInstance>> {
+        val startUTC = startLocal.withZoneSameInstant(ZoneOffset.UTC)
+        val endUTC = endLocal.withZoneSameInstant(ZoneOffset.UTC)
+
+        return dao.fromToRx(startUTC, endUTC)
+            .flatMap { list ->
+                Flowable.fromIterable(list)
+                    .map {
+                        getEventInstances(
+                            it,
+                            startUTC.withZoneSameInstant(it.zoneId),
+                            endUTC.withZoneSameInstant(it.zoneId))
+                    }
+                    .flatMapIterable { it }
+                    .toList()
+                    .toFlowable()
             }
-        } else {
-            return startedAt.plus(duration)
+    }
+
+    fun fromToSet(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Flowable<HashSet<ZonedDateTime>> {
+        return fromTo(startLocal, endLocal)
+            .flatMap { list ->
+                Flowable.fromIterable(list)
+                    .map { daysInEvent(it) }
+                    .flatMapIterable { it }
+                    .collect({ hashSetOf<ZonedDateTime>() }, { set, z -> set.add(z) })
+                    .toFlowable()
+            }
+    }
+
+    fun getEventById(eventId: String): Flowable<List<EventRecurrence>> {
+        return dao.getEventByIdRx(eventId)
+    }
+
+    fun insertEvent(event: EventRecurrence): Completable {
+        return dao.insertRx(event)
+    }
+
+    private fun setUntil(event: EventRecurrence, until: ZonedDateTime) {
+        if (event.isRecurrence()) {
+            val recurrence = RecurrenceRule(event.rrule)
+            recurrence.until = toDateTimeUTC(until.withZoneSameInstant(ZoneOffset.UTC))
+            event.rrule = recurrence.toString()
         }
     }
 
-    fun addUntil(event: EventRecurrence, until: ZonedDateTime) : EventRecurrence {
-        val recurrence = RecurrenceRule(event.rrule)
-        recurrence.until = toDateTimeUTC(until)
-        return EventRecurrence(
-            name = event.name,
-            note = event.note,
-            startedAt = event.startedAt,
-            duration = event.duration,
-            endOutRecurrence = until,
-            rrule = recurrence.toString())
-    }
+    private fun updateAllSimple(event: EventInstance) {
+        val eventRecList = dao.getEventById(event.idEventRecurrence)
+        if (eventRecList.isEmpty()) {
+            throw LoginException("Event doesn't exist")
+        }
+        val eventRecurrence = eventRecList[0]
 
-    fun insertNotRecurrenceCopy(dao: EventRecurrenceDao, event: EventInstance) {
-        val e = EventRecurrence(
-            name = event.nameEventRecurrence,
-            note = event.noteEventRecurrence,
-            startedAt = event.startedAtInstance,
-            duration = event.duration,
-            endOutRecurrence = calculateEndOutOfRange(event.startedAtInstance, event.duration, "")
+        var startedAt = eventRecurrence.startedAtLocal
+        if (event.startedAtLocalNotUpdate != event.startedAtLocal) {
+            val d = Duration.between(event.startedAtLocalNotUpdate, event.startedAtLocal)
+            startedAt = eventRecurrence.startedAtLocal.plus(d)
+        }
+
+        val eventRec = EventRecurrence(
+            event.nameEventRecurrence,
+            event.noteEventRecurrence,
+            startedAt,
+            event.duration,
+            event.rrule,
+            event.idEventRecurrence
         )
-        dao.insert(e)
+        dao.update(eventRec)
+        event.startedAtLocalNotUpdate = event.startedAtLocal
     }
 
-    fun insertEvent(dao: EventRecurrenceDao, event: EventInstance) {
-        val e = EventRecurrence(
-            name = event.nameEventRecurrence,
-            note = event.noteEventRecurrence,
-            startedAt = event.startedAtInstance,
-            duration = event.duration,
-            endOutRecurrence = calculateEndOutOfRange(event.startedAtInstance, event.duration, event.rrule),
-            rrule = event.rrule
+    private fun updateFutureSimple(event: EventInstance) {
+        val eventRecList = dao.getEventById(event.idEventRecurrence)
+        if (eventRecList.isEmpty()) {
+            throw LoginException("Event doesn't exist")
+        }
+        val eventRecurrence = eventRecList[0]
+
+        if (!eventRecurrence.isRecurrence() ||
+            event.startedAtLocalNotUpdate == event.startedAtLocal
+        ) {
+            updateAllSimple(event)
+            return
+        }
+
+        val rule = RecurrenceRule(eventRecurrence.rrule)
+        val newEventRecurrence = EventRecurrence(
+            event.nameEventRecurrence,
+            event.noteEventRecurrence,
+            event.startedAtLocal,
+            event.duration,
+            event.rrule
         )
-        dao.insert(e)
+
+        if (rule.isInfinite) {
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
+        } else if (rule.until != null) {
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
+        } else if (rule.count != null) {
+            val count = rule.count
+            var countRecurrence = 0
+
+            val it = rule.iterator(toDateTime(eventRecurrence.startedAtLocal))
+            while (it.hasNext()) {
+                val startInstance = it.nextDateTime()
+                if (fromDateTime(startInstance) >= event.startedAtLocalNotUpdate) {
+                    break
+                }
+                countRecurrence++
+            }
+
+            val countNewRecurrence = count - countRecurrence
+            if (countNewRecurrence <= 0 || countRecurrence <= 0) {
+                // todo replace
+                throw LoginException("What's wrong")
+            }
+
+            // if count set
+            if (event.isRecurrence() &&
+                RecurrenceRule(event.rrule).count != null
+            ) {
+
+                val ruleEvent = RecurrenceRule(event.rrule)
+                ruleEvent.count = countNewRecurrence
+                event.rrule = ruleEvent.toString()
+                newEventRecurrence.rrule = event.rrule
+            }
+
+            rule.count = countRecurrence
+            eventRecurrence.rrule = rule.toString()
+        }
+
+        dao.update(eventRecurrence)
+        dao.insert(newEventRecurrence)
+        event.startedAtLocalNotUpdate = event.startedAtLocal
     }
 
-    fun deleteEventSingle(dao: EventRecurrenceDao, event: EventInstance) {
-        val eventRec = dao.getEventById(event.idEventRecurrence)
-        if (!eventRec.isRecurrence()) {
-            deleteEventAll(dao, event)
+    private fun deleteAllSimple(event: EventInstance) {
+        val eventRecList = dao.getEventById(event.idEventRecurrence)
+        if (eventRecList.isEmpty()) {
+            throw LoginException("Event doesn't exist")
+        }
+        val eventRecurrence = eventRecList[0]
+        dao.delete(eventRecurrence)
+    }
+
+    private fun deleteFutureSimple(event: EventInstance) {
+        val eventRecList = dao.getEventById(event.idEventRecurrence)
+        if (eventRecList.isEmpty()) {
+            throw LoginException("Event doesn't exist")
+        }
+        val eventRecurrence = eventRecList[0]
+
+        if (!eventRecurrence.isRecurrence() ||
+            eventRecurrence.startedAtLocal == event.startedAtLocalNotUpdate) {
+            deleteAllSimple(event)
             return
         }
-        dao.addException(event.idEventRecurrence, event.startedAtInstance)
-    }
 
-    fun deleteEventFuture(dao: EventRecurrenceDao, event: EventInstance) {
-        var eventRec = dao.getEventById(event.idEventRecurrence)
-        if (!eventRec.isRecurrence()) {
-            deleteEventAll(dao, event)
-            return
-        }
-        // precision todo
-        val until = event.startedAtInstance
-        eventRec = addUntil(eventRec, until)
-        dao.update(eventRec)
-    }
+        val rule = RecurrenceRule(eventRecurrence.rrule)
+        if (rule.isInfinite) {
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
+        } else if (rule.until != null) {
+            setUntil(eventRecurrence, event.startedAtLocalNotUpdate)
+        } else if (rule.count != null) {
+            val count = rule.count
+            var countRecurrence = 0
 
-    fun deleteEventAll(dao: EventRecurrenceDao, event: EventInstance) {
-        val eventRec = dao.getEventById(event.idEventRecurrence)
-        dao.delete(eventRec)
-    }
+            val it = rule.iterator(toDateTime(eventRecurrence.startedAtLocal))
+            while (it.hasNext()) {
+                val startInstance = it.nextDateTime()
+                if (fromDateTime(startInstance) >= event.startedAtLocalNotUpdate) {
+                    break
+                }
+                countRecurrence++
+            }
 
-    fun updateEventSingle(dao: EventRecurrenceDao, event: EventInstance) {
-        val eventRec = dao.getEventById(event.idEventRecurrence)
-        if (!eventRec.isRecurrence()) {
-            updateEventAll(dao, event)
-            return
-        }
-        insertNotRecurrenceCopy(dao, event)
-        dao.addException(eventRec.id, event.startedAtInstance)
-    }
-
-    fun updateEventFuture(dao: EventRecurrenceDao, event: EventInstance) {
-        var eventRec = dao.getEventById(event.idEventRecurrence)
-        if (!eventRec.isRecurrence()) {
-            updateEventAll(dao, event)
-            return
+            val countNewRecurrence = count - countRecurrence
+            if (countNewRecurrence <= 0 || countRecurrence <= 0) {
+                // todo replace
+                throw LoginException("What's wrong")
+            }
+            rule.count = countRecurrence
+            eventRecurrence.rrule = rule.toString()
         }
 
-        // precision todo
-        val until = event.startedAtInstance
-        eventRec = addUntil(eventRec, until)
-        dao.update(eventRec)
-        insertEvent(dao, event) // originEndDAte
+        dao.update(eventRecurrence)
     }
 
-    fun updateEventAll(dao: EventRecurrenceDao, event: EventInstance) {
-        val eventRec = dao.getEventById(event.idEventRecurrence)
-        if (event.startAtNotUpdate != event.startedAtInstance) {
-            val d = Duration.between(event.startAtNotUpdate, event.startedAtInstance)
-            eventRec.startedAt = eventRec.startedAt.plus(d)
+    fun updateAll(event: EventInstance): Completable {
+        return Completable.fromRunnable {
+            updateAllSimple(event)
         }
-        eventRec.name = event.nameEventRecurrence
-        eventRec.note = event.noteEventRecurrence
-        eventRec.duration = event.duration
-        eventRec.rrule = event.rrule
-        eventRec.endOutRecurrence = calculateEndOutOfRange(eventRec.startedAt, eventRec.duration, eventRec.rrule)
-        dao.update(eventRec)
     }
+
+    fun updateFuture(event: EventInstance): Completable {
+        return Completable.fromRunnable {
+            updateFutureSimple(event)
+        }
+    }
+
+    fun deleteAll(event: EventInstance): Completable {
+        return Completable.fromRunnable {
+            deleteAllSimple(event)
+        }
+    }
+
+    fun deleteFuture(event: EventInstance): Completable {
+        return Completable.fromRunnable {
+            deleteFutureSimple(event)
+        }
+    }
+
+//
+//    fun insertNotRecurrenceCopy(dao: EventRecurrenceDao, event: EventInstance) {
+//        val e = EventRecurrence(addElement
+//            name = event.nameEventRecurrence,
+//            note = event.noteEventRecurrence,
+//            startedAt = event.startedAtInstance,
+//            duration = event.duration,
+//            endOutRecurrence = calculateEndOutOfRange(event.startedAtInstance, event.duration, "")
+//        )
+//        dao.insert(e)
+//    }
+//
+//
+//    fun deleteEventSingle(dao: EventRecurrenceDao, event: EventInstance) {
+//        val eventRec = dao.getEventById(event.idEventRecurrence)
+//        if (!eventRec.isRecurrence()) {
+//            deleteEventAll(dao, event)
+//            return
+//        }
+//        dao.addException(event.idEventRecurrence, event.startedAtInstance)
+//    }
+//
+//    fun deleteEventFuture(dao: EventRecurrenceDao, event: EventInstance) {
+//        var eventRec = dao.getEventById(event.idEventRecurrence)
+//        if (!eventRec.isRecurrence()) {
+//            deleteEventAll(dao, event)
+//            return
+//        }
+//        // precision todo
+//        val until = event.startedAtInstance
+//        eventRec = addUntil(eventRec, until)
+//        dao.update(eventRec)
+//    }
+//
+//    fun deleteEventAll(dao: EventRecurrenceDao, event: EventInstance) {
+//        val eventRec = dao.getEventById(event.idEventRecurrence)
+//        dao.delete(eventRec)
+//    }
+//
+//    fun updateEventSingle(dao: EventRecurrenceDao, event: EventInstance) {
+//        val eventRec = dao.getEventById(event.idEventRecurrence)
+//        if (!eventRec.isRecurrence()) {
+//            updateEventAll(dao, event)
+//            return
+//        }
+//        insertNotRecurrenceCopy(dao, event)
+//        dao.addException(eventRec.id, event.startedAtInstance)
+//    }
 }

@@ -1,51 +1,52 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.oldEvent.EventRepository
-import com.example.calendar.data.oldEvent.EventTable
+import com.example.calendar.data.EventInstance
+import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.*
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.*
-
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
 
 @InjectViewState
 class ListEventPresenter(
-    private val eventRepository: EventRepository
-) :
+    private val eventRepository: EventRecurrenceRepository) :
     BaseMvpSubscribe<ListEventView>() {
 
-    private val start = getCalendarWithDefaultTimeZone()
-    private val end = getCalendarWithDefaultTimeZone()
-    private val events = ArrayList<EventTable>()
+    private val events = ArrayList<EventInstance>()
+    private var start = ZonedDateTime.now(ZoneId.systemDefault())
+    private var end = ZonedDateTime.now(ZoneId.systemDefault())
 
-    constructor(e: EventRepository, startTime: Long, endTime: Long) : this(e) {
-        start.timeInMillis = startTime
-        end.timeInMillis = endTime
+    constructor(r: EventRecurrenceRepository, s: ZonedDateTime, e: ZonedDateTime):
+            this(r) {
+        setStartAndEnd(s, e)
         loadEvents()
+    }
+
+    private fun setStartAndEnd(s: ZonedDateTime, e: ZonedDateTime) {
+        start = s.withZoneSameInstant(ZoneId.systemDefault())
+        end = e.withZoneSameInstant(ZoneId.systemDefault())
     }
 
     // todo not work on two click ???
-    fun onDateSelected(date: Calendar) {
-        start.setYearMonthDay(date)
-        end.setYearMonthDay(date)
-        roundHourAndMinute()
+    fun onDateSelected(day: ZonedDateTime) {
+        val dayLocal = day.withZoneSameInstant(ZoneId.systemDefault())
+        start = dayLocal.truncatedTo(ChronoUnit.DAYS)
+        end = start.plusDays(1)
+
+        unsubscribeOnAll()
         loadEvents()
     }
 
-    fun getId(pos: Int): String {
+    fun getEvent(pos: Int): EventInstance {
         if (pos >= events.size) {
-            // todo hardcore
             throw IllegalArgumentException("Position greater list size ${events.size}")
         }
-        return events[pos].id
+        return events[pos]
     }
 
-
-    private fun roundHourAndMinute() {
-        start.setHourOfDayAndMinute(0, 0)
-        end.setHourOfDayAndMinute(0, 0)
-        end.add(Calendar.DAY_OF_MONTH, 1)
-    }
 
     private fun loadEvents() {
         val subscription = eventRepository.fromTo(start, end)
@@ -56,15 +57,15 @@ class ListEventPresenter(
                 },
                 { error ->
                     onLoadingFailed(error)
-                });
+                })
         unsubscribeOnDestroy(subscription)
     }
 
     private fun onLoadingFailed(error: Throwable) {
-        viewState.showError(error.toString());
+        viewState.showError(error.toString())
     }
 
-    private fun onLoadingSuccess(rep: List<EventTable>) {
+    private fun onLoadingSuccess(rep: List<EventInstance>) {
         events.clear()
         events.addAll(rep)
         viewState.setEvents(rep)

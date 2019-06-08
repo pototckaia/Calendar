@@ -3,29 +3,39 @@ package com.example.calendar.eventFragment;
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import java.util.*
+import android.text.InputType
 import android.view.*
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.arellomobile.mvp.MvpAppCompatFragment
-import com.example.calendar.helpers.START_EVENT_KEY
-import com.example.calendar.helpers.END_EVENT_KEY
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
+import com.example.calendar.RecurrenceViewModel
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.data.EventRoomDatabase
-import com.example.calendar.navigation.CiceroneApplication
+import com.example.calendar.helpers.*
+import com.example.calendar.inject.InjectApplication
+import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
+import org.dmfs.rfc5545.recur.RecurrenceRule
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfoView, DateClickView {
+    CreateEventInfoView, DateClickView, RecurrenceEventView {
 
     companion object {
-        fun newInstance(startEvent: Calendar, endEvent: Calendar): CreateEventFragment {
+        fun newInstance(
+            startEvent: ZonedDateTime,
+            endEvent: ZonedDateTime
+        ): CreateEventFragment {
             val args = Bundle()
             args.run {
-                this.putLong(START_EVENT_KEY, startEvent.timeInMillis)
-                this.putLong(END_EVENT_KEY, endEvent.timeInMillis)
+                this.putString(START_EVENT_KEY, toStringFromZoned(startEvent))
+                this.putString(END_EVENT_KEY, toStringFromZoned(endEvent))
             }
             val f = CreateEventFragment()
             f.arguments = args
@@ -41,7 +51,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
         return CreateEventPresenter(
             // todo inject
             router,
-            EventRoomDatabase.getInstance(context!!).eventDao()
+            InjectApplication.inject.repository
         )
     }
 
@@ -51,15 +61,21 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideDateClickPresenter(): DateClickPresenter {
         return DateClickPresenter(
-            arguments!!.getLong(START_EVENT_KEY),
-            arguments!!.getLong(END_EVENT_KEY)
+            fromStringToZoned(arguments!!.getString(START_EVENT_KEY)),
+            fromStringToZoned(arguments!!.getString(END_EVENT_KEY)),
+            { d: ZonedDateTime -> validateStartEvent(d) },
+            { true }
         )
     }
 
+    @InjectPresenter
+    lateinit var recurrenceEventPresenter: RecurrenceEventPresenter
+
     // todo inject
-    private val router = CiceroneApplication.instance.router
+    private val router = InjectApplication.inject.router
 
     private lateinit var v: View
+    lateinit var recurrenceViewModel: RecurrenceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,7 +85,16 @@ class CreateEventFragment : MvpAppCompatFragment(),
         super.onCreateView(inflater, container, savedInstanceState)
         v = inflater.inflate(
             R.layout.fragment_create_event,
-            container, false)
+            container, false
+        )
+
+        recurrenceViewModel = activity?.run {
+            ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
+        } ?: throw Exception("Invalid scope to ViewModel")
+
+        recurrenceViewModel.recurrence.observe(this, Observer<String> { r ->
+            recurrenceEventPresenter.onRuleChange(r)
+        })
 
         initToolBar()
 
@@ -78,6 +103,12 @@ class CreateEventFragment : MvpAppCompatFragment(),
         v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
         v.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
 
+        v.etRecurrenceRule.inputType = InputType.TYPE_NULL
+        v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
+        v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
+
+        v.tvTimeZone.text = ZoneId.systemDefault().toString()
+
         return v
     }
 
@@ -85,31 +116,74 @@ class CreateEventFragment : MvpAppCompatFragment(),
         v.tbNoteCreate.setNavigationOnClickListener { router.exit() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_enent_create)
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
-            createEventPresenter.onSaveEvent(
-                view!!.etTextEvent.text.toString(),
-                dateClickPresenter.startEvent,
-                dateClickPresenter.endEvent)
+            onSave()
             true
         }
     }
 
-    override fun updateDateInfo(begin: Calendar, end: Calendar) {
-        v.vBegin.setDate(begin)
-        v.vEnd.setDate(end)
+    private fun onSave() {
+        createEventPresenter.onSaveEvent(
+            view!!.etTextEvent.text.toString(),
+            "TODO",
+            dateClickPresenter.start,
+            dateClickPresenter.end,
+            recurrenceEventPresenter.getRule()
+        )
     }
 
-    override fun showDatePickerDialog(c: Calendar, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(c, l)
+    private fun onRecurrenceRuleClick() {
+        router.navigateTo(
+            Screens.FreqScreen(
+                dateClickPresenter.start,
+                recurrenceEventPresenter.getRule()
+            )
+        )
+    }
+
+    override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
+        v.vBegin.setDate(startLocal)
+        v.vEnd.setDate(endLocal)
+    }
+
+    override fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
+        val dpd = MaterialDatePickerDialog.newInstance(local, l)
         dpd.show(activity?.supportFragmentManager, "date-picker")
     }
 
-    override fun showTimePickerDialog(c: Calendar, l: TimePickerDialog.OnTimeSetListener) {
+    override fun showTimePickerDialog(local: ZonedDateTime, l: TimePickerDialog.OnTimeSetListener) {
         val tpd = TimePickerDialog(
             context, l,
-            c.get(Calendar.HOUR_OF_DAY),
-            c.get(Calendar.MINUTE),
+            local.hour,
+            local.minute,
             true
         )
         tpd.show()
     }
+
+    override fun setRecurrenceViw(r: String) {
+        v.etRecurrenceRule.setText(r)
+    }
+
+    override fun postRecurrence(r: String) {
+        recurrenceViewModel.recurrence.postValue(r)
+    }
+
+    private fun validateStartEvent(start: ZonedDateTime): Boolean {
+        val rule = recurrenceEventPresenter.getRule()
+        if (rule.isNotEmpty() && RecurrenceRule(rule).until != null) {
+            val until = fromDateTimeUTC(RecurrenceRule(rule).until)
+            val startUTC = start.withZoneSameInstant(ZoneOffset.UTC)
+            if (startUTC >= until) {
+                Toast
+                    .makeText(
+                        context,
+                        "Дата начала события не может быть позже даты ДО в правиле переодичности",
+                        Toast.LENGTH_SHORT)
+                    .show()
+            }
+            return startUTC < until
+        }
+        return true
+    }
+
 }

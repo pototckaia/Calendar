@@ -13,10 +13,13 @@ open class BaseMvpSubscribe<View : MvpView> : MvpPresenter<View>() {
     protected fun unsubscribeOnDestroy(disposable: Disposable) {
         compositeSubscription.add(disposable)
     }
-    // f.subscribeWith for Subscription
+
+    protected fun unsubscribeOnAll() {
+        compositeSubscription.clear()
+    }
 
     override fun onDestroy() {
+        unsubscribeOnAll()
         super.onDestroy()
-        compositeSubscription.clear()
     }
 }
