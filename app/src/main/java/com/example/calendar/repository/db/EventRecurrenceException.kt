@@ -1,6 +1,7 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import androidx.room.*
+import com.example.calendar.repository.db.convert.ZoneDateTimeConverter
 import org.threeten.bp.ZonedDateTime
 import java.util.UUID
 

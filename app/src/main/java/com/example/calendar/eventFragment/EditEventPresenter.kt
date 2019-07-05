@@ -1,9 +1,9 @@
 package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventInstance
-import com.example.calendar.data.EventRecurrence
-import com.example.calendar.data.EventRecurrenceRepository
+import com.example.calendar.repository.db.EventInstance
+import com.example.calendar.repository.db.EventRecurrence
+import com.example.calendar.repository.db.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -55,7 +55,8 @@ class EditEventPresenter(
             zoneId = eventInstance.zoneId,
             duration = Duration.between(
                 startEvent.withZoneSameInstant(ZoneOffset.UTC),
-                endEvent.withZoneSameInstant(ZoneOffset.UTC)),
+                endEvent.withZoneSameInstant(ZoneOffset.UTC)
+            ),
             rrule = rule
         )
 
@@ -89,7 +90,8 @@ class EditEventPresenter(
             zoneId = eventInstance.zoneId,
             duration = Duration.between(
                 startEvent.withZoneSameInstant(ZoneOffset.UTC),
-                endEvent.withZoneSameInstant(ZoneOffset.UTC)),
+                endEvent.withZoneSameInstant(ZoneOffset.UTC)
+            ),
             rrule = rule
         )
 

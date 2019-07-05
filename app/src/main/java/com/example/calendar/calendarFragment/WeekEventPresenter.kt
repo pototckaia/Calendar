@@ -2,8 +2,8 @@ package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.customView.EventWeekView
-import com.example.calendar.data.EventInstance
-import com.example.calendar.data.EventRecurrenceRepository
+import com.example.calendar.repository.db.EventInstance
+import com.example.calendar.repository.db.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.Duration
@@ -160,7 +160,7 @@ class WeekEventPresenter(
             if (isAddFake) {
                 val eventFake = EventInstance(
                     idEventRecurrence = "",
-                    nameEventRecurrence= titleFake,
+                    nameEventRecurrence = titleFake,
                     noteEventRecurrence = "",
                     startedAtInstance = startIntersection,
                     startedAtNotUpdate = startIntersection,

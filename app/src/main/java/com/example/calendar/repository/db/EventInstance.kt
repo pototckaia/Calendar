@@ -1,17 +1,14 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.calendar.repository.db.convert.DurationConverter
 import com.example.calendar.helpers.fromLongUTC
 import com.example.calendar.helpers.toLongUTC
-import com.example.calendar.helpers.toTimeZone
-import org.dmfs.rfc5545.DateTime
-import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
-import java.util.*
 import javax.security.auth.login.LoginException
 
 data class EventInstance(

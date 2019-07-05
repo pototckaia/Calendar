@@ -1,4 +1,4 @@
-package com.example.calendar.server
+package com.example.calendar.repository.server
 
 import io.reactivex.schedulers.Schedulers
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +17,7 @@ class Server private constructor() {
     }
 
     private val baseUrl = "http://planner.skillmasters.ga/"
-    internal var api: PlannerServiceApi
+    internal var api: PlannerApi
 
     init {
         val logging = HttpLoggingInterceptor()
@@ -62,6 +62,6 @@ class Server private constructor() {
             .addCallAdapterFactory(rxAdapter)
             .build()
 
-        api = retrofit.create(PlannerServiceApi::class.java)
+        api = retrofit.create(PlannerApi::class.java)
     }
 }

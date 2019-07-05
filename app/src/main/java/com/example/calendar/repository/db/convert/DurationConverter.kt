@@ -1,4 +1,4 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db.convert
 
 import androidx.room.TypeConverter
 import org.threeten.bp.Duration

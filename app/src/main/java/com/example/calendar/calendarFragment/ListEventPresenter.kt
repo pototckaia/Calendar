@@ -1,18 +1,18 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventInstance
-import com.example.calendar.data.EventRecurrenceRepository
+import com.example.calendar.repository.db.EventInstance
+import com.example.calendar.repository.db.EventRecurrenceRepository
 import com.example.calendar.helpers.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 
 @InjectViewState
 class ListEventPresenter(
-    private val eventRepository: EventRecurrenceRepository) :
+    private val eventRepository: EventRecurrenceRepository
+) :
     BaseMvpSubscribe<ListEventView>() {
 
     private val events = ArrayList<EventInstance>()

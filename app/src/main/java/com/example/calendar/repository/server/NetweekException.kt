@@ -1,4 +1,4 @@
-package com.example.calendar.server
+package com.example.calendar.repository.server
 
 open class NetworkException(message: String) : RuntimeException(message)
 

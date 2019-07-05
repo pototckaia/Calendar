@@ -4,11 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calendar.R
-import com.example.calendar.data.EventInstance
+import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.view_duration_event_holder.view.*
 import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 
 

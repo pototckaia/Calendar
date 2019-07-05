@@ -1,8 +1,9 @@
-package com.example.calendar.server
+package com.example.calendar.repository.server
 
 data class EventServer(
     val id: Long,
     val owner_id: Long,
+
     val created_at: Long,
     val updated_at: Long,
 
@@ -29,6 +30,7 @@ data class EventPatternExruleServer(
 
 data class EventPatternServer(
     val id: Long,
+
     val created_at: Long,
     val updated_at: Long,
 

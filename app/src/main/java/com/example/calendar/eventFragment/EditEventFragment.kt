@@ -14,7 +14,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.RecurrenceViewModel
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.data.EventInstance
+import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.EVENT_INSTANCE_KEY
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens

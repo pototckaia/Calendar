@@ -1,8 +1,8 @@
 package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventRecurrence
-import com.example.calendar.data.EventRecurrenceRepository
+import com.example.calendar.repository.db.EventRecurrence
+import com.example.calendar.repository.db.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,8 +25,10 @@ class CreateEventPresenter(
         rule: String
     ) {
         val event =
-            EventRecurrence(title, note,
-                start, Duration.between(start, end), rule)
+            EventRecurrence(
+                title, note,
+                start, Duration.between(start, end), rule
+            )
 
         val subscription = eventRepository.insertEvent(event)
             .subscribeOn(Schedulers.io())

@@ -4,9 +4,9 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Cicerone
 import android.app.Application
-import com.example.calendar.data.EventRecurrenceDao
-import com.example.calendar.data.EventRecurrenceRepository
-import com.example.calendar.data.EventRoomDatabase
+import com.example.calendar.repository.db.EventRecurrenceDao
+import com.example.calendar.repository.db.EventRecurrenceRepository
+import com.example.calendar.repository.db.EventRoomDatabase
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 

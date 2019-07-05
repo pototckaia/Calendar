@@ -1,4 +1,4 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import com.example.calendar.helpers.*
 import io.reactivex.Completable

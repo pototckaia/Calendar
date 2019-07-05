@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.calendarFragment.ListEventPresenter
 import com.example.calendar.calendarFragment.ListEventView
-import com.example.calendar.data.EventInstance
+import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens

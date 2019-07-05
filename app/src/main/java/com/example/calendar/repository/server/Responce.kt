@@ -1,4 +1,4 @@
-package com.example.calendar.server
+package com.example.calendar.repository.server
 
 
 data class EventResponse(

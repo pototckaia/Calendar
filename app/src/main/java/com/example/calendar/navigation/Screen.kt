@@ -9,7 +9,7 @@ import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
-import com.example.calendar.data.EventInstance
+import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.AuthFragment

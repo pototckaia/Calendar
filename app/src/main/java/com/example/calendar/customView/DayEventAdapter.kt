@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.example.calendar.R
-import com.example.calendar.data.EventInstance
+import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.view_day_event_holder.view.*
 import org.threeten.bp.ZoneId

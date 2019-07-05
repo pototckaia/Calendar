@@ -1,7 +1,7 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventRecurrenceRepository
+import com.example.calendar.repository.db.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.ZoneId
