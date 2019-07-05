@@ -12,6 +12,7 @@ import com.example.calendar.calendarFragment.WeekCalendarFragment
 import com.example.calendar.data.EventInstance
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
+import com.example.calendar.AuthFragment
 import org.threeten.bp.ZonedDateTime
 
 class Screens {
@@ -60,6 +61,11 @@ class Screens {
     class FreqScreen(private val start: ZonedDateTime, private val rule:String="") : SupportAppScreen() {
         override fun getFragment(): Fragment =
                 FreqFragment.newInstance(start, rule)
+    }
+
+    class AuthScreen : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+                AuthFragment.newInstance()
     }
 
 //    class GithubScreen : SupportAppScreen() {

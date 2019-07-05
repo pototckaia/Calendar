@@ -90,7 +90,7 @@ ext.deps.navigation = [
 ext.deps.retrofit = [
         core         : "com.squareup.retrofit2:retrofit:$v.retrofitVersion",
         gsonConverter: "com.squareup.retrofit2:converter-gson:$v.retrofitVersion",
-        rxJava2      : "com.squareup.retrofit2:adapter-rxjava:$v.retrofitVersion",
+        rxJava2      : "com.squareup.retrofit2:adapter-rxjava2:$v.retrofitVersion",
         logging      : "com.squareup.okhttp3:logging-interceptor:$v.loggingVersion",
 ]
 

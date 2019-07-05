@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             // todo inject
-            InjectApplication.inject.router.newRootScreen(Screens.NavigationScreen())
+            InjectApplication.inject.router.newRootScreen(Screens.AuthScreen())
         }
     }
 
