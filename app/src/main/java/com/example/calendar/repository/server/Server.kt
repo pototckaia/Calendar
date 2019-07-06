@@ -1,5 +1,9 @@
 package com.example.calendar.repository.server
 
+import com.example.calendar.repository.server.convert.DurationJsonConvert
+import com.example.calendar.repository.server.convert.ZoneIdJsonConvert
+import com.example.calendar.repository.server.convert.ZonedDateTimeJsonConvert
+import com.google.gson.GsonBuilder
 import io.reactivex.schedulers.Schedulers
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
@@ -7,6 +11,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
 import okhttp3.Headers
+import org.threeten.bp.Duration
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 
@@ -55,10 +62,16 @@ class Server private constructor() {
 
         val rxAdapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
 
+        val json = GsonBuilder()
+            .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeJsonConvert())
+            .registerTypeAdapter(Duration::class.java, DurationJsonConvert())
+            .registerTypeAdapter(ZoneId::class.java, ZoneIdJsonConvert())
+            .create()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(json))
             .addCallAdapterFactory(rxAdapter)
             .build()
 

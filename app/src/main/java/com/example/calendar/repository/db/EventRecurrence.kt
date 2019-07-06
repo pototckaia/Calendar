@@ -29,7 +29,7 @@ data class EventRecurrence(
     // in minute
     // [start, end)
     @ColumnInfo(name = "duration") var duration: Duration,
-    // for all recurrence event or endOutRecurrence for single event
+    // for all recurrence entity or endOutRecurrence for single entity
     @ColumnInfo(name = "end_out_of_range") var endOutRecurrence: ZonedDateTime,
 
     @ColumnInfo(name="zone_id") var zoneId: ZoneId,

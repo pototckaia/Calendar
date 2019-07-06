@@ -1,5 +1,4 @@
-package com.example.calendar.repository.server
-
+package com.example.calendar.repository.server.model
 
 data class EventResponse(
     val count: Int,
@@ -39,7 +38,7 @@ data class PermissionResponse(
 
 data class TaskResponse(
     val count: Int,
-    val data: List<Task>,
+    val data: List<TaskServer>,
     val message: String,
     val offset: Long,
     val status: Int,

@@ -1,5 +1,6 @@
 package com.example.calendar.repository.server
 
+import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -7,7 +8,7 @@ import retrofit2.http.*
 
 const val request = "/api/v1"
 
-internal interface PlannerApi {
+interface PlannerApi {
 
     // iCal
     @GET("$request/export")
@@ -40,8 +41,16 @@ internal interface PlannerApi {
         @Body event: EventRequest
     ): Observable<EventResponse>
 
+    @POST("$request/events")
+    fun createEventConsistently(
+        @Body event: EventRequest
+    ): EventResponse
+
     @GET("$request/events/{id}")
     fun getEventById(@Path("id") id: Long) : Observable<EventResponse>
+
+    @GET("$request/events/{id}")
+    fun getEventByIdConsistently(@Path("id") id: Long) : EventResponse
 
     @DELETE("$request/events/{id}")
     fun deleteEventById(@Path("id") id: Long) : Observable<EventResponse>
@@ -74,20 +83,34 @@ internal interface PlannerApi {
         @Query("event_id") event_id: Long
     ) : Observable<EventPatternResponse>
 
+    @GET("$request/patterns")
+    fun getPatternsConsistently(
+        @Query("event_id") event_id: Long
+    ) : EventPatternResponse
+
     @POST("$request/patterns")
     fun createPattern(
         @Query("event_id") event_id: Long,
         @Body pattern: PatternRequest
     ): Observable<EventPatternResponse>
 
+    @POST("$request/patterns")
+    fun createPatternConsistently(
+        @Query("event_id") event_id: Long,
+        @Body pattern: PatternRequest
+    ): EventPatternResponse
+
     @GET("$request/patterns/{id}")
     fun getPatternById(@Path("id") id: Long) : Observable<EventPatternResponse>
+
+    @GET("$request/patterns/{id}")
+    fun getPatternByIdConsistently(@Path("id") id: Long) : EventPatternResponse
 
     @DELETE("$request/patterns/{id}")
     fun deletePatternById(@Path("id") id: Long) : Observable<EventPatternResponse>
 
     @PATCH("$request/patterns/{id}")
-    fun updateEvent(
+    fun updatePattern(
         @Path("id") id: Long,
         @Body updates: PatternRequest
     ) : Observable<EventPatternResponse>
@@ -131,7 +154,7 @@ internal interface PlannerApi {
     @GET("$request/share/{token}")
     fun activateLink(@Path("token") token: String) : Completable
 
-    // Task
+    // TaskServer
 
     @GET("$request/tasks")
     fun getTasksByEventId(
@@ -153,6 +176,9 @@ internal interface PlannerApi {
 
     @GET("$request/tasks/{id}")
     fun getTaskById(@Path("id") id: Long) : Observable<TaskResponse>
+
+    @GET("$request/tasks/{id}")
+    fun getTaskByIdConsistently(@Path("id") id: Long) : TaskResponse
 
     @DELETE("$request/tasks/{id}")
     fun deleteTaskById(@Path("id") id: Long) : Observable<TaskResponse>
