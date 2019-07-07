@@ -41,16 +41,8 @@ interface PlannerApi {
         @Body event: EventRequest
     ): Observable<EventResponse>
 
-    @POST("$request/events")
-    fun createEventConsistently(
-        @Body event: EventRequest
-    ): EventResponse
-
     @GET("$request/events/{id}")
     fun getEventById(@Path("id") id: Long) : Observable<EventResponse>
-
-    @GET("$request/events/{id}")
-    fun getEventByIdConsistently(@Path("id") id: Long) : EventResponse
 
     @DELETE("$request/events/{id}")
     fun deleteEventById(@Path("id") id: Long) : Observable<EventResponse>
@@ -94,17 +86,8 @@ interface PlannerApi {
         @Body pattern: PatternRequest
     ): Observable<EventPatternResponse>
 
-    @POST("$request/patterns")
-    fun createPatternConsistently(
-        @Query("event_id") event_id: Long,
-        @Body pattern: PatternRequest
-    ): EventPatternResponse
-
     @GET("$request/patterns/{id}")
     fun getPatternById(@Path("id") id: Long) : Observable<EventPatternResponse>
-
-    @GET("$request/patterns/{id}")
-    fun getPatternByIdConsistently(@Path("id") id: Long) : EventPatternResponse
 
     @DELETE("$request/patterns/{id}")
     fun deletePatternById(@Path("id") id: Long) : Observable<EventPatternResponse>
@@ -176,9 +159,6 @@ interface PlannerApi {
 
     @GET("$request/tasks/{id}")
     fun getTaskById(@Path("id") id: Long) : Observable<TaskResponse>
-
-    @GET("$request/tasks/{id}")
-    fun getTaskByIdConsistently(@Path("id") id: Long) : TaskResponse
 
     @DELETE("$request/tasks/{id}")
     fun deleteTaskById(@Path("id") id: Long) : Observable<TaskResponse>

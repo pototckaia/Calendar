@@ -1,6 +1,10 @@
 package com.example.calendar.repository.server.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.example.calendar.helpers.betweenIncludeMillis
+import com.example.calendar.repository.db.convert.ZoneDateTimeConverter
+import com.example.calendar.repository.server.EventServerRepository
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
@@ -20,7 +24,7 @@ data class EventInstance(
     // [start, end]
     var started_at: ZonedDateTime,
     var ended_at: ZonedDateTime
-) {
+) : Parcelable {
 
     val started_at_zoneid: ZonedDateTime
         get() = started_at.withZoneSameInstant(pattern.timezone)
@@ -52,6 +56,37 @@ data class EventInstance(
 
             pattern.duration = newDuration
             ended_at = newEndedAt
+        }
+    }
+
+    constructor(parcel: Parcel) :
+            this(
+                entity = parcel.readParcelable<EventServer>(EventServer::class.java.classLoader),
+                pattern = parcel.readParcelable<EventPatternServer>(EventPatternServer::class.java.classLoader),
+                started_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
+                ended_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!
+            )
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        if (dest == null) return
+
+        dest.writeParcelable(entity, 0)
+        dest.writeParcelable(pattern, 0)
+        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(started_at)!!)
+        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(ended_at)!!)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EventInstance> {
+        override fun createFromParcel(parcel: Parcel): EventInstance {
+            return EventInstance(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EventInstance?> {
+            return arrayOfNulls(size)
         }
     }
 }

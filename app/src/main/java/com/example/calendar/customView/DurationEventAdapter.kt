@@ -4,8 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calendar.R
-import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.*
+import com.example.calendar.repository.server.model.EventInstance
 import kotlinx.android.synthetic.main.view_duration_event_holder.view.*
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
@@ -24,17 +24,17 @@ class DurationEventViewHolder(
     private val emptyTitle = "< Нет названия >"
 
     fun bind(e: EventInstance, start: ZonedDateTime, end: ZonedDateTime) {
-        if (e.nameEventRecurrence.isEmpty()) {
+        if (e.entity.name.isEmpty()) {
             view.tvEventTitle.text = emptyTitle
         } else {
-            view.tvEventTitle.text = e.nameEventRecurrence
+            view.tvEventTitle.text = e.entity.name
         }
 
-        view.tvEventHourDuration.text = getStringDiff(e.startedAtLocal, e.endedAtLocal, "HH:mm")
+        view.tvEventHourDuration.text = getStringDiff(e.started_at_local, e.ended_at_local, "HH:mm")
         if (isSameDay(start, end)) {
             view.tvEventDay.height = 0
         } else {
-            view.tvEventDay.text = getStringDayDiff(e.startedAtLocal, e.endedAtLocal)
+            view.tvEventDay.text = getStringDayDiff(e.started_at_local, e.ended_at_local)
         }
     }
 }

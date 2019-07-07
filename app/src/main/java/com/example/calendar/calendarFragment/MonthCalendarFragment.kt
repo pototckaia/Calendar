@@ -20,11 +20,11 @@ import com.example.calendar.customView.MonthDotDecorator
 import com.example.calendar.customView.TodayDecorator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.fromCalendar
 import com.example.calendar.helpers.toCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -134,7 +134,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     private fun onClickEvent(pos: Int) {
         val event = listEventPresenter.getEvent(pos)
-        // todo need presenter ???
         router.navigateTo(Screens.EventScreen(event))
     }
 

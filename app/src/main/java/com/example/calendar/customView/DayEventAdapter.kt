@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.example.calendar.R
-import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.*
+import com.example.calendar.repository.server.model.EventInstance
 import kotlinx.android.synthetic.main.view_day_event_holder.view.*
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
@@ -30,20 +30,20 @@ class DayEventViewHolder(
     private val emptyTitle = "< Нет названия >"
 
     fun bind(e: EventInstance, day: ZonedDateTime) {
-        if (e.nameEventRecurrence.isEmpty()) {
+        if (e.entity.name.isEmpty()) {
             view.tvEventTitle.text = emptyTitle
         } else {
-            view.tvEventTitle.text = e.nameEventRecurrence
+            view.tvEventTitle.text = e.entity.name
         }
 
-        var first = e.startedAtLocal.format(fmtHour)
-        var second = e.endedAtLocal.format(fmtHour)
+        var first = e.started_at_local.format(fmtHour)
+        var second = e.started_at_local.format(fmtHour)
 
-        if (lessDay(e.startedAtLocal, day) && moreDay(e.endedAtLocal, day)) {
+        if (lessDay(e.started_at_local, day) && moreDay(e.ended_at_local, day)) {
             view.tvEventHourDuration.text = allDay
         } else {
-            if (lessDay(e.startedAtLocal, day)) { first = rangeOut}
-            if (moreDay(e.endedAtLocal, day)) { second = rangeOut }
+            if (lessDay(e.started_at_local, day)) { first = rangeOut}
+            if (moreDay(e.ended_at_local, day)) { second = rangeOut }
 
             view.tvEventHourDuration.text = "$first - $second"
         }

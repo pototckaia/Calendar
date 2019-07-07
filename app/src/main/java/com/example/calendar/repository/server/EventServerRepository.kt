@@ -2,28 +2,22 @@ package com.example.calendar.repository.server
 
 import com.example.calendar.helpers.betweenIncludeMillis
 import com.example.calendar.helpers.toLongUTC
-import com.example.calendar.repository.server.model.Event
-import com.example.calendar.repository.server.model.EventInstance
-import com.example.calendar.repository.server.model.EventRequest
-import com.example.calendar.repository.server.model.PatternRequest
+import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
+import io.reactivex.functions.BiFunction
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
 
-    override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<List<EventInstance>> {
-        val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
-        val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
-
-        return api.getEventsInstancesFromTo(startUTC, endUTC)
-            .map {
-                val list = it.data
-                list.map { e ->
-                    val event = api.getEventByIdConsistently(e.event_id)
-                    val pattern = api.getPatternByIdConsistently(e.pattern_id)
+    private fun getEventInstance(e: EventInstanceServer): Observable<EventInstance> {
+        return api.getEventById(e.event_id)
+            .zipWith(
+                api.getPatternById(e.pattern_id),
+                BiFunction { event: EventResponse, pattern: EventPatternResponse ->
                     EventInstance(
                         // todo check data
                         entity = event.data[0],
@@ -31,16 +25,27 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                         started_at = e.started_at,
                         ended_at = e.ended_at
                     )
-
                 }
-            }
+            )
+    }
+
+    override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<List<EventInstance>> {
+        val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
+        val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
+
+        return api.getEventsInstancesFromTo(startUTC, endUTC)
+            .map { it.data }
+            .flatMap { Observable.fromIterable(it) }
+            .flatMap { getEventInstance(it) }
+            .toList()
+            .toObservable()
     }
 
 
     private fun daysInEvent(event: EventInstance): List<ZonedDateTime> {
         val dates = arrayListOf<ZonedDateTime>()
 
-        // todo make local timezone or timezone create ????
+        // todo local or timezone
         dates.add(event.started_at_zoneid)
         var day = ZonedDateTime.from(event.started_at_zoneid)
         val durationZoneId = betweenIncludeMillis(event.started_at_zoneid, event.ended_at_zoneid)
@@ -66,24 +71,24 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
     }
 
     override fun getEventById(eventId: Long): Observable<Event> {
-        return Observable.fromCallable {
-            // todo check data
-            val e = api.getEventByIdConsistently(eventId).data[0]
-            // todo make list
-            val p = api.getPatternsConsistently(eventId).data[0]
-            Event(e, p)
-        }
+        return api.getEventById(eventId)
+            .zipWith(
+                api.getPatterns(eventId),
+                BiFunction { e: EventResponse, p: EventPatternResponse ->
+                    Event(e.data[0], p.data[0])
+                }
+            )
     }
 
     override fun insertEvent(
         eventRequest: EventRequest, patternRequest: PatternRequest
     ): Completable {
-        return Completable.fromCallable {
-            // todo check data
-            val eventId = api.createEventConsistently(eventRequest).data[0].id
-            api.createPatternConsistently(eventId, patternRequest)
-            true
-        }
+        return api.createEvent(eventRequest)
+            .flatMap {
+                val eventId = it.data[0].id
+                api.createPattern(eventId, patternRequest)
+            }
+            .ignoreElements()
     }
 
     override fun updateAll(event: EventInstance): Completable {

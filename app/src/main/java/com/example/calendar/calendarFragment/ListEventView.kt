@@ -4,7 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.example.calendar.repository.db.EventInstance
+import com.example.calendar.repository.server.model.EventInstance
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ListEventView : MvpView {

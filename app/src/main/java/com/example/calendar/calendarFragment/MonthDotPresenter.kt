@@ -1,8 +1,8 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.repository.db.EventRecurrenceRepository
 import com.example.calendar.helpers.BaseMvpSubscribe
+import com.example.calendar.repository.server.EventRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
@@ -13,7 +13,7 @@ import kotlin.collections.HashSet
 
 @InjectViewState
 class MonthDotPresenter(
-    private val eventRepository: EventRecurrenceRepository,
+    private val eventRepository: EventRepository,
     private var curMonth: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
 ) :
     BaseMvpSubscribe<MonthDotView>() {
@@ -34,6 +34,7 @@ class MonthDotPresenter(
     private fun loadEvents() {
         val monthStart = curMonth.with(TemporalAdjusters.firstDayOfMonth())
             .truncatedTo(ChronoUnit.DAYS)
+        // todo [end]
         val monthEnd = curMonth.with(TemporalAdjusters.lastDayOfMonth())
             .truncatedTo(ChronoUnit.DAYS)
             .plusDays(1)

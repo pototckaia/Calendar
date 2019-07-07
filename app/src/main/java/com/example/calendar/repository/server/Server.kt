@@ -17,11 +17,7 @@ import org.threeten.bp.ZonedDateTime
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 
-class Server private constructor() {
-
-    companion object {
-        val server = Server()
-    }
+class Server {
 
     private val baseUrl = "http://planner.skillmasters.ga/"
     internal var api: PlannerApi

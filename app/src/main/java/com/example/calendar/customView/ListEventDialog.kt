@@ -13,10 +13,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.calendarFragment.ListEventPresenter
 import com.example.calendar.calendarFragment.ListEventView
-import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import com.example.calendar.repository.server.model.EventInstance
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
@@ -41,8 +41,9 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
 
     @ProvidePresenter
     fun provideListEventPresenter(): ListEventPresenter {
-        val startString = arguments!!.getString(START_LIST_EVENT_KEY)
-        val endString = arguments!!.getString(END_LIST_EVENT_KEY)
+        // todo !!
+        val startString = arguments!!.getString(START_LIST_EVENT_KEY)!!
+        val endString = arguments!!.getString(END_LIST_EVENT_KEY)!!
         return ListEventPresenter(
             // todo inject
             InjectApplication.inject.repository,
@@ -64,7 +65,6 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         val inflater = activity!!.layoutInflater
         v = inflater.inflate(R.layout.dialog_list_event, null)
 
-
         val linerLayoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
             v.rvEvents.context,
@@ -81,8 +81,9 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         // ???
         val b = savedInstanceState ?: arguments!!
 
-        start = fromStringToZoned(b.getString(START_LIST_EVENT_KEY))
-        end = fromStringToZoned(b.getString(END_LIST_EVENT_KEY))
+        // todo !!
+        start = fromStringToZoned(b.getString(START_LIST_EVENT_KEY)!!)
+        end = fromStringToZoned(b.getString(END_LIST_EVENT_KEY)!!)
         setDuration(start, end)
 
 

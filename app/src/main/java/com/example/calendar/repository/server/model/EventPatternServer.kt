@@ -1,9 +1,15 @@
 package com.example.calendar.repository.server.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.example.calendar.helpers.fromDateTimeUTC
 import com.example.calendar.helpers.fromLongUTC
 import com.example.calendar.helpers.max
 import com.example.calendar.helpers.toDateTimeUTC
+import com.example.calendar.repository.db.convert.DurationConverter
+import com.example.calendar.repository.db.convert.ZoneDateTimeConverter
+import com.example.calendar.repository.db.convert.ZoneIdConverter
+import com.example.calendar.repository.server.convert.ZonedDateTimeJsonConvert
 import org.dmfs.rfc5545.DateTime
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.*
@@ -21,7 +27,7 @@ data class EventPatternServer(
     var exrules: List<EventPatternExruleServer>,
     var rrule: String,
     var timezone: ZoneId
-) {
+) : Parcelable {
 
     val started_at_zoneid: ZonedDateTime
         get() = started_at.withZoneSameInstant(timezone)
@@ -108,5 +114,51 @@ data class EventPatternServer(
             newEndedAt = max(startedAtZonedDate.plus(duration), newEndedAt)
         }
         return newEndedAt
+    }
+
+    constructor(parcel: Parcel) :
+            this(
+                id = parcel.readLong(),
+                // todo a lof of create
+                created_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
+                updated_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
+                started_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
+                duration = DurationConverter().toDuration(parcel.readLong())!!,
+                ended_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
+                exrules = emptyList<EventPatternExruleServer>(),
+                rrule = parcel.readString()!!,
+                timezone = ZoneIdConverter().toZoneId(parcel.readString())!!
+            )
+    {
+        parcel.readTypedList(exrules, EventPatternExruleServer.CREATOR)
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        if (dest == null) return
+
+        dest.writeLong(id)
+        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(created_at)!!)
+        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(updated_at)!!)
+        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(started_at)!!)
+        dest.writeLong(DurationConverter().fromDuration(duration)!!)
+        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(ended_at)!!)
+        dest.writeString(rrule)
+        dest.writeString(ZoneIdConverter().fromZoneId(timezone))
+
+        dest.writeTypedList(exrules)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EventPatternServer> {
+        override fun createFromParcel(parcel: Parcel): EventPatternServer{
+            return EventPatternServer(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EventPatternServer?> {
+            return arrayOfNulls(size)
+        }
     }
 }

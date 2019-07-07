@@ -19,6 +19,7 @@ class OpenNewEventPresenter(private val router: Router) : MvpPresenter<OpenNewEv
         val start = dayLocal
             .truncatedTo(ChronoUnit.DAYS)
             .withHour(0)
+        // todo [end]
         val end = start
             .plusHours(1)
         openFromTo(start, end)
@@ -30,6 +31,7 @@ class OpenNewEventPresenter(private val router: Router) : MvpPresenter<OpenNewEv
 
     fun openOnTime(timeLocal: ZonedDateTime) {
         val start = timeLocal.withMinute(0)
+        // todo [end]
         val end = start.plusHours(1)
         openFromTo(start, end)
     }

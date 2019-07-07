@@ -135,7 +135,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     override fun onEventClick(data: EventWeekView, eventRect: RectF) {
         // todo need presenter ??
         if (data.isFake) {
-            val d = ListEventDialog.newInstance(data.event.startedAtLocal, data.event.endedAtLocal)
+            val d = ListEventDialog.newInstance(data.event.started_at_local, data.event.ended_at_local)
             d.show(activity?.supportFragmentManager, "list-dialog")
         } else {
             router.navigateTo(Screens.EventScreen(data.event))

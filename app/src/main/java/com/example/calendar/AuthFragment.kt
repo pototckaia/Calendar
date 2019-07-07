@@ -31,16 +31,16 @@ class AuthFragment : MvpAppCompatFragment() {
             container, false
         )
 
-        val r = Server.server.api.getEventsOffset(count = 100, offset = 0)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Toast.makeText(context, "Ok!!", Toast.LENGTH_LONG).show()
-                Log.d("OkHttp", "Size data ${it.data.size}")
-            }, {
-                Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show()
-                Log.d("OkHttp", it.toString())
-            })
+//        val r = Server.server.api.getEventsOffset(count = 100, offset = 0)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                Toast.makeText(context, "Ok!!", Toast.LENGTH_LONG).show()
+//                Log.d("OkHttp", "Size data ${it.data.size}")
+//            }, {
+//                Toast.makeText(context, it.toString(), Toast.LENGTH_LONG).show()
+//                Log.d("OkHttp", it.toString())
+//            })
 
 
         return v

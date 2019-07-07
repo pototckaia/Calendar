@@ -14,7 +14,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.RecurrenceViewModel
 import com.example.calendar.customView.MaterialDatePickerDialog
-import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.helpers.EVENT_INSTANCE_KEY
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
@@ -22,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import org.threeten.bp.ZonedDateTime
 import androidx.appcompat.app.AlertDialog
 import com.example.calendar.helpers.fromDateTimeUTC
+import com.example.calendar.repository.server.model.EventInstance
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZoneOffset
 
@@ -56,8 +56,8 @@ class EditEventFragment : MvpAppCompatFragment(),
     fun provideDateClickPresenter(): DateClickPresenter {
         val event = arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)
         return DateClickPresenter(
-            event.startedAtLocal,
-            event.endedAtLocal,
+            event.started_at_local,
+            event.ended_at_local,
             { d: ZonedDateTime -> validateStartEvent(d) },
             { true }
         )
@@ -72,6 +72,7 @@ class EditEventFragment : MvpAppCompatFragment(),
             // todo inject
             router,
             InjectApplication.inject.repository,
+            // todo !!
             arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)!!
         )
     }
@@ -82,7 +83,7 @@ class EditEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideRecurrenceEventPresenter(): RecurrenceEventPresenter {
         val e = arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)!!
-        return RecurrenceEventPresenter(e.rrule)
+        return RecurrenceEventPresenter(e.pattern.rrule)
     }
 
 
@@ -120,13 +121,13 @@ class EditEventFragment : MvpAppCompatFragment(),
 
         v.etRecurrenceRule.inputType = InputType.TYPE_NULL
         v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
-        v.etRecurrenceRule.setOnFocusChangeListener { view, b -> if (b) onRecurrenceRuleClick() }
+        v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
 
         return v
     }
 
     private fun initToolBar() {
-        v.tbNoteCreate.setNavigationOnClickListener() { router.exit() }
+        v.tbNoteCreate.setNavigationOnClickListener { router.exit() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_event_edit)
         v.tbNoteCreate.setOnMenuItemClickListener {
             onItemSelected(it);
@@ -155,11 +156,10 @@ class EditEventFragment : MvpAppCompatFragment(),
     }
 
     override fun updateEventInfo(e: EventInstance) {
-        v.etTextEvent.setText(e.nameEventRecurrence)
-        dateClickPresenter.setDate(e.startedAtLocal, e.endedAtLocal)
-        recurrenceEventPresenter.onRuleChange(e.rrule)
-        v.tvTimeZone.text = e.zoneId.toString()
-
+        v.etTextEvent.setText(e.entity.name)
+        dateClickPresenter.setDate(e.started_at_local, e.ended_at_local)
+        recurrenceEventPresenter.onRuleChange(e.pattern.rrule)
+        v.tvTimeZone.text = e.pattern.timezone.toString()
     }
 
     override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
@@ -254,18 +254,18 @@ class EditEventFragment : MvpAppCompatFragment(),
     private fun onRecurrenceModifyModeView(m: ModifyView, pos: Int) =
         when (pos) {
             RecurrenceModifyViw.Future.pos -> {
-                when (m) {
-                    ModifyView.Update ->
-                        editEventPresenter.onUpdateFuture(
-                            v.etTextEvent.text.toString(),
-                            "TODO",
-                            dateClickPresenter.start,
-                            dateClickPresenter.end,
-                            recurrenceEventPresenter.getRule()
-                        )
-                    ModifyView.Delete ->
-                        editEventPresenter.onDeleteFuture()
-                }
+//                when (m) {
+//                    ModifyView.Update ->
+//                        editEventPresenter.onUpdateFuture(
+//                            v.etTextEvent.text.toString(),
+//                            "TODO",
+//                            dateClickPresenter.start,
+//                            dateClickPresenter.end,
+//                            recurrenceEventPresenter.getRule()
+//                        )
+//                    ModifyView.Delete ->
+//                        editEventPresenter.onDeleteFuture()
+//                }
             }
             RecurrenceModifyViw.All.pos -> {
                 when (m) {

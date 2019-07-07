@@ -60,9 +60,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     @ProvidePresenter
     fun provideDateClickPresenter(): DateClickPresenter {
+        // todo !!
         return DateClickPresenter(
-            fromStringToZoned(arguments!!.getString(START_EVENT_KEY)),
-            fromStringToZoned(arguments!!.getString(END_EVENT_KEY)),
+            fromStringToZoned(arguments!!.getString(START_EVENT_KEY)!!),
+            fromStringToZoned(arguments!!.getString(END_EVENT_KEY)!!),
             { d: ZonedDateTime -> validateStartEvent(d) },
             { true }
         )

@@ -9,17 +9,17 @@ import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
-import com.example.calendar.repository.db.EventInstance
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.AuthFragment
+import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
 
 class Screens {
 
     class EventScreen(private val event: EventInstance) : SupportAppScreen() {
         init {
-            screenKey = "${javaClass.simpleName}_${event.idEventRecurrence}"
+            screenKey = "${javaClass.simpleName}_${event.entity.id}"
         }
 
         override fun getFragment(): Fragment =
@@ -58,7 +58,7 @@ class Screens {
             NavigationFragment.newInstance()
     }
 
-    class FreqScreen(private val start: ZonedDateTime, private val rule:String="") : SupportAppScreen() {
+    class FreqScreen(private val start: ZonedDateTime, private val rule: String = "") : SupportAppScreen() {
         override fun getFragment(): Fragment =
                 FreqFragment.newInstance(start, rule)
     }
