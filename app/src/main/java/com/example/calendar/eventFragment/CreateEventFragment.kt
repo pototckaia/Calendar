@@ -134,7 +134,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
         )
     }
 
-
     override fun setRecurrenceViw(r: String) {
         pattern.etRecurrenceRule.setText(r)
     }
