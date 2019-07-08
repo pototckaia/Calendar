@@ -28,7 +28,7 @@ import org.threeten.bp.ZonedDateTime
 
 class CreateEventFragment : MvpAppCompatFragment(),
     CreateEventInfoView,
-    DateClickView, RecurrenceEventView {
+    RecurrenceEventView {
 
     companion object {
         fun newInstance(
@@ -44,20 +44,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
             f.arguments = args
             return f
         }
-    }
-
-    @InjectPresenter
-    lateinit var dateClickPresenter: DateClickPresenter
-
-    @ProvidePresenter
-    fun provideDateClickPresenter(): DateClickPresenter {
-        // todo !!
-        return DateClickPresenter(
-            fromStringToZoned(arguments!!.getString(START_EVENT_KEY)!!),
-            fromStringToZoned(arguments!!.getString(END_EVENT_KEY)!!),
-            { d: ZonedDateTime -> validateStartEvent(d) },
-            { true }
-        )
     }
 
     @InjectPresenter
@@ -94,8 +80,17 @@ class CreateEventFragment : MvpAppCompatFragment(),
             R.layout.fragment_create_event,
             container, false
         )
+        pattern = v.vEventPatternRequest.v
 
+        v.vEventPatternRequest.init(mvpDelegate)
         initToolBar()
+
+        if (savedInstanceState == null) {
+            v.vEventPatternRequest.dateClickPresenter.setDate(
+                fromStringToZoned(arguments!!.getString(START_EVENT_KEY)!!),
+                fromStringToZoned(arguments!!.getString(END_EVENT_KEY)!!)
+            )
+        }
 
         recurrenceViewModel = activity?.run {
             ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
@@ -104,13 +99,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
         recurrenceViewModel.recurrence.observe(this, Observer<String> { r ->
             recurrenceEventPresenter.onRuleChange(r)
         })
-
-        pattern = v.vEventPatternRequest.v
-
-        pattern.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
-        pattern.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
-        pattern.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
-        pattern.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
 
         pattern.etRecurrenceRule.inputType = InputType.TYPE_NULL
         pattern.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
@@ -140,31 +128,12 @@ class CreateEventFragment : MvpAppCompatFragment(),
     private fun onRecurrenceRuleClick() {
         router.navigateTo(
             Screens.FreqScreen(
-                dateClickPresenter.start,
+                v.vEventPatternRequest.dateClickPresenter.start,
                 recurrenceEventPresenter.getRule()
             )
         )
     }
 
-    override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
-        pattern.vBegin.setDate(startLocal)
-        pattern.vEnd.setDate(endLocal)
-    }
-
-    override fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(local, l)
-        dpd.show(activity?.supportFragmentManager, "date-picker")
-    }
-
-    override fun showTimePickerDialog(local: ZonedDateTime, l: TimePickerDialog.OnTimeSetListener) {
-        val tpd = TimePickerDialog(
-            context, l,
-            local.hour,
-            local.minute,
-            true
-        )
-        tpd.show()
-    }
 
     override fun setRecurrenceViw(r: String) {
         pattern.etRecurrenceRule.setText(r)
@@ -174,29 +143,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
         recurrenceViewModel.recurrence.postValue(r)
     }
 
-    private fun validateStartEvent(start: ZonedDateTime): Boolean {
-        val rule = recurrenceEventPresenter.getRule()
-        if (rule.isNotEmpty() && RecurrenceRule(rule).until != null) {
-            val until = fromDateTimeUTC(RecurrenceRule(rule).until)
-            val startUTC = start.withZoneSameInstant(ZoneOffset.UTC)
-            if (startUTC >= until) {
-                Toast
-                    .makeText(
-                        context,
-                        "Дата начала события не может быть позже даты ДО в правиле переодичности",
-                        Toast.LENGTH_SHORT
-                    )
-                    .show()
-            }
-            return startUTC < until
-        }
-        return true
-    }
-
     fun getEventPatternRequest() =
         PatternRequest(
-            started_at = dateClickPresenter.start,
-            ended_at = dateClickPresenter.end,
+            started_at = v.vEventPatternRequest.dateClickPresenter.start,
+            ended_at = v.vEventPatternRequest.dateClickPresenter.end,
             rrule = recurrenceEventPresenter.getRule(),
             // todo make exrules
             exrules = emptyList()

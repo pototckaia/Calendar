@@ -2,6 +2,7 @@ package com.example.calendar.eventFragment
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -128,8 +129,9 @@ class FreqFragment : MvpAppCompatFragment(),
 
 
     override fun openCalendar(until: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(until, l)
-        dpd.show(activity?.supportFragmentManager, "date-picker")
+        val dpd = MaterialDatePickerDialog(until, l, context!!,
+            DialogInterface.OnCancelListener { var1: DialogInterface -> })
+        dpd.show()
     }
 
 

@@ -19,9 +19,13 @@ class DateClickPresenter(
     private val validateEnd: (ZonedDateTime) -> Boolean
 ) : MvpPresenter<DateClickView>() {
 
+    constructor(validateStart: (ZonedDateTime) -> Boolean,
+                validateEnd: (ZonedDateTime) -> Boolean
+    ) : this(ZonedDateTime.now(), ZonedDateTime.now(),
+        validateStart, validateEnd)
+
     init {
         setDate(start, end)
-        updateView()
     }
 
     private fun updateView() {
@@ -31,6 +35,7 @@ class DateClickPresenter(
     fun setDate(s: ZonedDateTime, e: ZonedDateTime) {
         start = ZonedDateTime.from(s)
         end = ZonedDateTime.from(e)
+        updateView()
     }
 
     // todo how remove this shit
