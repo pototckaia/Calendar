@@ -20,32 +20,9 @@ class CreateEventPresenter(
 ) : BaseMvpSubscribe<CreateEventInfoView>() {
 
     fun onSaveEvent(
-        title: String,
-        note: String,
-        start: ZonedDateTime,
-        end: ZonedDateTime,
-        rule: String
+        event: EventRequest,
+        pattern: PatternRequest
     ) {
-        // todo recurrence
-        val event =
-            EventRequest(
-                name = title,
-                details = note,
-                location = "",
-                status = ""
-            )
-
-        // todo list pattern
-        val pattern = PatternRequest(
-            // todo add in constructor UTC timezone
-            started_at = start.withZoneSameInstant(ZoneOffset.UTC),
-            ended_at = end.withZoneSameInstant(ZoneOffset.UTC),
-            // todo check duration
-            duration = Duration.between(start, end),
-            timezone = start.zone,
-            exrules = emptyList(),
-            rrule = ""
-        )
 
         val subscription = eventRepository.insertEvent(event, pattern)
             .subscribeOn(Schedulers.io())

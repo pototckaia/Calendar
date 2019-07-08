@@ -17,7 +17,9 @@ import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import com.example.calendar.repository.server.model.PatternRequest
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
+import kotlinx.android.synthetic.main.view_event_pattern_request.view.*
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
@@ -25,7 +27,8 @@ import org.threeten.bp.ZonedDateTime
 
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfoView, DateClickView, RecurrenceEventView {
+    CreateEventInfoView,
+    DateClickView, RecurrenceEventView {
 
     companion object {
         fun newInstance(
@@ -44,18 +47,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var createEventPresenter: CreateEventPresenter
-
-    @ProvidePresenter
-    fun provideCreateEventPresenter(): CreateEventPresenter {
-        return CreateEventPresenter(
-            // todo inject
-            router,
-            InjectApplication.inject.repository
-        )
-    }
-
-    @InjectPresenter
     lateinit var dateClickPresenter: DateClickPresenter
 
     @ProvidePresenter
@@ -70,14 +61,29 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var recurrenceEventPresenter: RecurrenceEventPresenter
+    lateinit var createEventPresenter: CreateEventPresenter
+
+    @ProvidePresenter
+    fun provideCreateEventPresenter(): CreateEventPresenter {
+        return CreateEventPresenter(
+            // todo inject
+            router,
+            InjectApplication.inject.repository
+        )
+    }
 
     // todo inject
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View
+    private lateinit var pattern: View
+
+    @InjectPresenter
+    lateinit var recurrenceEventPresenter: RecurrenceEventPresenter
+
     lateinit var recurrenceViewModel: RecurrenceViewModel
 
+    // todo error with clava
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,6 +95,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
             container, false
         )
 
+        initToolBar()
+
         recurrenceViewModel = activity?.run {
             ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
         } ?: throw Exception("Invalid scope to ViewModel")
@@ -97,18 +105,18 @@ class CreateEventFragment : MvpAppCompatFragment(),
             recurrenceEventPresenter.onRuleChange(r)
         })
 
-        initToolBar()
+        pattern = v.vEventPatternRequest.v
 
-        v.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
-        v.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
-        v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
-        v.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
+        pattern.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
+        pattern.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
+        pattern.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
+        pattern.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
 
-        v.etRecurrenceRule.inputType = InputType.TYPE_NULL
-        v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
-        v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
+        pattern.etRecurrenceRule.inputType = InputType.TYPE_NULL
+        pattern.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
+        pattern.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
 
-        v.tvTimeZone.text = ZoneId.systemDefault().toString()
+        v.etTimezone.setText(ZoneId.systemDefault().toString())
 
         return v
     }
@@ -117,18 +125,15 @@ class CreateEventFragment : MvpAppCompatFragment(),
         v.tbNoteCreate.setNavigationOnClickListener { router.exit() }
         v.tbNoteCreate.inflateMenu(R.menu.menu_enent_create)
         v.tbNoteCreate.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
-            onSave()
+            //            onSave()
             true
         }
     }
 
     private fun onSave() {
         createEventPresenter.onSaveEvent(
-            view!!.etTextEvent.text.toString(),
-            "TODO",
-            dateClickPresenter.start,
-            dateClickPresenter.end,
-            recurrenceEventPresenter.getRule()
+            v.vEventRequest.getEventRequest(),
+            getEventPatternRequest()
         )
     }
 
@@ -142,8 +147,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
-        v.vBegin.setDate(startLocal)
-        v.vEnd.setDate(endLocal)
+        pattern.vBegin.setDate(startLocal)
+        pattern.vEnd.setDate(endLocal)
     }
 
     override fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
@@ -162,7 +167,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     override fun setRecurrenceViw(r: String) {
-        v.etRecurrenceRule.setText(r)
+        pattern.etRecurrenceRule.setText(r)
     }
 
     override fun postRecurrence(r: String) {
@@ -179,12 +184,22 @@ class CreateEventFragment : MvpAppCompatFragment(),
                     .makeText(
                         context,
                         "Дата начала события не может быть позже даты ДО в правиле переодичности",
-                        Toast.LENGTH_SHORT)
+                        Toast.LENGTH_SHORT
+                    )
                     .show()
             }
             return startUTC < until
         }
         return true
     }
+
+    fun getEventPatternRequest() =
+        PatternRequest(
+            started_at = dateClickPresenter.start,
+            ended_at = dateClickPresenter.end,
+            rrule = recurrenceEventPresenter.getRule(),
+            // todo make exrules
+            exrules = emptyList()
+        )
 
 }

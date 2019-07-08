@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">Calendar</string>
-    <string name="default_event_text">Новое событие</string>
+
+    <string name="default_event_name">Название</string>
+    <string name="default_event_details">Описание</string>
+    <string name="default_event_status">Статус</string>
+    <string name="default_event_location">Местоположение</string>
+    <string name="default_event_recurrence">Не повторяется</string>
+
     <string name="begin_label_name">Начало</string>
     <string name="end_label_name">Конец</string>
+
     <string name="label_name_prev">Предыдущий</string>
     <string name="label_text_next">Следующий</string>
     <string name="label_event_create">Сохранить</string>

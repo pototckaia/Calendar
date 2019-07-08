@@ -41,6 +41,21 @@ data class PatternRequest(
         started_at = p.started_at,
         timezone = p.timezone
     )
+
+    constructor(started_at : ZonedDateTime,
+                ended_at: ZonedDateTime,
+                rrule: String,
+                exrules: List<String>)
+    :this(
+        started_at = started_at,
+        ended_at = ended_at,
+        duration = Duration.between(started_at, ended_at),
+        exrules = exrules.map { RruleStructure(it) },
+        // todo
+        rrule = "",
+        timezone = started_at.zone
+    )
+
 }
 
 data class TaskRequest(

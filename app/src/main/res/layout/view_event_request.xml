@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+>
+    <EditText
+            android:id="@+id/etTextName"
+
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/default_event_name"
+            android:textSize="24sp"
+            android:inputType=""
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/etTextDetails"
+    />
+
+    <EditText
+            android:id="@+id/etTextDetails"
+
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/default_event_details"
+            android:textSize="20sp"
+            android:inputType=""
+
+            app:layout_constraintLeft_toRightOf="@id/ivDetails"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etTextName"
+            app:layout_constraintBottom_toTopOf="@id/etTextLocation"
+    />
+
+    <ImageView
+            android:id="@+id/ivDetails"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:srcCompat="@drawable/menu"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/etTextDetails"
+            app:layout_constraintTop_toTopOf="@+id/etTextDetails"
+            app:layout_constraintBottom_toBottomOf="@id/etTextDetails"
+    />
+
+    <EditText
+            android:id="@+id/etTextLocation"
+
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/default_event_location"
+            android:textSize="20sp"
+            android:inputType=""
+
+            app:layout_constraintLeft_toRightOf="@id/ivLocation"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etTextDetails"
+            app:layout_constraintBottom_toTopOf="@id/etTextStatus"
+    />
+
+    <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:srcCompat="@drawable/location"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/etTextLocation"
+            app:layout_constraintTop_toTopOf="@+id/etTextLocation"
+            app:layout_constraintBottom_toBottomOf="@id/etTextLocation"
+    />
+
+    <EditText
+            android:id="@+id/etTextStatus"
+
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/default_event_status"
+            android:textSize="20sp"
+            android:inputType=""
+
+            app:layout_constraintLeft_toRightOf="@id/ivStatus"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etTextLocation"
+    />
+
+    <ImageView
+            android:id="@+id/ivStatus"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/hashtag"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/etTextStatus"
+            app:layout_constraintTop_toTopOf="@+id/etTextStatus"
+            app:layout_constraintBottom_toBottomOf="@id/etTextStatus"
+    />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
