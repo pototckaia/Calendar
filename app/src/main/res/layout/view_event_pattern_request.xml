@@ -10,6 +10,49 @@
         android:layout_marginRight="10dp"
 >
 
+    <TextView
+            android:id="@+id/tvNumber"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+
+            tools:text="1"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTitlePattern"
+            app:layout_constraintBottom_toBottomOf="@id/tvTitlePattern"
+    />
+
+    <TextView
+            android:id="@+id/tvTitlePattern"
+            android:text="Интервал времени"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+    <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/trash"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTitlePattern"
+            app:layout_constraintBottom_toBottomOf="@id/tvTitlePattern"
+    />
 
     <com.example.calendar.customView.DayHourView
             android:id="@+id/vBegin"
@@ -21,7 +64,7 @@
 
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitlePattern"
             app:layout_constraintBottom_toTopOf="@id/vEnd">
     </com.example.calendar.customView.DayHourView>
 
@@ -72,6 +115,7 @@
             app:layout_constraintWidth_default="spread"
             android:layout_height="wrap_content"
 
+            android:hint="@string/default_event_timezone"
             tools:text="GMT+10"
             android:textSize="20sp"
             android:inputType=""

@@ -21,7 +21,7 @@ class CreateEventPresenter(
 
     fun onSaveEvent(
         event: EventRequest,
-        pattern: PatternRequest
+        pattern: ArrayList<PatternRequest>
     ) {
 
         val subscription = eventRepository.insertEvent(event, pattern)

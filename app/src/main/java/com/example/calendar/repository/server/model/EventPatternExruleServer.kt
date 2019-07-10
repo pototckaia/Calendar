@@ -2,7 +2,7 @@ package com.example.calendar.repository.server.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.example.calendar.repository.db.convert.ZoneDateTimeConverter
+import com.example.calendar.repository.zonedDateTime_cn
 import org.threeten.bp.ZonedDateTime
 
 data class EventPatternExruleServer(
@@ -17,9 +17,8 @@ data class EventPatternExruleServer(
             this(
                 id = parcel.readLong(),
                 rule = parcel.readString()!!,
-                // todo a lof of create
-                created_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
-                updated_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!
+                created_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
+                updated_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!
             )
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -27,21 +26,13 @@ data class EventPatternExruleServer(
 
         dest.writeLong(id)
         dest.writeString(rule)
-        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(created_at)!!)
-        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(updated_at)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(created_at)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(updated_at)!!)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
+    override fun describeContents() = 0
     companion object CREATOR : Parcelable.Creator<EventPatternExruleServer> {
-        override fun createFromParcel(parcel: Parcel): EventPatternExruleServer {
-            return EventPatternExruleServer(parcel)
-        }
-
-        override fun newArray(size: Int): Array<EventPatternExruleServer?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = EventPatternExruleServer(parcel)
+        override fun newArray(size: Int): Array<EventPatternExruleServer?> = arrayOfNulls(size)
     }
 }

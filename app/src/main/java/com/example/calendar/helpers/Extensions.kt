@@ -121,10 +121,10 @@ fun moreDay(d1: ZonedDateTime, d2: ZonedDateTime): Boolean {
 
 // Duration fun help
 
-fun betweenIncludeMillis(s: ZonedDateTime, e: ZonedDateTime) : Duration {
-    val endExclusive = e.plus(1, ChronoUnit.MILLIS)
-    return Duration.between(s, endExclusive)
-}
+//fun betweenIncludeMillis(s: ZonedDateTime, e: ZonedDateTime) : Duration {
+//    val endExclusive = e.plus(1, ChronoUnit.MILLIS)
+//    return Duration.between(s, endExclusive)
+//}
 
 // zonedDateTime to string convert
 

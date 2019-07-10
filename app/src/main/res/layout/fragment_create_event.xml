@@ -29,32 +29,34 @@
             app:layout_constraintRight_toRightOf="parent">
     </com.example.calendar.customView.EventRequestView>
 
-    <TextView
-            android:id="@+id/tvTitlePattern"
-            android:text="Интервал времени"
+    <Button
+            android:id="@+id/btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:text="Add New Items To ListView"
 
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vEventRequest"
-
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorDark"
+            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
     />
 
-    <com.example.calendar.customView.EventPatternRequestView
-            android:id="@+id/vEventPatternRequest"
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPattern"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_default="spread"
 
-            app:layout_constraintTop_toBottomOf="@id/tvTitlePattern"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-    </com.example.calendar.customView.EventPatternRequestView>
+            app:layout_constraintTop_toBottomOf="@id/btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+    <!--<com.example.calendar.customView.EventPatternRequestView-->
+    <!--android:id="@+id/vEventPatternRequest"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+
+
+    <!--</com.example.calendar.customView.EventPatternRequestView>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.example.calendar.helpers.fromLongUTC
 import com.example.calendar.helpers.toLongUTC
+import com.example.calendar.repository.zonedDateTime_cn
 import org.threeten.bp.ZonedDateTime
 
 data class EventServer(
@@ -23,8 +24,8 @@ data class EventServer(
             this(
                 id = parcel.readLong(),
                 owner_id = parcel.readLong(),
-                created_at = fromLongUTC(parcel.readLong()),
-                updated_at = fromLongUTC(parcel.readLong()),
+                created_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
+                updated_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
                 name = parcel.readString()!!,
                 details = parcel.readString()!!,
                 status = parcel.readString()!!,
@@ -36,25 +37,17 @@ data class EventServer(
 
         dest.writeLong(id)
         dest.writeLong(owner_id)
-        dest.writeLong(toLongUTC(created_at))
-        dest.writeLong(toLongUTC(updated_at))
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(created_at)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(updated_at)!!)
         dest.writeString(name)
         dest.writeString(details)
         dest.writeString(status)
         dest.writeString(location)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
+    override fun describeContents() = 0
     companion object CREATOR : Parcelable.Creator<EventServer> {
-        override fun createFromParcel(parcel: Parcel): EventServer {
-            return EventServer(parcel)
-        }
-
-        override fun newArray(size: Int): Array<EventServer?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = EventServer(parcel)
+        override fun newArray(size: Int): Array<EventServer?> = arrayOfNulls(size)
     }
 }

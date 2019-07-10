@@ -3,7 +3,7 @@ apply from: './dependencies.gradle'
 
 buildscript {
     ext.kotlinVersion = "1.3.21"
-    ext.grableVersion = '3.4.1'
+    ext.grableVersion = '3.4.2'
 
     repositories {
         google()

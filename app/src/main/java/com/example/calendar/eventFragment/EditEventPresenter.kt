@@ -2,6 +2,7 @@ package com.example.calendar.eventFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.helpers.BaseMvpSubscribe
+import com.example.calendar.repository.isRecurrence
 import com.example.calendar.repository.server.EventRepository
 import com.example.calendar.repository.server.model.Event
 import com.example.calendar.repository.server.model.EventInstance
@@ -147,7 +148,7 @@ class EditEventPresenter(
 //        }
     }
 
-    fun isEventRecurrence() = eventInstance.pattern.isRecurrence()
+    fun isEventRecurrence() = isRecurrence(eventInstance.pattern.rrule)
 
     private fun onUpdateLoading(newEventInstance: EventInstance) {
 //        eventInstance = newEventInstance

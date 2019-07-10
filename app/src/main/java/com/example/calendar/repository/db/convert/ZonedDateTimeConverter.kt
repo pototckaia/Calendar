@@ -6,17 +6,17 @@ import com.example.calendar.helpers.toLongUTC
 import org.threeten.bp.ZonedDateTime
 
 
-class ZoneDateTimeConverter {
+class ZonedDateTimeConverter {
 //    private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
     @TypeConverter
-    fun toZoneDateTime(date: Long?): ZonedDateTime? {
+    fun toZonedDateTime(date: Long?): ZonedDateTime? {
         return date?.let {
             return fromLongUTC(date)
         }
     }
 
     @TypeConverter
-    fun fromZoneDateTime(date: ZonedDateTime?): Long? {
+    fun fromZonedDateTime(date: ZonedDateTime?): Long? {
         return date?.let {
             return toLongUTC(date)
         }

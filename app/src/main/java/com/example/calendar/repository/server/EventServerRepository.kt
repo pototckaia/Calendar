@@ -1,12 +1,12 @@
 package com.example.calendar.repository.server
 
-import com.example.calendar.helpers.betweenIncludeMillis
 import com.example.calendar.helpers.toLongUTC
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
+import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
@@ -48,7 +48,8 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         // todo local or timezone
         dates.add(event.started_at_zoneid)
         var day = ZonedDateTime.from(event.started_at_zoneid)
-        val durationZoneId = betweenIncludeMillis(event.started_at_zoneid, event.ended_at_zoneid)
+        // todo check between
+        val durationZoneId = Duration.between(event.started_at_zoneid, event.ended_at_zoneid)
         for (i in 1..durationZoneId.toDays()) {
             day = day.plusDays(1)
                 .truncatedTo(ChronoUnit.DAYS)
@@ -75,18 +76,21 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .zipWith(
                 api.getPatterns(eventId),
                 BiFunction { e: EventResponse, p: EventPatternResponse ->
-                    Event(e.data[0], p.data[0])
+                    Event(e.data[0], p.data)
                 }
             )
     }
 
     override fun insertEvent(
-        eventRequest: EventRequest, patternRequest: PatternRequest
+        eventRequest: EventRequest, patternRequests: ArrayList<PatternRequest>
     ): Completable {
         return api.createEvent(eventRequest)
             .flatMap {
                 val eventId = it.data[0].id
-                api.createPattern(eventId, patternRequest)
+                val observables = patternRequests.map {
+                    api.createPattern(eventId, it)
+                }
+                Observable.merge(observables)
             }
             .ignoreElements()
     }
@@ -95,7 +99,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         return api.updateEvent(event.entity.id, EventRequest(event.entity))
             .ignoreElements()
             .mergeWith(
-                api.updatePattern(event.pattern.id, PatternRequest(event.pattern))
+                api.updatePattern(event.pattern.id, event.pattern.getPatternRequest())
                     .ignoreElements()
             )
     }

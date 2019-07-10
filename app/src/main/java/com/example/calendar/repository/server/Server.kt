@@ -1,8 +1,8 @@
 package com.example.calendar.repository.server
 
-import com.example.calendar.repository.server.convert.DurationJsonConvert
-import com.example.calendar.repository.server.convert.ZoneIdJsonConvert
-import com.example.calendar.repository.server.convert.ZonedDateTimeJsonConvert
+import com.example.calendar.repository.server.convertJson.DurationJsonConvert
+import com.example.calendar.repository.server.convertJson.ZoneIdJsonConvert
+import com.example.calendar.repository.server.convertJson.ZonedDateTimeJsonConvert
 import com.google.gson.GsonBuilder
 import io.reactivex.schedulers.Schedulers
 import retrofit2.converter.gson.GsonConverterFactory

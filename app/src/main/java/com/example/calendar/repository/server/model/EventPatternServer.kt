@@ -7,9 +7,11 @@ import com.example.calendar.helpers.fromLongUTC
 import com.example.calendar.helpers.max
 import com.example.calendar.helpers.toDateTimeUTC
 import com.example.calendar.repository.db.convert.DurationConverter
-import com.example.calendar.repository.db.convert.ZoneDateTimeConverter
+import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
 import com.example.calendar.repository.db.convert.ZoneIdConverter
-import com.example.calendar.repository.server.convert.ZonedDateTimeJsonConvert
+import com.example.calendar.repository.duration_cn
+import com.example.calendar.repository.zoneId_cn
+import com.example.calendar.repository.zonedDateTime_cn
 import org.dmfs.rfc5545.DateTime
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.*
@@ -29,105 +31,27 @@ data class EventPatternServer(
     var timezone: ZoneId
 ) : Parcelable {
 
-    val started_at_zoneid: ZonedDateTime
-        get() = started_at.withZoneSameInstant(timezone)
-
-    val started_at_local: ZonedDateTime
-        get() = started_at.withZoneSameInstant(ZoneId.systemDefault())
-
-    val ended_at_zoneid: ZonedDateTime
-        get() = ended_at.withZoneSameInstant(timezone)
-
-    val ended_at_local: ZonedDateTime
-        get() = ended_at.withZoneSameInstant(ZoneId.systemDefault())
-
-    fun isRecurrence() = rrule.isNotEmpty()
-
-    fun getRecurrenceRuleWithZoneId(): RecurrenceRule? {
-        if (!isRecurrence()) {
-            return null
-        }
-        val r = RecurrenceRule(rrule)
-        if (r.until != null) {
-            r.until =
-                DateTime(DateTime.GREGORIAN_CALENDAR_SCALE, DateTimeUtils.toTimeZone(timezone), r.until)
-        }
-        return r
-    }
-
-
-    fun removeRecurrence() {
-        rrule = ""
-        ended_at = calculateEndedAt()
-    }
-
-    fun setRecurrence(r: String) {
-        if (r.isEmpty()) {
-            removeRecurrence()
-            return
-        }
-        val recurrence = RecurrenceRule(r)
-        // until to UTF
-        if (recurrence.until != null) {
-            recurrence.until = DateTime(
-                DateTime.GREGORIAN_CALENDAR_SCALE, TimeZone.getTimeZone("UTF"), recurrence.until
-            )
-        }
-        rrule = recurrence.toString()
-        ended_at = calculateEndedAt()
-    }
-
-    fun setUntil(until: ZonedDateTime) {
-        if (isRecurrence()) {
-            val recurrence = RecurrenceRule(rrule)
-            recurrence.until = toDateTimeUTC(until.withZoneSameInstant(ZoneOffset.UTC))
-            rrule = recurrence.toString()
-            ended_at = calculateEndedAt()
-        }
-    }
-
-    private fun calculateEndedAt(): ZonedDateTime {
-        val maxDate = fromLongUTC(Long.MAX_VALUE)
-        var newEndedAt = started_at.plus(duration)
-
-        if (!isRecurrence()) {
-            return newEndedAt
-        }
-
-        val recurrence = RecurrenceRule(rrule)
-        if (recurrence.isInfinite) {
-            newEndedAt = maxDate
-        }
-        else if (recurrence.until != null) {
-            // the RRULE includes an UNTIL
-            newEndedAt = max(fromDateTimeUTC(recurrence.until), newEndedAt)
-        }
-        else if (recurrence.count != null) {
-            // The RRULE has a limit, so calculate
-            var startedAtDateTime = toDateTimeUTC(started_at)
-            val it = recurrence.iterator(startedAtDateTime)
-            if (it.hasNext()) {
-                it.skipAllButLast()
-                startedAtDateTime = it.nextDateTime()
-            }
-            val startedAtZonedDate = fromDateTimeUTC(startedAtDateTime)
-            newEndedAt = max(startedAtZonedDate.plus(duration), newEndedAt)
-        }
-        return newEndedAt
-    }
+    fun getPatternRequest() = PatternRequest(
+        started_at = started_at,
+        duration = duration,
+        ended_at = ended_at,
+        exrules = exrules.map { RruleStructure(it.rule) },
+        rrule = rrule,
+        timezone = timezone
+    )
 
     constructor(parcel: Parcel) :
             this(
                 id = parcel.readLong(),
                 // todo a lof of create
-                created_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
-                updated_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
-                started_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
-                duration = DurationConverter().toDuration(parcel.readLong())!!,
-                ended_at = ZoneDateTimeConverter().toZoneDateTime(parcel.readLong())!!,
+                created_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
+                updated_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
+                started_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
+                duration = duration_cn.toDuration(parcel.readLong())!!,
+                ended_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
                 exrules = emptyList<EventPatternExruleServer>(),
                 rrule = parcel.readString()!!,
-                timezone = ZoneIdConverter().toZoneId(parcel.readString())!!
+                timezone = zoneId_cn.toZoneId(parcel.readString())!!
             )
     {
         parcel.readTypedList(exrules, EventPatternExruleServer.CREATOR)
@@ -137,28 +61,19 @@ data class EventPatternServer(
         if (dest == null) return
 
         dest.writeLong(id)
-        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(created_at)!!)
-        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(updated_at)!!)
-        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(started_at)!!)
-        dest.writeLong(DurationConverter().fromDuration(duration)!!)
-        dest.writeLong(ZoneDateTimeConverter().fromZoneDateTime(ended_at)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(created_at)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(updated_at)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(started_at)!!)
+        dest.writeLong(duration_cn.fromDuration(duration)!!)
+        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(ended_at)!!)
         dest.writeString(rrule)
-        dest.writeString(ZoneIdConverter().fromZoneId(timezone))
-
+        dest.writeString(zoneId_cn.fromZoneId(timezone))
         dest.writeTypedList(exrules)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
+    override fun describeContents() =  0
     companion object CREATOR : Parcelable.Creator<EventPatternServer> {
-        override fun createFromParcel(parcel: Parcel): EventPatternServer{
-            return EventPatternServer(parcel)
-        }
-
-        override fun newArray(size: Int): Array<EventPatternServer?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel) = EventPatternServer(parcel)
+        override fun newArray(size: Int): Array<EventPatternServer?> = arrayOfNulls(size)
     }
 }

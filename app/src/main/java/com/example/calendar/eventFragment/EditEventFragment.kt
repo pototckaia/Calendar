@@ -3,27 +3,16 @@ package com.example.calendar.eventFragment
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
-import com.example.calendar.RecurrenceViewModel
-import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.helpers.EVENT_INSTANCE_KEY
 import com.example.calendar.inject.InjectApplication
-import com.example.calendar.navigation.Screens
 import kotlinx.android.synthetic.main.fragment_create_event.view.*
 import org.threeten.bp.ZonedDateTime
-import androidx.appcompat.app.AlertDialog
-import com.example.calendar.helpers.fromDateTimeUTC
 import com.example.calendar.repository.server.model.EventInstance
-import org.dmfs.rfc5545.recur.RecurrenceRule
-import org.threeten.bp.ZoneOffset
 
 
 enum class ModifyView {
@@ -91,7 +80,7 @@ class EditEventFragment : MvpAppCompatFragment(),
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View
-    lateinit var recurrenceViewModel: RecurrenceViewModel
+    lateinit var recurrenceViewModel: EventPatternViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,7 +94,7 @@ class EditEventFragment : MvpAppCompatFragment(),
         )
 
 //        recurrenceViewModel = activity?.run {
-//            ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
+//            ViewModelProviders.of(this).get(EventPatternViewModel::class.java)
 //        } ?: throw Exception("Invalid scope to ViewModel")
 //
 //        recurrenceViewModel.recurrence.observe(this, Observer<String> { r ->

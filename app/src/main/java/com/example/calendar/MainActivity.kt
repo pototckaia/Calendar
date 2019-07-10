@@ -10,10 +10,6 @@ import com.example.calendar.navigation.Screens
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 
-class RecurrenceViewModel: ViewModel() {
-    val recurrence = MutableLiveData<String>()
-}
-
 class MainActivity : AppCompatActivity() {
 
     private var navigator = SupportAppNavigator(this, R.id.clMainContainer)
