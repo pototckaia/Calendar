@@ -10,7 +10,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.helpers.EVENT_INSTANCE_KEY
 import com.example.calendar.inject.InjectApplication
-import kotlinx.android.synthetic.main.fragment_create_event.view.*
+import kotlinx.android.synthetic.main.fragment_event.view.*
 import org.threeten.bp.ZonedDateTime
 import com.example.calendar.repository.server.model.EventInstance
 
@@ -89,7 +89,7 @@ class EditEventFragment : MvpAppCompatFragment(),
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         v = inflater.inflate(
-            R.layout.fragment_create_event,
+            R.layout.fragment_event,
             container, false
         )
 
@@ -147,7 +147,7 @@ class EditEventFragment : MvpAppCompatFragment(),
     override fun updateEventInfo(e: EventInstance) {
 //        v.etTextEvent.setText(e.entity.name)
 //        dateClickPresenter.setDate(e.started_at_local, e.ended_at_local)
-//        recurrenceEventPresenter.onRuleChange(e.pattern.rrule)
+//        recurrenceEventPresenter.onRuleChange(e.pattern.recurrence)
 //        v.tvTimeZone.text = e.pattern.timezone.toString()
     }
 

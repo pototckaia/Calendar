@@ -72,7 +72,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
         )
         // todo add dot
         v.rvEvents.run {
-            this.adapter = DurationEventAdapter { _, position ->
+            this.adapter = DurationEventRecycleViewAdapter { _, position ->
                 onClickEvent(position)
             }
             this.layoutManager = linerLayoutManager
@@ -111,7 +111,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
 
     override fun setEvents(it: List<EventInstance>) {
         v.rvEvents.adapter.run {
-            (this as DurationEventAdapter).setEvents(it, start, end)
+            (this as DurationEventRecycleViewAdapter).setEvents(it, start, end)
         }
     }
 

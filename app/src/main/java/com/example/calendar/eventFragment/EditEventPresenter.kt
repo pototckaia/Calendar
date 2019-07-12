@@ -91,7 +91,7 @@ class EditEventPresenter(
 //                startEvent.withZoneSameInstant(ZoneOffset.UTC),
 //                endEvent.withZoneSameInstant(ZoneOffset.UTC)
 //            ),
-//            rrule = rule
+//            recurrence = rule
 //        )
 //
 //        val sub = eventRepository.updateFuture(newEventInstance)

@@ -52,7 +52,7 @@ class SelectedStringAdapter(
         parent: ViewGroup,
         viewType: Int
     ): SelectedStringViewHolder {
-        val view = parent.inflate(R.layout.selectable_list_item, false)
+        val view = parent.inflate(R.layout.view_textview_item, false)
         return SelectedStringViewHolder(view)
     }
 

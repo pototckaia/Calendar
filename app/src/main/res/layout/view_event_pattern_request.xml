@@ -139,6 +139,18 @@
             app:layout_constraintBottom_toBottomOf="@id/etTimezone"
     />
 
-<!-- todo add exrules -->
+    <TextView
+            android:id="@+id/tvDefaultDate"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:textSize="18sp"
+            tools:text="Владивосток, Россия: 13/07/2019 4:00 - 5:00"
+
+            app:layout_constraintTop_toBottomOf="@id/etTimezone"
+            app:layout_constraintLeft_toRightOf="@id/ivTimezone"
+            app:layout_constraintRight_toRightOf="parent"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

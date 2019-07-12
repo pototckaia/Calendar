@@ -51,7 +51,7 @@ class DayEventViewHolder(
     }
 }
 
-class DayEventAdapter(
+class DayEventRecycleViewAdapter(
     private val onClickListener: (View, Int) -> Unit
 ) :
     RecyclerView.Adapter<DayEventViewHolder>() {

@@ -87,6 +87,7 @@ class FreqFragment : MvpAppCompatFragment(),
         }
 
         v.tbFreqFragment.setNavigationOnClickListener { freqPresenter.onBack() }
+
         v.spFreq.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,

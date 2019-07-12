@@ -2,8 +2,6 @@ package com.example.calendar
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.calendar.helpers.OnBackPressed
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens

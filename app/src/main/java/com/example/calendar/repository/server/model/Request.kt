@@ -54,20 +54,14 @@ data class PatternRequest(
     val exrules: List<RruleStructure>,
     var rrule: String,
     var started_at: ZonedDateTime,
-    val timezone: ZoneId
+    var timezone: ZoneId
 ) : Parcelable {
 
-    val started_at_zoneid: ZonedDateTime
+    val startedAtTimezone: ZonedDateTime
         get() = started_at.withZoneSameInstant(timezone)
 
-    val started_at_local: ZonedDateTime
-        get() = started_at.withZoneSameInstant(ZoneId.systemDefault())
-
-    val ended_at_zoneid: ZonedDateTime
-        get() = ended_at.withZoneSameInstant(timezone)
-
-    val ended_at_local: ZonedDateTime
-        get() = ended_at.withZoneSameInstant(ZoneId.systemDefault())
+    val endedAtAtTimezone: ZonedDateTime
+        get() = started_at.plus(duration).withZoneSameInstant(timezone)
 
     constructor(
         started_at: ZonedDateTime,

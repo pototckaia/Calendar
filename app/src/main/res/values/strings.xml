@@ -8,6 +8,9 @@
     <string name="default_event_recurrence">Не повторяется</string>
     <string name="default_event_timezone">Часовой пояс</string>
 
+    <string name="search_hint">Поиск</string>
+    <string name="timezone_search_hint">Укажите страну или часовой пояс</string>
+
     <string name="begin_label_name">Начало</string>
     <string name="end_label_name">Конец</string>
 

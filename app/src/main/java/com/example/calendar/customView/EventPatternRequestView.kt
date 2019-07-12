@@ -15,40 +15,48 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import android.os.Parcelable
 import android.os.Bundle
-import android.text.InputType
+import android.util.Log
 import android.widget.Toast
 import com.example.calendar.R
 import com.example.calendar.inject.InjectApplication
-import com.example.calendar.navigation.Screens
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZoneOffset
-import java.util.*
+
+private fun getTimeZoneName(z: ZoneId) : String {
+    val id = z.toString()
+    val timezoneName = InjectApplication.inject.timezoneName
+    if (timezoneName.containsKey(id)) {
+        return timezoneName[id]!!
+    } else {
+        return id
+    }
+}
 
 class EventPatternRequestView
 @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    constructor(
-        start: ZonedDateTime, end: ZonedDateTime,
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-    ) : this(context, attrs, defStyleAttr) {
-        setDate(start, end)
-    }
-
     private var v: View = LayoutInflater.from(context).inflate(
         R.layout.view_event_pattern_request, this, true
     )
 
-    var start: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
-    var end: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
+    // in timezone
+    var start = ZonedDateTime.now()
+        private set
+    var end = ZonedDateTime.now()
+        private set
+    var recurrence = ""
+        private set
+    var timezone = ZoneId.systemDefault()
+        private set
 
     init {
         val attr = context.obtainStyledAttributes(attrs, R.styleable.EventPatternRequestView)
         attr.recycle()
 
-        setDate(start, end)
-        v.etTimezone.setText(ZoneId.systemDefault().toString())
+        updateView()
+
         v.vBegin.onDayClickListener = OnClickListener { onClickBeginDay() }
         v.vBegin.onHourClickListener = OnClickListener { onClickBeginHour() }
         v.vEnd.onDayClickListener = OnClickListener { onClickEndDay() }
@@ -58,30 +66,46 @@ class EventPatternRequestView
     fun getPattern() = PatternRequest(
         started_at = start.withZoneSameInstant(ZoneOffset.UTC),
         ended_at = end.withZoneSameInstant(ZoneOffset.UTC),
-        rrule = v.etRecurrenceRule.text.toString(),
-        timezone = ZoneId.of(v.etTimezone.text.toString()),
+        rrule = recurrence,
+        timezone = timezone,
         exrules = emptyList()
     )
 
-    fun setDate(s: ZonedDateTime, e: ZonedDateTime) {
-        start = ZonedDateTime.from(s)
-        end = ZonedDateTime.from(e)
-        updateDateInfo(s, e)
-    }
-
     fun setPattern(e: PatternRequest) {
-        setDate(e.started_at, e.started_at.plus(e.duration))
-        v.etRecurrenceRule.setText(e.rrule)
-        v.etTimezone.setText(e.timezone.toString())
+        start = e.startedAtTimezone
+        end = e.endedAtAtTimezone
+        timezone = e.timezone
+        recurrence = e.rrule
+
+        updateView()
     }
 
-    fun setRecurrence(r: String) {
-        v.etRecurrenceRule.setText(r)
+    private fun updateView() {
+        setDateView(start, end)
+        v.etRecurrenceRule.setText(recurrence)
+        v.etTimezone.setText(getTimeZoneName(timezone))
+        setDefaultDateView(timezone)
     }
 
-    private fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
+    private fun setDateView(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
         v.vBegin.setDate(startLocal)
         v.vEnd.setDate(endLocal)
+        setDefaultDateView(timezone)
+    }
+
+    private fun setDefaultDateView(timezone: ZoneId) {
+        val zoneDefault = ZoneId.systemDefault()
+        if (timezone == zoneDefault) {
+            v.tvDefaultDate.setText("")
+            return
+        }
+
+        val nameDefault = getTimeZoneName(zoneDefault)
+        val startDefault = start.withZoneSameInstant(zoneDefault)
+        val endDefault = end.withZoneSameInstant(zoneDefault)
+        val diffDay = getStringDayDiff(startDefault, endDefault)
+        val diffHour = getStringDiff(startDefault, endDefault, "HH:mm")
+        v.tvDefaultDate.setText("$nameDefault : \n $diffDay $diffHour")
     }
 
     private fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
@@ -123,23 +147,6 @@ class EventPatternRequestView
         return true
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
-        val superState = super.onSaveInstanceState()
-        val bundle = Bundle()
-        bundle.putParcelable("superState", superState)
-        bundle.putParcelable("pattern", getPattern())
-        return bundle
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable) {
-        var superState = state
-        if (state is Bundle) {
-            setPattern(state.getParcelable("pattern") as PatternRequest)
-            superState = state.getParcelable("superState")
-        }
-        super.onRestoreInstanceState(superState)
-    }
-
     private fun onClickBeginDay() {
         showDatePickerDialog(
             start,
@@ -155,7 +162,7 @@ class EventPatternRequestView
                 if (start > end) {
                     end = withYearMonthDay(end, year, monthOfYear, dayOfMonth)
                 }
-                updateDateInfo(start, end)
+                setDateView(start, end)
             })
     }
 
@@ -172,7 +179,7 @@ class EventPatternRequestView
                 if (start >= end) {
                     end = start.plusHours(1)
                 }
-                updateDateInfo(start, end)
+                setDateView(start, end)
             })
     }
 
@@ -189,10 +196,9 @@ class EventPatternRequestView
                 if (end < start) {
                     start = withYearMonthDay(start, year, monthOfYear, dayOfMonth)
                 }
-                updateDateInfo(start, end)
+                setDateView(start, end)
             })
     }
-
 
     private fun onClickEndHour() {
         showTimePickerDialog(
@@ -207,7 +213,24 @@ class EventPatternRequestView
                 if (end <= start) {
                     start = end.minusHours(1)
                 }
-                updateDateInfo(start, end)
+                setDateView(start, end)
             })
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        val bundle = Bundle()
+        bundle.putParcelable("superState", superState)
+        bundle.putParcelable("pattern", getPattern())
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable) {
+        var superState = state
+        if (state is Bundle) {
+            setPattern(state.getParcelable("pattern") as PatternRequest)
+            superState = state.getParcelable("superState")
+        }
+        super.onRestoreInstanceState(superState)
     }
 }

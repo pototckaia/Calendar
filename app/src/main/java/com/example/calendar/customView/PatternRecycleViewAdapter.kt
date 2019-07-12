@@ -5,43 +5,34 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.calendar.inject.InjectApplication
-import com.example.calendar.navigation.Screens
 import com.example.calendar.repository.server.model.PatternRequest
 import kotlinx.android.synthetic.main.view_event_pattern_request.view.*
 
 
-class PatternViewHolder constructor(val v: EventPatternRequestView) : RecyclerView.ViewHolder(v) {
-
-    // todo inject
-    private val router = InjectApplication.inject.router
-    private var posItem = -1
-
-    fun bind(item: PatternRequest, pos: Int) {
-        posItem = pos
-        v.setPattern(item)
-
-        v.tvNumber.text = (pos + 1).toString()
-        v.etRecurrenceRule.inputType = InputType.TYPE_NULL
-        v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
-        v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
-    }
-
-    private fun onRecurrenceRuleClick() {
-        router.navigateTo(
-            Screens.FreqScreen(
-                posItem,
-                v.start,
-                v.etRecurrenceRule.text.toString()
-            )
-        )
-    }
-}
-
 class PatternRecycleViewAdapter(
     var patterns: ArrayList<PatternRequest>,
-    var getView : (Int) -> EventPatternRequestView
-) : RecyclerView.Adapter<PatternViewHolder>() {
+    val onRecurrenceRuleClick: (pos: Int, patter: PatternRequest) -> Unit,
+    val onTimeZoneClick: (pos: Int) -> Unit,
+    var getViewByPos : (Int) -> EventPatternRequestView
+) : RecyclerView.Adapter<PatternRecycleViewAdapter.PatternViewHolder>() {
+
+    inner class PatternViewHolder constructor(val v: EventPatternRequestView) : RecyclerView.ViewHolder(v) {
+        private var posItem = -1
+
+        fun bind(item: PatternRequest, pos: Int) {
+            posItem = pos
+            v.setPattern(item)
+
+            v.tvNumber.text = (pos + 1).toString()
+            v.etRecurrenceRule.inputType = InputType.TYPE_NULL
+            v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick(posItem, v.getPattern()) }
+            v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick(posItem, v.getPattern()) }
+
+            v.etTimezone.inputType = InputType.TYPE_NULL
+            v.etTimezone.setOnClickListener { onTimeZoneClick(posItem) }
+            v.etTimezone.setOnFocusChangeListener { _, b -> if (b) onTimeZoneClick(posItem) }
+        }
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -70,10 +61,9 @@ class PatternRecycleViewAdapter(
 
             notifyItemRemoved(position)
             for (i in position until patterns.size) {
-                patterns[i] = getView(i).getPattern()
+                patterns[i] = getViewByPos(i).getPattern()
                 notifyItemChanged(i)
             }
-//            notifyDataSetChanged()
         }
         holder.bind(pattern, position)
     }

@@ -15,7 +15,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
-import com.example.calendar.customView.DayEventAdapter
+import com.example.calendar.customView.DayEventRecycleViewAdapter
 import com.example.calendar.customView.MonthDotDecorator
 import com.example.calendar.customView.TodayDecorator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -112,7 +112,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
             linerLayoutManager.orientation
         )
         v.rvEvents.run {
-            this.adapter = DayEventAdapter { _, position ->
+            this.adapter = DayEventRecycleViewAdapter { _, position ->
                 onClickEvent(position)
             }
             this.layoutManager = linerLayoutManager
@@ -166,7 +166,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
 
     override fun setEvents(it: List<EventInstance>) {
         v.rvEvents.adapter.run {
-            (this as DayEventAdapter).setEvents(
+            (this as DayEventRecycleViewAdapter).setEvents(
                 it,
                 fromCalendar(v.cvMonthCalendar.selectedDate.calendar)
             )

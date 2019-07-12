@@ -16,7 +16,8 @@
             android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
             app:navigationIcon="?attr/homeAsUpIndicator"
 
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+    >
     </androidx.appcompat.widget.Toolbar>
 
     <com.example.calendar.customView.EventRequestView
@@ -26,37 +27,19 @@
 
             app:layout_constraintTop_toBottomOf="@id/tbNoteCreate"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+    >
     </com.example.calendar.customView.EventRequestView>
 
-    <Button
-            android:id="@+id/btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add New Items To ListView"
-
-            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-    />
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPattern"
+    <com.example.calendar.customView.EventPatternRequestView
+            android:id="@+id/vEventPatternRequest"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_default="spread"
 
-            app:layout_constraintTop_toBottomOf="@id/btn"
+            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
             app:layout_constraintBottom_toBottomOf="parent"
-    />
-
-    <!--<com.example.calendar.customView.EventPatternRequestView-->
-    <!--android:id="@+id/vEventPatternRequest"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-
-
-    <!--</com.example.calendar.customView.EventPatternRequestView>-->
-
+    >
+    </com.example.calendar.customView.EventPatternRequestView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

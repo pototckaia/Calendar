@@ -34,8 +34,13 @@ class PatternListSavePresenter(
         viewState.setPatterns(patterns)
     }
 
-    fun onRecurrenceExit(rrule: String, pos: Int) {
+    fun onCloseRecurrenceSelect(rrule: String, pos: Int) {
         patterns[pos].setRecurrence(rrule)
+        viewState.updatePattern(patterns[pos], pos)
+    }
+
+    fun onCloseTimezoneSelect(t: ZoneId, pos: Int) {
+        patterns[pos].timezone = t
         viewState.updatePattern(patterns[pos], pos)
     }
 

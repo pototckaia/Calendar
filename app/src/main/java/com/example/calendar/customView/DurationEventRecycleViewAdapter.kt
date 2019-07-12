@@ -39,7 +39,7 @@ class DurationEventViewHolder(
     }
 }
 
-class DurationEventAdapter(
+class DurationEventRecycleViewAdapter(
     private val onClickListener: (View, Int) -> Unit
 ) :
     RecyclerView.Adapter<DurationEventViewHolder>() {

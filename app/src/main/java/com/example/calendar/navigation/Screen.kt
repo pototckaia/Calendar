@@ -12,6 +12,7 @@ import com.example.calendar.calendarFragment.WeekCalendarFragment
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
 import com.example.calendar.AuthFragment
+import com.example.calendar.eventFragment.TimeZoneSelectFragment
 import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
 
@@ -72,9 +73,8 @@ class Screens {
                 AuthFragment.newInstance()
     }
 
-//    class GithubScreen : SupportAppScreen() {
-//        fun getActivityIntent(context: Context): Intent {
-//            return Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/terrakok/Cicerone"))
-//        }
-//    }
+    class TimeZoneSelectScreen(private val id: Int) : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+                TimeZoneSelectFragment.newInstance(id)
+    }
 }
