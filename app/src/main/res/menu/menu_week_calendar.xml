@@ -1,9 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MyActivity" >
+      tools:context=".MyActivity"
+>
     <item android:id="@+id/action_today"
           android:title="@string/today"
           android:orderInCategory="100"
-          app:showAsAction="ifRoom"/>
+          app:showAsAction="ifRoom"
+    />
 </menu>

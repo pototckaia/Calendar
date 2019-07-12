@@ -18,14 +18,7 @@ fun ViewGroup.inflate(
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
-
-fun max(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
-    return if (d1.isAfter(d2)) d1 else d2
-}
-
-fun min(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
-    return if (d1.isBefore(d2)) d1 else d2
-}
+// convert time
 
 fun toTimeZone(id: ZoneId): TimeZone {
     return DateTimeUtils.toTimeZone(id)
@@ -78,6 +71,16 @@ fun fromCalendar(s: Calendar): ZonedDateTime {
     return DateTimeUtils.toZonedDateTime(s)
 }
 
+// zonedDateTime fun help
+
+fun max(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
+    return if (d1.isAfter(d2)) d1 else d2
+}
+
+fun min(d1: ZonedDateTime, d2: ZonedDateTime): ZonedDateTime {
+    return if (d1.isBefore(d2)) d1 else d2
+}
+
 fun withYearMonthDay(
     d: ZonedDateTime,
     year: Int, monthOfYear: Int, dayOfMonth: Int
@@ -116,6 +119,15 @@ fun moreDay(d1: ZonedDateTime, d2: ZonedDateTime): Boolean {
     return d1.truncatedTo(ChronoUnit.DAYS) > d2.truncatedTo(ChronoUnit.DAYS)
 }
 
+// Duration fun help
+
+//fun betweenIncludeMillis(s: ZonedDateTime, e: ZonedDateTime) : Duration {
+//    val endExclusive = e.plus(1, ChronoUnit.MILLIS)
+//    return Duration.between(s, endExclusive)
+//}
+
+// zonedDateTime to string convert
+
 //"HH:mm"
 fun getStringDiff(
     d1: ZonedDateTime, d2: ZonedDateTime,
@@ -147,5 +159,4 @@ fun getStringDayDiff(
     }
 
     return d1.format(fmtDay)
-
 }

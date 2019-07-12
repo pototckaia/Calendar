@@ -1,6 +1,7 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import androidx.room.*
+import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.threeten.bp.ZonedDateTime
@@ -46,16 +47,16 @@ interface EventRecurrenceDao {
     fun delete(event: EventRecurrence): Void
 
     // [from, to)
-    @TypeConverters(ZoneDateTimeConverter::class)
+    @TypeConverters(ZonedDateTimeConverter::class)
     @Query(queryFromTo)
     fun fromTo(start: ZonedDateTime, end: ZonedDateTime): List<EventRecurrence>
 
-    @TypeConverters(ZoneDateTimeConverter::class)
+    @TypeConverters(ZonedDateTimeConverter::class)
     @Query(queryFromTo)
     fun fromToRx(start: ZonedDateTime, end: ZonedDateTime): Flowable<List<EventRecurrence>>
 
     @Query(queryAddException)
-    @TypeConverters(ZoneDateTimeConverter::class)
+    @TypeConverters(ZonedDateTimeConverter::class)
     fun addException(event_id: String, exception_date: ZonedDateTime)
 
     @Query("SELECT * FROM eventsRecurrenceException WHERE event_id = :eventId")

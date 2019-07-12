@@ -9,59 +9,44 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.example.calendar.R
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.DialogInterface
+import android.view.LayoutInflater
 import com.example.calendar.helpers.*
 import kotlinx.android.synthetic.main.dialog_date_picker.view.*
 import org.threeten.bp.ZonedDateTime
 import java.util.*
 
-class MaterialDatePickerDialog : AppCompatDialogFragment() {
-
-    private lateinit var onDateSet: DatePickerDialog.OnDateSetListener
-
-    companion object {
-        fun newInstance(
-            date: ZonedDateTime,
-            l: DatePickerDialog.OnDateSetListener
-        ): MaterialDatePickerDialog {
-            val pickerFragment = MaterialDatePickerDialog()
-            val bundle = Bundle()
-            bundle.putString(DIALOG_DATE_KEY, toStringFromZoned(date))
-            pickerFragment.onDateSet = l
-            pickerFragment.arguments = bundle
-            return pickerFragment
-        }
-    }
+class MaterialDatePickerDialog(
+    private val date: ZonedDateTime,
+    private val onDateSet: DatePickerDialog.OnDateSetListener,
+    context: Context,
+    cancelListener: DialogInterface.OnCancelListener
+) : AlertDialog(context, true, cancelListener) {
 
     private lateinit var v: View
     private lateinit var widget: MaterialCalendarView
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        super.onCreateDialog(savedInstanceState)
-        val inflater = activity!!.layoutInflater
-
-        v = inflater.inflate(R.layout.dialog_date_picker, null)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        v = LayoutInflater.from(context)
+            .inflate(R.layout.dialog_date_picker, null)
         widget = v.calendarView
-        retainInstance = true
+        setView(v)
 
-        val stringDate = arguments!!.getString(DIALOG_DATE_KEY)!!
-        val curDate : ZonedDateTime = fromStringToZoned(stringDate)
-
-        val temp = toCalendar(curDate)
+        val temp = toCalendar(date)
         widget.selectedDate = CalendarDay.from(temp)
         widget.currentDate = widget.selectedDate
         widget.addDecorators(
             TodayDecorator(
-                resources.getDrawable(
-                    R.drawable.today_circle_background, null
-                )
+                // todo !!
+                context.getDrawable(
+                    R.drawable.today_circle_background
+                )!!
             )
         )
-
-        return AlertDialog.Builder(activity)
-            .setTitle("")
-            .setView(v)
-            .setPositiveButton(android.R.string.ok) { _, _i -> onOkClick() }
-            .create()
+        setTitle("")
+        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(android.R.string.ok), { _, _i -> onOkClick() })
+        super.onCreate(savedInstanceState)
     }
 
     private fun onOkClick() {

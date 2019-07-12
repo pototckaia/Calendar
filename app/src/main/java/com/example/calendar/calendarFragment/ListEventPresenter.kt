@@ -1,26 +1,28 @@
 package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.data.EventInstance
-import com.example.calendar.data.EventRecurrenceRepository
 import com.example.calendar.helpers.*
+import com.example.calendar.repository.server.EventRepository
+import com.example.calendar.repository.server.model.EventInstance
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 
 @InjectViewState
 class ListEventPresenter(
-    private val eventRepository: EventRecurrenceRepository) :
+    private val eventRepository: EventRepository
+) :
     BaseMvpSubscribe<ListEventView>() {
 
     private val events = ArrayList<EventInstance>()
     private var start = ZonedDateTime.now(ZoneId.systemDefault())
     private var end = ZonedDateTime.now(ZoneId.systemDefault())
 
-    constructor(r: EventRecurrenceRepository, s: ZonedDateTime, e: ZonedDateTime):
-            this(r) {
+    constructor(
+        r: EventRepository,
+        s: ZonedDateTime, e: ZonedDateTime
+    ) : this(r) {
         setStartAndEnd(s, e)
         loadEvents()
     }
@@ -34,6 +36,7 @@ class ListEventPresenter(
     fun onDateSelected(day: ZonedDateTime) {
         val dayLocal = day.withZoneSameInstant(ZoneId.systemDefault())
         start = dayLocal.truncatedTo(ChronoUnit.DAYS)
+        // todo [end]
         end = start.plusDays(1)
 
         unsubscribeOnAll()
@@ -42,7 +45,7 @@ class ListEventPresenter(
 
     fun getEvent(pos: Int): EventInstance {
         if (pos >= events.size) {
-            throw IllegalArgumentException("Position greater list size ${events.size}")
+            throw IllegalArgumentException("Position greater than list size ${events.size}")
         }
         return events[pos]
     }

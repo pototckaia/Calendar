@@ -3,6 +3,7 @@ package com.example.calendar.customView
 import android.content.Context
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import com.example.calendar.R

@@ -2,8 +2,8 @@ package com.example.calendar.customView
 
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
-import com.example.calendar.data.EventInstance
 import com.example.calendar.helpers.toCalendar
+import com.example.calendar.repository.server.model.EventInstance
 
 class EventWeekView (
     var event: EventInstance,
@@ -13,9 +13,8 @@ class EventWeekView (
 
     override fun toWeekViewEvent(): WeekViewEvent<EventWeekView> {
         return WeekViewEvent(0,
-            event.nameEventRecurrence,
-            toCalendar(event.startedAtLocal), toCalendar(event.endedAtLocal),
+            event.entity.name,
+            toCalendar(event.started_at_local), toCalendar(event.ended_at_local),
             null, color, false, this)
     }
-
 }

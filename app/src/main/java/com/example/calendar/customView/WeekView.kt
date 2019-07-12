@@ -22,6 +22,7 @@ class ItemSelected(val text: String) {
 
 class SelectedStringViewHolder constructor(private val v: View) : RecyclerView.ViewHolder(v) {
     fun bind(item: ItemSelected, allItem: List<ItemSelected>) {
+        // todo rename id
         val t = v.findViewById<TextView>(R.id.text1)
         t.text = item.text
         setBackground(item)
@@ -36,6 +37,7 @@ class SelectedStringViewHolder constructor(private val v: View) : RecyclerView.V
     }
 
     private fun setBackground(item: ItemSelected) {
+        // todo color
         v.setBackgroundColor(if (item.isSelected) Color.GRAY else Color.TRANSPARENT)
     }
 }
@@ -50,7 +52,7 @@ class SelectedStringAdapter(
         parent: ViewGroup,
         viewType: Int
     ): SelectedStringViewHolder {
-        val view = parent.inflate(R.layout.selectable_list_item, false)
+        val view = parent.inflate(R.layout.view_textview_item, false)
         return SelectedStringViewHolder(view)
     }
 
@@ -112,10 +114,12 @@ class WeekView
 
     fun getSelected() : List<RecurrenceRule.WeekdayNum> {
         val s = getAdapter().getSelectedPos()
+        // todo !!
         return s.map { eWeekView.fromPos(it)!!.toWeekNum() }
     }
 
     fun setSelected(s: List<RecurrenceRule.WeekdayNum>) {
+        // todo !!
         val u = s.map { eWeekView.fromWeekNum(it)!!.pos }
         getAdapter().setSelectedPos(u)
     }

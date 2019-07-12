@@ -2,6 +2,7 @@ package com.example.calendar.eventFragment
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,9 +29,14 @@ class FreqFragment : MvpAppCompatFragment(),
     RecurrenceRuleView, OnBackPressed {
 
     companion object {
-        fun newInstance(start: ZonedDateTime, freq: String = ""): FreqFragment {
+        fun newInstance(
+            id: Int,
+            start: ZonedDateTime,
+            freq: String = ""
+        ): FreqFragment {
             val args = Bundle()
             args.run {
+                this.putInt(ID_RECURRENCE_RULE, id)
                 this.putString(RULE_RECURRENCE_RULE, freq)
                 this.putString(START_RECURRENCE_RULE, toStringFromZoned(start))
             }
@@ -54,8 +60,10 @@ class FreqFragment : MvpAppCompatFragment(),
     }
 
     lateinit var v: View
-    lateinit var recurrenceViewModel: RecurrenceViewModel
+    lateinit var recurrenceViewModel: EventPatternViewModel
     private val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")
+
+    var idResult = -1
 
     // todo month, week, year
     override fun onCreateView(
@@ -69,12 +77,17 @@ class FreqFragment : MvpAppCompatFragment(),
             container, false
         )
         recurrenceViewModel = activity?.run {
-            ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
+            ViewModelProviders.of(this).get(EventPatternViewModel::class.java)
         } ?: throw Exception("Invalid scope to ViewModel")
 
-
+        if (savedInstanceState == null) {
+            idResult = arguments!!.getInt(ID_RECURRENCE_RULE)
+        } else {
+            idResult = savedInstanceState.getInt(ID_RECURRENCE_RULE)
+        }
 
         v.tbFreqFragment.setNavigationOnClickListener { freqPresenter.onBack() }
+
         v.spFreq.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -94,6 +107,11 @@ class FreqFragment : MvpAppCompatFragment(),
         v.tvDate.setOnClickListener { freqPresenter.onUntilClick() }
 
         return v
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ID_RECURRENCE_RULE, idResult)
     }
 
     override fun onBackPressed() {
@@ -128,8 +146,9 @@ class FreqFragment : MvpAppCompatFragment(),
 
 
     override fun openCalendar(until: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(until, l)
-        dpd.show(activity?.supportFragmentManager, "date-picker")
+        val dpd = MaterialDatePickerDialog(until, l, context!!,
+            DialogInterface.OnCancelListener { var1: DialogInterface -> })
+        dpd.show()
     }
 
 
@@ -142,7 +161,8 @@ class FreqFragment : MvpAppCompatFragment(),
                     v.wvWekSelected.setSelected(it.byDayPart)
                 }
             }
-            else -> {}
+            else -> {
+            }
         }
 
         v.etEach.setText(it.interval.toString())
@@ -177,7 +197,8 @@ class FreqFragment : MvpAppCompatFragment(),
                 if (v.wvWekSelected.getSelected().isNotEmpty())
                     it.byDayPart = v.wvWekSelected.getSelected()
             }
-            else -> {}
+            else -> {
+            }
         }
 
         var interval = v.etEach.text.toString().toInt()
@@ -206,7 +227,7 @@ class FreqFragment : MvpAppCompatFragment(),
     }
 
     override fun onExit(r: String) {
-        recurrenceViewModel.recurrence.postValue(r)
+        recurrenceViewModel.recurrenceNew.postValue(Pair(idResult, r))
         InjectApplication.inject.router.exit()
     }
 

@@ -1,6 +1,7 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import androidx.room.*
+import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
 import org.threeten.bp.ZonedDateTime
 import java.util.UUID
 
@@ -15,7 +16,7 @@ import java.util.UUID
     )],
     indices = [Index(value=["event_id"])]
 )
-@TypeConverters(ZoneDateTimeConverter::class)
+@TypeConverters(ZonedDateTimeConverter::class)
 data class EventRecurrenceException(
     @PrimaryKey var id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "event_id") var eventId: String,

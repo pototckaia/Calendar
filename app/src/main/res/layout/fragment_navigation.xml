@@ -6,42 +6,49 @@
         android:id="@+id/clMainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+>
 
     <Button
             android:id="@+id/bMonth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Месяц"
-            android:background="?selectableItemBackground"/>
+            android:background="?selectableItemBackground"
+    />
 
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="@color/gray"
+    />
 
     <Button
             android:id="@+id/bWeek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Неделя"
-            android:background="?selectableItemBackground"/>
+            android:background="?selectableItemBackground"
+    />
 
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="@color/gray"
+    />
 
     <Button
             android:id="@+id/bDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="День"
-            android:background="?selectableItemBackground"/>
+            android:background="?selectableItemBackground"
+    />
 
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="@color/gray"
+    />
 
 </LinearLayout>

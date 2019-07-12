@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+>
+
+    <TextView
+            android:id="@+id/tvNumber"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+
+            tools:text="1"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTitlePattern"
+            app:layout_constraintBottom_toBottomOf="@id/tvTitlePattern"
+    />
+
+    <TextView
+            android:id="@+id/tvTitlePattern"
+            android:text="@string/title_pattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+    <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/trash"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTitlePattern"
+            app:layout_constraintBottom_toBottomOf="@id/tvTitlePattern"
+    />
+
+    <com.example.calendar.customView.DayHourView
+            android:id="@+id/vBegin"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            app:label_name="@string/begin_label_name"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitlePattern"
+            app:layout_constraintBottom_toTopOf="@id/vEnd"
+    >
+    </com.example.calendar.customView.DayHourView>
+
+    <com.example.calendar.customView.DayHourView
+            android:id="@+id/vEnd"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            app:label_name="@string/end_label_name"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vBegin"
+    >
+    </com.example.calendar.customView.DayHourView>
+
+    <EditText
+            android:id="@+id/etRecurrenceRule"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/default_event_recurrence"
+            android:textSize="20sp"
+            android:inputType=""
+
+            app:layout_constraintTop_toBottomOf="@id/vEnd"
+            app:layout_constraintBottom_toTopOf="@id/etTimezone"
+            app:layout_constraintLeft_toRightOf="@id/ivRecurrenceRule"
+            app:layout_constraintRight_toRightOf="parent"
+    />
+
+    <ImageView
+            android:id="@+id/ivRecurrenceRule"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/repeat"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/etRecurrenceRule"
+            app:layout_constraintTop_toTopOf="@+id/etRecurrenceRule"
+            app:layout_constraintBottom_toBottomOf="@id/etRecurrenceRule"
+    />
+
+    <EditText
+            android:id="@+id/etTimezone"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/default_event_timezone"
+            tools:text="Азорские о-ва"
+            android:textSize="20sp"
+            android:inputType=""
+
+            app:layout_constraintTop_toBottomOf="@id/etRecurrenceRule"
+            app:layout_constraintLeft_toRightOf="@id/ivTimezone"
+            app:layout_constraintRight_toRightOf="parent"
+    />
+
+    <ImageView
+            android:id="@+id/ivTimezone"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/planet_earth"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/etTimezone"
+            app:layout_constraintTop_toTopOf="@+id/etTimezone"
+            app:layout_constraintBottom_toBottomOf="@id/etTimezone"
+    />
+
+    <TextView
+            android:id="@+id/tvDefaultDate"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:textSize="18sp"
+            tools:text="Владивосток, Россия: 13/07/2019 4:00 - 5:00"
+
+            app:layout_constraintTop_toBottomOf="@id/etTimezone"
+            app:layout_constraintLeft_toRightOf="@id/ivTimezone"
+            app:layout_constraintRight_toRightOf="parent"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,12 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.example.calendar.repository.db.convert.DurationConverter
+import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
+import com.example.calendar.repository.db.convert.ZoneIdConverter
 import com.example.calendar.helpers.*
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.Duration
@@ -15,7 +18,7 @@ import org.threeten.bp.ZoneId
 
 
 @Entity(tableName = "eventsRecurrence")
-@TypeConverters(ZoneDateTimeConverter::class, DurationConverter::class, ZoneIdConverter::class)
+@TypeConverters(ZonedDateTimeConverter::class, DurationConverter::class, ZoneIdConverter::class)
 data class EventRecurrence(
     @PrimaryKey @ColumnInfo(name = "id") var id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "name") var name: String,
@@ -26,7 +29,7 @@ data class EventRecurrence(
     // in minute
     // [start, end)
     @ColumnInfo(name = "duration") var duration: Duration,
-    // for all recurrence event or endOutRecurrence for single event
+    // for all recurrence entity or endOutRecurrence for single entity
     @ColumnInfo(name = "end_out_of_range") var endOutRecurrence: ZonedDateTime,
 
     @ColumnInfo(name="zone_id") var zoneId: ZoneId,

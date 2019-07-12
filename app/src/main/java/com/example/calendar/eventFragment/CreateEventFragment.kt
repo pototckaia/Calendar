@@ -1,31 +1,42 @@
 package com.example.calendar.eventFragment;
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
-import com.example.calendar.RecurrenceViewModel
-import com.example.calendar.customView.MaterialDatePickerDialog
 import com.example.calendar.helpers.*
 import com.example.calendar.inject.InjectApplication
+import kotlinx.android.synthetic.main.fragment_event.view.*
+import org.threeten.bp.ZonedDateTime
+import com.example.calendar.customView.EventPatternRequestView
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.example.calendar.repository.server.model.PatternRequest
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.calendar.customView.PatternRecycleViewAdapter
 import com.example.calendar.navigation.Screens
-import kotlinx.android.synthetic.main.fragment_create_event.view.*
-import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
-import org.threeten.bp.ZonedDateTime
+import kotlin.collections.ArrayList
 
+
+
+
+class EventPatternViewModel: ViewModel() {
+    val recurrence = MutableLiveData<String>()
+    val recurrenceNew = MutableLiveData<Pair<Int, String>>()
+    val location = MutableLiveData<Pair<Int, String>>()
+    val timezone = MutableLiveData<Pair<Int, ZoneId>>()
+}
 
 class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventInfoView, DateClickView, RecurrenceEventView {
+    CreateEventInfoView, PatternListSaveView {
 
     companion object {
         fun newInstance(
@@ -34,8 +45,8 @@ class CreateEventFragment : MvpAppCompatFragment(),
         ): CreateEventFragment {
             val args = Bundle()
             args.run {
-                this.putString(START_EVENT_KEY, toStringFromZoned(startEvent))
-                this.putString(END_EVENT_KEY, toStringFromZoned(endEvent))
+                putString(START_EVENT_KEY, toStringFromZoned(startEvent))
+                putString(END_EVENT_KEY, toStringFromZoned(endEvent))
             }
             val f = CreateEventFragment()
             f.arguments = args
@@ -56,27 +67,25 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
-    lateinit var dateClickPresenter: DateClickPresenter
+    lateinit var patternListSavePresenter: PatternListSavePresenter
 
     @ProvidePresenter
-    fun provideDateClickPresenter(): DateClickPresenter {
-        return DateClickPresenter(
-            fromStringToZoned(arguments!!.getString(START_EVENT_KEY)),
-            fromStringToZoned(arguments!!.getString(END_EVENT_KEY)),
-            { d: ZonedDateTime -> validateStartEvent(d) },
-            { true }
+    fun providePatternListPresenter(): PatternListSavePresenter {
+        val arg = arguments!!
+        return PatternListSavePresenter(
+            fromStringToZoned(arg.getString(START_EVENT_KEY)!!),
+            fromStringToZoned(arg.getString(END_EVENT_KEY)!!)
         )
     }
-
-    @InjectPresenter
-    lateinit var recurrenceEventPresenter: RecurrenceEventPresenter
 
     // todo inject
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View
-    lateinit var recurrenceViewModel: RecurrenceViewModel
 
+    lateinit var recurrenceViewModel: EventPatternViewModel
+
+    // todo error with clava
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,32 +93,85 @@ class CreateEventFragment : MvpAppCompatFragment(),
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         v = inflater.inflate(
-            R.layout.fragment_create_event,
+            R.layout.fragment_event,
             container, false
         )
-
-        recurrenceViewModel = activity?.run {
-            ViewModelProviders.of(this).get(RecurrenceViewModel::class.java)
-        } ?: throw Exception("Invalid scope to ViewModel")
-
-        recurrenceViewModel.recurrence.observe(this, Observer<String> { r ->
-            recurrenceEventPresenter.onRuleChange(r)
-        })
-
+        patternListSavePresenter.onCreateView()
         initToolBar()
 
-        v.vBegin.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickBeginDay() }
-        v.vBegin.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickBeginHour() }
-        v.vEnd.onDayClickListener = View.OnClickListener { dateClickPresenter.onClickEndDay() }
-        v.vEnd.onHourClickListener = View.OnClickListener { dateClickPresenter.onClickEndHour() }
+        recurrenceViewModel = activity?.run {
+            ViewModelProviders.of(this).get(EventPatternViewModel::class.java)
+        } ?: throw Exception("Invalid scope to ViewModel")
 
-        v.etRecurrenceRule.inputType = InputType.TYPE_NULL
-        v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick() }
-        v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick() }
+        recurrenceViewModel.recurrenceNew.observe(this, Observer<Pair<Int, String>> { p ->
+            onCloseRecurrenceSelect(p)
+        })
 
-        v.tvTimeZone.text = ZoneId.systemDefault().toString()
+        recurrenceViewModel.timezone.observe(this, Observer<Pair<Int, ZoneId>> { p ->
+            onClostTimezoneSelect(p)
+        })
+
+        val emptyPattern = ArrayList<PatternRequest>()
+        val adapter = PatternRecycleViewAdapter(emptyPattern,
+            this::onRecurrenceRuleClick,
+            this::onTimeZoneClick,
+            {i : Int ->  v.rvPattern.getChildAt(i) as EventPatternRequestView})
+        val linerLayoutManager = LinearLayoutManager(context)
+        v.rvPattern.run {
+            this.adapter = adapter
+            this.layoutManager = linerLayoutManager
+        }
+
+        v.btn.setOnClickListener { patternListSavePresenter.onAddPatterns() }
 
         return v
+    }
+
+    private fun onCloseRecurrenceSelect(p : Pair<Int, String>) {
+        if (p.first >= 0) {
+            // set and remove
+            patternListSavePresenter.onCloseRecurrenceSelect(p.second, p.first)
+            recurrenceViewModel.recurrenceNew.postValue(Pair(-1, ""))
+        }
+    }
+
+    private fun onClostTimezoneSelect(p : Pair<Int, ZoneId>) {
+        if (p.first >= 0) {
+            // set and remove
+            patternListSavePresenter.onCloseTimezoneSelect(p.second, p.first)
+            recurrenceViewModel.timezone.postValue(Pair(-1, ZoneOffset.UTC))
+        }
+    }
+
+    private fun onRecurrenceRuleClick(posItem: Int, v: PatternRequest) {
+        router.navigateTo(
+            Screens.FreqScreen(
+                posItem,
+                v.startedAtTimezone,
+                v.rrule
+            )
+        )
+    }
+
+    private fun onTimeZoneClick(posItem: Int) {
+        router.navigateTo(Screens.TimeZoneSelectScreen(posItem))
+    }
+
+    override fun updatePattern(m: PatternRequest, pos: Int) {
+        (v.rvPattern.adapter as PatternRecycleViewAdapter).updateItem(m, pos)
+    }
+
+    override fun addPattern(pattern: PatternRequest) {
+        (v.rvPattern.adapter as PatternRecycleViewAdapter).addItem(pattern, context!!)
+    }
+
+    override fun setPatterns(patterns: ArrayList<PatternRequest>) {
+        (v.rvPattern.adapter as PatternRecycleViewAdapter).setItem(patterns)
+    }
+
+    override fun onStop() {
+        patternListSavePresenter.onSaveInstanceState(getPatterns())
+        super.onStop()
     }
 
     private fun initToolBar() {
@@ -123,67 +185,23 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     private fun onSave() {
         createEventPresenter.onSaveEvent(
-            view!!.etTextEvent.text.toString(),
-            "TODO",
-            dateClickPresenter.start,
-            dateClickPresenter.end,
-            recurrenceEventPresenter.getRule()
+            v.vEventRequest.getEventRequest(),
+            getPatterns()
         )
     }
 
-    private fun onRecurrenceRuleClick() {
-        router.navigateTo(
-            Screens.FreqScreen(
-                dateClickPresenter.start,
-                recurrenceEventPresenter.getRule()
-            )
-        )
-    }
-
-    override fun updateDateInfo(startLocal: ZonedDateTime, endLocal: ZonedDateTime) {
-        v.vBegin.setDate(startLocal)
-        v.vEnd.setDate(endLocal)
-    }
-
-    override fun showDatePickerDialog(local: ZonedDateTime, l: DatePickerDialog.OnDateSetListener) {
-        val dpd = MaterialDatePickerDialog.newInstance(local, l)
-        dpd.show(activity?.supportFragmentManager, "date-picker")
-    }
-
-    override fun showTimePickerDialog(local: ZonedDateTime, l: TimePickerDialog.OnTimeSetListener) {
-        val tpd = TimePickerDialog(
-            context, l,
-            local.hour,
-            local.minute,
-            true
-        )
-        tpd.show()
-    }
-
-    override fun setRecurrenceViw(r: String) {
-        v.etRecurrenceRule.setText(r)
-    }
-
-    override fun postRecurrence(r: String) {
-        recurrenceViewModel.recurrence.postValue(r)
-    }
-
-    private fun validateStartEvent(start: ZonedDateTime): Boolean {
-        val rule = recurrenceEventPresenter.getRule()
-        if (rule.isNotEmpty() && RecurrenceRule(rule).until != null) {
-            val until = fromDateTimeUTC(RecurrenceRule(rule).until)
-            val startUTC = start.withZoneSameInstant(ZoneOffset.UTC)
-            if (startUTC >= until) {
-                Toast
-                    .makeText(
-                        context,
-                        "Дата начала события не может быть позже даты ДО в правиле переодичности",
-                        Toast.LENGTH_SHORT)
-                    .show()
+    private fun getPatterns() : ArrayList<PatternRequest> {
+        val patterns = ArrayList<PatternRequest>()
+        val adapter = v.rvPattern.adapter!! as PatternRecycleViewAdapter
+        for (index in 0 until adapter.itemCount) {
+            val nextChild = v.rvPattern.findViewHolderForAdapterPosition(index)
+            if (nextChild == null) {
+                patterns.add(adapter.patterns[index])
+            } else {
+                val holder = nextChild as PatternRecycleViewAdapter.PatternViewHolder
+                patterns.add(holder.v.getPattern())
             }
-            return startUTC < until
         }
-        return true
+        return patterns
     }
-
 }

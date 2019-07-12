@@ -9,16 +9,18 @@ import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
-import com.example.calendar.data.EventInstance
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventFragment
+import com.example.calendar.AuthFragment
+import com.example.calendar.eventFragment.TimeZoneSelectFragment
+import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
 
 class Screens {
 
     class EventScreen(private val event: EventInstance) : SupportAppScreen() {
         init {
-            screenKey = "${javaClass.simpleName}_${event.idEventRecurrence}"
+            screenKey = "${javaClass.simpleName}_${event.entity.id}"
         }
 
         override fun getFragment(): Fragment =
@@ -57,14 +59,22 @@ class Screens {
             NavigationFragment.newInstance()
     }
 
-    class FreqScreen(private val start: ZonedDateTime, private val rule:String="") : SupportAppScreen() {
+    class FreqScreen(
+        private val id: Int,
+        private val start: ZonedDateTime,
+        private val rule: String = ""
+    ) : SupportAppScreen() {
         override fun getFragment(): Fragment =
-                FreqFragment.newInstance(start, rule)
+            FreqFragment.newInstance(id, start, rule)
     }
 
-//    class GithubScreen : SupportAppScreen() {
-//        fun getActivityIntent(context: Context): Intent {
-//            return Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/terrakok/Cicerone"))
-//        }
-//    }
+    class AuthScreen : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+                AuthFragment.newInstance()
+    }
+
+    class TimeZoneSelectScreen(private val id: Int) : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+                TimeZoneSelectFragment.newInstance(id)
+    }
 }

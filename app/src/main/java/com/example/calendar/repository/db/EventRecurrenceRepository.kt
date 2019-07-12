@@ -1,4 +1,4 @@
-package com.example.calendar.data
+package com.example.calendar.repository.db
 
 import com.example.calendar.helpers.*
 import io.reactivex.Completable
@@ -32,7 +32,7 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
         val instances = arrayListOf<EventInstance>()
 
 //        val exceptionsList = arrayListOf<DateTime>()
-//        dao.getExceptionByEventId(event.id).forEach {
+//        dao.getExceptionByEventId(entity.id).forEach {
 //            exceptionsList.add(toDateTimeUTC(it.exceptionDate))
 //        }
 //        val exceptionsSet = exceptionsList.toSet()
@@ -304,51 +304,51 @@ class EventRecurrenceRepository(val dao: EventRecurrenceDao) {
     }
 
 //
-//    fun insertNotRecurrenceCopy(dao: EventRecurrenceDao, event: EventInstance) {
+//    fun insertNotRecurrenceCopy(dao: EventRecurrenceDao, entity: EventInstance) {
 //        val e = EventRecurrence(addElement
-//            name = event.nameEventRecurrence,
-//            note = event.noteEventRecurrence,
-//            startedAt = event.startedAtInstance,
-//            duration = event.duration,
-//            endOutRecurrence = calculateEndOutOfRange(event.startedAtInstance, event.duration, "")
+//            name = entity.nameEventRecurrence,
+//            note = entity.noteEventRecurrence,
+//            startedAt = entity.startedAtInstance,
+//            duration = entity.duration,
+//            endOutRecurrence = calculateEndOutOfRange(entity.startedAtInstance, entity.duration, "")
 //        )
 //        dao.insert(e)
 //    }
 //
 //
-//    fun deleteEventSingle(dao: EventRecurrenceDao, event: EventInstance) {
-//        val eventRec = dao.getEventById(event.idEventRecurrence)
+//    fun deleteEventSingle(dao: EventRecurrenceDao, entity: EventInstance) {
+//        val eventRec = dao.getEventById(entity.idEventRecurrence)
 //        if (!eventRec.isRecurrence()) {
-//            deleteEventAll(dao, event)
+//            deleteEventAll(dao, entity)
 //            return
 //        }
-//        dao.addException(event.idEventRecurrence, event.startedAtInstance)
+//        dao.addException(entity.idEventRecurrence, entity.startedAtInstance)
 //    }
 //
-//    fun deleteEventFuture(dao: EventRecurrenceDao, event: EventInstance) {
-//        var eventRec = dao.getEventById(event.idEventRecurrence)
+//    fun deleteEventFuture(dao: EventRecurrenceDao, entity: EventInstance) {
+//        var eventRec = dao.getEventById(entity.idEventRecurrence)
 //        if (!eventRec.isRecurrence()) {
-//            deleteEventAll(dao, event)
+//            deleteEventAll(dao, entity)
 //            return
 //        }
 //        // precision todo
-//        val until = event.startedAtInstance
+//        val until = entity.startedAtInstance
 //        eventRec = addUntil(eventRec, until)
 //        dao.update(eventRec)
 //    }
 //
-//    fun deleteEventAll(dao: EventRecurrenceDao, event: EventInstance) {
-//        val eventRec = dao.getEventById(event.idEventRecurrence)
+//    fun deleteEventAll(dao: EventRecurrenceDao, entity: EventInstance) {
+//        val eventRec = dao.getEventById(entity.idEventRecurrence)
 //        dao.delete(eventRec)
 //    }
 //
-//    fun updateEventSingle(dao: EventRecurrenceDao, event: EventInstance) {
-//        val eventRec = dao.getEventById(event.idEventRecurrence)
+//    fun updateEventSingle(dao: EventRecurrenceDao, entity: EventInstance) {
+//        val eventRec = dao.getEventById(entity.idEventRecurrence)
 //        if (!eventRec.isRecurrence()) {
-//            updateEventAll(dao, event)
+//            updateEventAll(dao, entity)
 //            return
 //        }
-//        insertNotRecurrenceCopy(dao, event)
-//        dao.addException(eventRec.id, event.startedAtInstance)
+//        insertNotRecurrenceCopy(dao, entity)
+//        dao.addException(eventRec.id, entity.startedAtInstance)
 //    }
 }

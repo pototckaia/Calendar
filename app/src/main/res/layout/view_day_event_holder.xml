@@ -6,7 +6,8 @@
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="10dp"
+>
 
     <TextView
             android:id="@+id/tvEventTitle"
@@ -15,7 +16,8 @@
             android:textSize="20sp"
             android:gravity="center"
 
-            tool:text="Title Event"/>
+            tool:text="Title Event"
+    />
 
     <TextView
             android:id="@+id/tvEventHourDuration"
@@ -24,6 +26,7 @@
             android:textSize="18sp"
             android:gravity="center"
 
-            tool:text="Hour Duration Event"/>
+            tool:text="Hour Duration Event"
+    />
 
 </LinearLayout>
