@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/clMainContainer"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/clMainContainer"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+>
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/tbWeekCalendar"
@@ -13,7 +15,8 @@
             android:background="@color/toolbarBackground"
             android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="?attr/homeAsUpIndicator">
+            app:navigationIcon="?attr/homeAsUpIndicator"
+    >
     </androidx.appcompat.widget.Toolbar>
 
     <com.alamkanak.weekview.WeekView
@@ -45,6 +48,7 @@
             app:timeColumnSeparatorStrokeWidth="1dp"
             app:timeColumnTextColor="#8f000000"
             app:timeColumnTextSize="12sp"
-            app:todayHeaderTextColor="#2789e4" />
+            app:todayHeaderTextColor="#2789e4"
+    />
 
 </LinearLayout>

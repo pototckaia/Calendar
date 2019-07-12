@@ -5,7 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/clMainContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+>
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/cvMonthCalendar"
@@ -14,7 +15,8 @@
             app:layout_constraintVertical_weight="0.8"
 
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tvSelectDate"/>
+            app:layout_constraintBottom_toTopOf="@id/tvSelectDate"
+    />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/abfAddNote"
@@ -28,7 +30,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+    />
 
     <TextView
             android:id="@+id/tvSelectDate"
@@ -43,7 +46,8 @@
             app:layout_constraintTop_toBottomOf="@+id/cvMonthCalendar"
             app:layout_constraintBottom_toTopOf="@+id/rvEvents"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+    />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEvents"
@@ -52,7 +56,7 @@
             app:layout_constraintVertical_weight="1"
 
             app:layout_constraintTop_toBottomOf="@+id/tvSelectDate"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

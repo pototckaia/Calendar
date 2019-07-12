@@ -4,7 +4,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+>
 
     <TextView
             android:id="@+id/tvLabel"
@@ -17,7 +18,8 @@
             app:layout_constraintTop_toTopOf="@id/etDay"
             app:layout_constraintBottom_toBottomOf="@id/etDay"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/etDay"/>
+            app:layout_constraintEnd_toStartOf="@+id/etDay"
+    />
 
     <EditText
             android:id="@+id/etDay"
@@ -32,7 +34,8 @@
             app:layout_constraintStart_toEndOf="@id/tvLabel"
             app:layout_constraintEnd_toStartOf="@id/etHour"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="пт, 15/03/2019"/>
+            tools:text="пт, 15/03/2019"
+    />
 
     <EditText
             android:id="@+id/etHour"
@@ -48,6 +51,7 @@
             app:layout_constraintBottom_toBottomOf="@id/etDay"
             app:layout_constraintStart_toEndOf="@id/etDay"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="12:00"/>
+            tools:text="12:00"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

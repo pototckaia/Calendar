@@ -28,7 +28,7 @@
 
     <TextView
             android:id="@+id/tvTitlePattern"
-            android:text="Интервал времени"
+            android:text="@string/title_pattern"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -65,7 +65,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitlePattern"
-            app:layout_constraintBottom_toTopOf="@id/vEnd">
+            app:layout_constraintBottom_toTopOf="@id/vEnd"
+    >
     </com.example.calendar.customView.DayHourView>
 
     <com.example.calendar.customView.DayHourView
@@ -78,7 +79,8 @@
 
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vBegin">
+            app:layout_constraintTop_toBottomOf="@id/vBegin"
+    >
     </com.example.calendar.customView.DayHourView>
 
     <EditText
@@ -116,7 +118,7 @@
             android:layout_height="wrap_content"
 
             android:hint="@string/default_event_timezone"
-            tools:text="GMT+10"
+            tools:text="Азорские о-ва"
             android:textSize="20sp"
             android:inputType=""
 

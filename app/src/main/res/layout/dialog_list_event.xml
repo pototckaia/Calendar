@@ -5,7 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+>
 
     <TextView
             android:id="@+id/tvDay"
@@ -15,7 +16,8 @@
 
             android:textSize="23sp"
             android:textColor="@android:color/black"
-            android:gravity="center"/>
+            android:gravity="center"
+    />
 
     <TextView
             android:id="@+id/tvHour"
@@ -25,16 +27,19 @@
 
             android:gravity="center"
             android:textColor="@android:color/black"
-            android:textSize="17sp"/>
+            android:textSize="17sp"
+    />
 
     <View
             android:background="@color/colorGrey"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/divide_height"/>
+            android:layout_height="@dimen/divide_height"
+    />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEvents"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+    />
 
 </LinearLayout>
