@@ -32,6 +32,7 @@ private fun getTimeZoneName(z: ZoneId) : String {
     }
 }
 
+// todo make model view
 class EventPatternRequestView
 @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

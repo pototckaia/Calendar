@@ -13,6 +13,7 @@ class PatternRecycleViewAdapter(
     var patterns: ArrayList<PatternRequest>,
     val onRecurrenceRuleClick: (pos: Int, patter: PatternRequest) -> Unit,
     val onTimeZoneClick: (pos: Int) -> Unit,
+// todo make model view
     var getViewByPos : (Int) -> EventPatternRequestView
 ) : RecyclerView.Adapter<PatternRecycleViewAdapter.PatternViewHolder>() {
 

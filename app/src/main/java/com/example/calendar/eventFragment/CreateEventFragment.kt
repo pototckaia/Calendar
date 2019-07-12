@@ -122,7 +122,7 @@ class CreateEventFragment : MvpAppCompatFragment(),
             this.layoutManager = linerLayoutManager
         }
 
-        v.btn.setOnClickListener { patternListSavePresenter.onAddPatterns() }
+        v.fabAddPattern.setOnClickListener { patternListSavePresenter.onAddPatterns() }
 
         return v
     }

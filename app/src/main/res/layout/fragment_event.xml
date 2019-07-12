@@ -31,16 +31,6 @@
     >
     </com.example.calendar.customView.EventRequestView>
 
-    <Button
-            android:id="@+id/btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add New Items To ListView"
-
-            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-    />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPattern"
@@ -48,8 +38,24 @@
             android:layout_height="0dp"
             app:layout_constraintHeight_default="spread"
 
-            app:layout_constraintTop_toBottomOf="@id/btn"
+            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
             app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddPattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/plus"
+            android:layout_margin="@dimen/fab_margin"
+            app:backgroundTint="@color/colorAccent"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
     />
 
 
