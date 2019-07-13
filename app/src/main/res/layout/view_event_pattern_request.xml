@@ -83,15 +83,15 @@
     >
     </com.example.calendar.customView.DayHourView>
 
-    <EditText
-            android:id="@+id/etRecurrenceRule"
+    <TextView
+            android:id="@+id/tvRecurrenceRule"
             android:layout_width="0dp"
             app:layout_constraintWidth_default="spread"
             android:layout_height="wrap_content"
 
+            android:background="?attr/editTextBackground"
             android:hint="@string/default_event_recurrence"
             android:textSize="20sp"
-            android:inputType=""
 
             app:layout_constraintTop_toBottomOf="@id/vEnd"
             app:layout_constraintBottom_toTopOf="@id/etTimezone"
@@ -106,9 +106,9 @@
             app:srcCompat="@drawable/repeat"
 
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/etRecurrenceRule"
-            app:layout_constraintTop_toTopOf="@+id/etRecurrenceRule"
-            app:layout_constraintBottom_toBottomOf="@id/etRecurrenceRule"
+            app:layout_constraintRight_toLeftOf="@id/tvRecurrenceRule"
+            app:layout_constraintTop_toTopOf="@+id/tvRecurrenceRule"
+            app:layout_constraintBottom_toBottomOf="@id/tvRecurrenceRule"
     />
 
     <EditText
@@ -122,7 +122,7 @@
             android:textSize="20sp"
             android:inputType=""
 
-            app:layout_constraintTop_toBottomOf="@id/etRecurrenceRule"
+            app:layout_constraintTop_toBottomOf="@id/tvRecurrenceRule"
             app:layout_constraintLeft_toRightOf="@id/ivTimezone"
             app:layout_constraintRight_toRightOf="parent"
     />

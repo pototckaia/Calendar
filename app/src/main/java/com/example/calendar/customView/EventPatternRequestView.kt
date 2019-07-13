@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Color
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.View
@@ -14,11 +13,11 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.calendar.R
 import com.example.calendar.inject.InjectApplication
+import com.example.calendar.repository.getRecurrenceName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.view_event_pattern_request.view.*
 import org.dmfs.rfc5545.recur.RecurrenceRule
@@ -88,7 +87,6 @@ class EventPatternRequestView
         val attr = context.obtainStyledAttributes(attrs, R.styleable.EventPatternRequestView)
         attr.recycle()
 
-        etRecurrenceRule.inputType = InputType.TYPE_NULL
         etTimezone.inputType = InputType.TYPE_NULL
 
         vBegin.onDayClickListener = OnClickListener { onClickBeginDay() }
@@ -102,8 +100,7 @@ class EventPatternRequestView
     }
 
     fun setRecurrenceOnClick(s : (p: PatternRequest) -> Unit) {
-        etRecurrenceRule.setOnClickListener { s(eventPattern) }
-        etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) s(eventPattern) }
+        tvRecurrenceRule.setOnClickListener { s(eventPattern) }
     }
 
     fun setTimeZoneOnClick(s : () -> Unit) {
@@ -125,7 +122,7 @@ class EventPatternRequestView
         vBegin.setDate(p.startedAtTimezone)
         vEnd.setDate(p.endedAtAtTimezone)
         setDefaultDateView(p.timezone)
-        etRecurrenceRule.setText(p.rrule)
+        tvRecurrenceRule.setText(getRecurrenceName(p.rrule))
         etTimezone.setText(getTimeZoneName(p.timezone))
         setDefaultDateView(p.timezone)
     }
