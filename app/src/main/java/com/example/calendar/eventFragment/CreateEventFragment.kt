@@ -21,14 +21,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.calendar.customView.PatternRecycleViewAdapter
 import com.example.calendar.navigation.Screens
 import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset
-import kotlin.collections.ArrayList
 
 
 class ExitEventPatternViewModel : ViewModel() {
-    val recurrence = MutableLiveData<Pair<Int, String>>()
+    var posItem : Int = -1
+
+    val recurrence = MutableLiveData<String>()
     //    val location = MutableLiveData<String?>()
-    val timezone = MutableLiveData<Pair<Int, ZoneId>>()
+    val timezone = MutableLiveData<ZoneId>()
+
+    fun isActivate() = posItem >= 0
+    fun activate(i: Int = 0) { posItem = i }
+    fun deactivate() { posItem = -1 }
 }
 
 class CreateEventFragment : MvpAppCompatFragment(),
@@ -121,28 +125,28 @@ class CreateEventFragment : MvpAppCompatFragment(),
         return v
     }
 
-    private fun onCloseRecurrenceSelect(p: Pair<Int, String>) {
-        if (p.first >= 0) {
-            // set and remove
-            patternsPresenter.onCloseRecurrenceSelect(p.second, p.first)
-            exitViewModel.recurrence.postValue(Pair(-1, ""))
+    private fun onCloseRecurrenceSelect(p: String) {
+        if (exitViewModel.isActivate()) {
+            patternsPresenter.onCloseRecurrenceSelect(p, exitViewModel.posItem)
+            exitViewModel.deactivate()
         }
     }
 
-    private fun onCloseTimezoneSelect(p: Pair<Int, ZoneId>) {
-        if (p.first >= 0) {
-            // set and remove
-            patternsPresenter.onCloseTimezoneSelect(p.second, p.first)
-            exitViewModel.timezone.postValue(Pair(-1, ZoneOffset.UTC))
+    private fun onCloseTimezoneSelect(p: ZoneId) {
+        if (exitViewModel.isActivate()) {
+            patternsPresenter.onCloseTimezoneSelect(p, exitViewModel.posItem)
+            exitViewModel.deactivate()
         }
     }
 
     private fun onRecurrenceRuleClick(posItem: Int, v: PatternRequest) {
-        router.navigateTo(Screens.FreqScreen(posItem, v.startedAtTimezone, v.rrule))
+        exitViewModel.activate(posItem)
+        router.navigateTo(Screens.FreqScreen(v.startedAtTimezone, v.rrule))
     }
 
     private fun onTimeZoneClick(posItem: Int) {
-        router.navigateTo(Screens.TimeZoneSelectScreen(posItem))
+        exitViewModel.activate(posItem)
+        router.navigateTo(Screens.TimeZoneSelectScreen())
     }
 
     override fun updatePattern(m: PatternRequest, pos: Int) {

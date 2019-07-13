@@ -60,12 +60,11 @@ class Screens {
     }
 
     class FreqScreen(
-        private val id: Int,
         private val start: ZonedDateTime,
         private val rule: String = ""
     ) : SupportAppScreen() {
         override fun getFragment(): Fragment =
-            FreqCreateFragment.newInstance(id, start, rule)
+            FreqCreateFragment.newInstance(start, rule)
     }
 
     class AuthScreen : SupportAppScreen() {
@@ -73,8 +72,8 @@ class Screens {
                 AuthFragment.newInstance()
     }
 
-    class TimeZoneSelectScreen(private val id: Int) : SupportAppScreen() {
+    class TimeZoneSelectScreen : SupportAppScreen() {
         override fun getFragment(): Fragment =
-                TimeZoneSelectFragment.newInstance(id)
+                TimeZoneSelectFragment.newInstance()
     }
 }

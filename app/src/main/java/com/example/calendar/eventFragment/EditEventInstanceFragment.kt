@@ -124,28 +124,28 @@ class EditEventInstanceFragment : MvpAppCompatFragment(),
         v.vEventPatternRequest.viewModel.liveData.postValue(p)
     }
 
-    private fun onCloseRecurrenceSelect(p: Pair<Int, String>) {
-        if (p.first >= 0) {
-            v.vEventPatternRequest.viewModel.setRecurrence(p.second)
-            exitViewModel.recurrence.postValue(Pair(-1, ""))
+    private fun onCloseRecurrenceSelect(p: String) {
+        if (exitViewModel.isActivate()) {
+            v.vEventPatternRequest.viewModel.setRecurrence(p)
+            exitViewModel.deactivate()
         }
     }
 
-    private fun onClostTimezoneSelect(p: Pair<Int, ZoneId>) {
-        if (p.first >= 0) {
-            v.vEventPatternRequest.viewModel.setTimeZone(p.second)
-            exitViewModel.timezone.postValue(Pair(-1, ZoneOffset.UTC))
+    private fun onClostTimezoneSelect(p: ZoneId) {
+        if (exitViewModel.isActivate()) {
+            v.vEventPatternRequest.viewModel.setTimeZone(p)
+            exitViewModel.deactivate()
         }
     }
 
     private fun onRecurrenceRuleClick(v: PatternRequest) {
-        router.navigateTo(
-            Screens.FreqScreen(0, v.startedAtTimezone, v.rrule)
-        )
+        exitViewModel.activate()
+        router.navigateTo(Screens.FreqScreen(v.startedAtTimezone, v.rrule))
     }
 
     private fun onTimeZoneClick() {
-        router.navigateTo(Screens.TimeZoneSelectScreen(0))
+        exitViewModel.activate()
+        router.navigateTo(Screens.TimeZoneSelectScreen())
     }
 
     private fun onItemSelected(item: MenuItem?) {

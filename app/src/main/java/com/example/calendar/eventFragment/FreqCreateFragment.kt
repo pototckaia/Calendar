@@ -30,13 +30,11 @@ class FreqCreateFragment : MvpAppCompatFragment(),
 
     companion object {
         fun newInstance(
-            id: Int,
             start: ZonedDateTime,
             freq: String = ""
         ): FreqCreateFragment {
             val args = Bundle()
             args.run {
-                this.putInt(ID_RECURRENCE_RULE, id)
                 this.putString(RULE_RECURRENCE_RULE, freq)
                 this.putString(START_RECURRENCE_RULE, toStringFromZoned(start))
             }
@@ -63,8 +61,6 @@ class FreqCreateFragment : MvpAppCompatFragment(),
     lateinit var recurrenceViewModel: ExitEventPatternViewModel
     private val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")
 
-    var idResult = -1
-
     // todo month, week, year
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,12 +75,6 @@ class FreqCreateFragment : MvpAppCompatFragment(),
         recurrenceViewModel = activity?.run {
             ViewModelProviders.of(this).get(ExitEventPatternViewModel::class.java)
         } ?: throw Exception("Invalid scope to ViewModel")
-
-        if (savedInstanceState == null) {
-            idResult = arguments!!.getInt(ID_RECURRENCE_RULE)
-        } else {
-            idResult = savedInstanceState.getInt(ID_RECURRENCE_RULE)
-        }
 
         v.tbFreqFragment.setNavigationOnClickListener { freqPresenter.onBack() }
 
@@ -107,11 +97,6 @@ class FreqCreateFragment : MvpAppCompatFragment(),
         v.tvDate.setOnClickListener { freqPresenter.onUntilClick() }
 
         return v
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ID_RECURRENCE_RULE, idResult)
     }
 
     override fun onBackPressed() {
@@ -227,7 +212,7 @@ class FreqCreateFragment : MvpAppCompatFragment(),
     }
 
     override fun onExit(r: String) {
-        recurrenceViewModel.recurrence.postValue(Pair(idResult, r))
+        recurrenceViewModel.recurrence.postValue(r)
         InjectApplication.inject.router.exit()
     }
 

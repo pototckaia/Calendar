@@ -13,7 +13,6 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.R
 import com.example.calendar.customView.TimeZoneRecycleViewAdapter
 import com.example.calendar.customView.TimeZoneModel
-import com.example.calendar.helpers.ID_TIMEZONE_SELECT
 import com.example.calendar.helpers.OnBackPressed
 import com.example.calendar.inject.InjectApplication
 import kotlinx.android.synthetic.main.view_timezone_list.view.*
@@ -22,14 +21,8 @@ import kotlinx.android.synthetic.main.view_timezone_list.view.*
 class TimeZoneSelectFragment : MvpAppCompatFragment(), OnBackPressed {
 
     companion object {
-        fun newInstance(
-            id: Int
-        ): TimeZoneSelectFragment {
+        fun newInstance(): TimeZoneSelectFragment {
             val args = Bundle()
-            args.run {
-                this.putInt(ID_TIMEZONE_SELECT, id)
-            }
-
             val f = TimeZoneSelectFragment()
             f.arguments = args
             return f
@@ -38,8 +31,6 @@ class TimeZoneSelectFragment : MvpAppCompatFragment(), OnBackPressed {
 
     lateinit var v: View
     lateinit var exitViewModel: ExitEventPatternViewModel
-
-    var idResult = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,12 +46,6 @@ class TimeZoneSelectFragment : MvpAppCompatFragment(), OnBackPressed {
         exitViewModel = activity?.run {
             ViewModelProviders.of(this).get(ExitEventPatternViewModel::class.java)
         } ?: throw Exception("Invalid scope to ViewModel")
-
-        if (savedInstanceState == null) {
-            idResult = arguments!!.getInt(ID_TIMEZONE_SELECT)
-        } else {
-            idResult = savedInstanceState.getInt(ID_TIMEZONE_SELECT)
-        }
 
         val timezone = InjectApplication.inject.timezone
         val adapter = TimeZoneRecycleViewAdapter(timezone, { v: TimeZoneModel -> onSelectTimeZone(v)})
@@ -119,13 +104,8 @@ class TimeZoneSelectFragment : MvpAppCompatFragment(), OnBackPressed {
 
 
     private fun onSelectTimeZone(t : TimeZoneModel) {
-        exitViewModel.timezone.postValue(Pair(idResult, t.zoneId))
+        exitViewModel.timezone.postValue(t.zoneId)
         onBackPressed()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ID_TIMEZONE_SELECT, idResult)
     }
 
     override fun onBackPressed() {
