@@ -3,7 +3,6 @@ package com.example.calendar.customView
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -90,18 +89,14 @@ class WeekView
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-
-    private var v: View = LayoutInflater.from(context).inflate(
-        R.layout.view_week, this, true
-    )
-
     init {
+        View.inflate(context, R.layout.view_week, this)
         val attr = context.obtainStyledAttributes(attrs, R.styleable.WeekView)
         //v.tvLabel.text = attr.getString(R.styleable.DayHourView_label_name)
         attr.recycle()
 
         val horizontalLayoutManagaer = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        v.lvWeek.run {
+        lvWeek.run {
             layoutManager = horizontalLayoutManagaer
             adapter = SelectedStringAdapter(resources.getStringArray(R.array.week))
             setHasFixedSize(true)
@@ -109,7 +104,7 @@ class WeekView
     }
 
     private fun getAdapter() : SelectedStringAdapter =
-        (v.lvWeek.adapter as SelectedStringAdapter)
+        (lvWeek.adapter as SelectedStringAdapter)
 
 
     fun getSelected() : List<RecurrenceRule.WeekdayNum> {

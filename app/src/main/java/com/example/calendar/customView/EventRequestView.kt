@@ -2,7 +2,6 @@ package com.example.calendar.customView
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.calendar.R
@@ -14,21 +13,24 @@ class EventRequestView
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private var v: View = LayoutInflater.from(context).inflate(
-        R.layout.view_event_request, this, true
-    )
-
     init {
+        View.inflate(context, R.layout.view_event_request, this)
         val attr = context.obtainStyledAttributes(attrs, R.styleable.EventRequestView)
-//        v.tvLabel.text = attr.getString(R.styleable.DayHourView_label_name)
         attr.recycle()
     }
 
-    fun getEventRequest() =
-        EventRequest(
-            name = v.etTextName.text.toString(),
-            details = v.etTextDetails.text.toString(),
-            location = v.etTextLocation.text.toString(),
-            status = v.etTextStatus.text.toString()
+    var eventRequest: EventRequest
+        get() = EventRequest(
+            name = etTextName.text.toString(),
+            details = etTextDetails.text.toString(),
+            location = etTextLocation.text.toString(),
+            status = etTextStatus.text.toString()
         )
+        set(value) {
+            etTextName.setText(value.name)
+            etTextDetails.setText(value.details)
+            etTextLocation.setText(value.location)
+            etTextStatus.setText(value.status)
+        }
+
 }
