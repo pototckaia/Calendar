@@ -4,12 +4,12 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.example.calendar.repository.server.model.EventInstance
+import com.example.calendar.repository.server.model.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface EditEventView : MvpView {
+interface EditEventInstanceView : MvpView {
 
-    fun updateEventInfo(e: EventInstance)
+    fun updateEventInfo(ownerName: String, e: EventRequest, p: PatternRequest)
 
     @StateStrategyType(SingleStateStrategy::class)
     fun showError(e: String)

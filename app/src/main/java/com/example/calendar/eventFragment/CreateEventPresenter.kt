@@ -7,9 +7,6 @@ import com.example.calendar.repository.server.model.EventRequest
 import com.example.calendar.repository.server.model.PatternRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.threeten.bp.Duration
-import org.threeten.bp.ZoneOffset
-import org.threeten.bp.ZonedDateTime
 import ru.terrakok.cicerone.Router
 
 
@@ -17,7 +14,7 @@ import ru.terrakok.cicerone.Router
 class CreateEventPresenter(
     private val router: Router,
     private val eventRepository: EventRepository
-) : BaseMvpSubscribe<CreateEventInfoView>() {
+) : BaseMvpSubscribe<CreateEventView>() {
 
     fun onSaveEvent(
         event: EventRequest,

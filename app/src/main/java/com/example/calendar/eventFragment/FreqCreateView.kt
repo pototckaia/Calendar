@@ -11,7 +11,7 @@ import org.threeten.bp.DayOfWeek
 import org.threeten.bp.ZonedDateTime
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface RecurrenceRuleView : MvpView {
+interface FreqCreateView : MvpView {
 
     fun setViewRule(it: RecurrenceRule)
 

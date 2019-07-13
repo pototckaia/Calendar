@@ -7,37 +7,26 @@ import com.example.calendar.repository.*
 import com.example.calendar.repository.db.convert.DurationConverter
 import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
 import com.example.calendar.repository.db.convert.ZoneIdConverter
+import kotlinx.android.parcel.Parcelize
 import org.dmfs.rfc5545.DateTime
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.*
 import java.util.*
 
 
+@Parcelize
 data class RruleStructure(
     var rrule: String
-) : Parcelable {
+) : Parcelable
 
-    constructor(parcel: Parcel) : this(parcel.readString()!!)
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        if (dest == null) return
-
-        dest.writeString(rrule)
-    }
-
-    override fun describeContents() = 0
-    companion object CREATOR : Parcelable.Creator<RruleStructure> {
-        override fun createFromParcel(parcel: Parcel) = RruleStructure(parcel)
-        override fun newArray(size: Int): Array<RruleStructure?> = arrayOfNulls(size)
-    }
-}
-
+@Parcelize
 data class EventRequest(
     val details: String,
     val location: String,
     val name: String,
     val status: String
-) {
+) : Parcelable {
 
     constructor(entity: EventServer)
             : this(
@@ -48,6 +37,7 @@ data class EventRequest(
     )
 }
 
+@Parcelize
 data class PatternRequest(
     var duration: Duration,
     var ended_at: ZonedDateTime,
@@ -131,38 +121,6 @@ data class PatternRequest(
             ended_at = calculateEndedAt(started_at, duration, rrule)
         }
     }
-
-
-    constructor(parcel: Parcel) :
-            this(
-                started_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
-                duration = duration_cn.toDuration(parcel.readLong())!!,
-                ended_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
-                rrule = parcel.readString()!!,
-                timezone = zoneId_cn.toZoneId(parcel.readString())!!,
-                exrules = emptyList<RruleStructure>()
-            )
-    {
-        parcel.readTypedList(exrules, RruleStructure.CREATOR)
-    }
-
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        if (dest == null) return
-
-        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(started_at)!!)
-        dest.writeLong(duration_cn.fromDuration(duration)!!)
-        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(ended_at)!!)
-        dest.writeString(rrule)
-        dest.writeString(zoneId_cn.fromZoneId(timezone))
-        dest.writeTypedList(exrules)
-    }
-
-    override fun describeContents() = 0
-    companion object CREATOR : Parcelable.Creator<PatternRequest> {
-        override fun createFromParcel(parcel: Parcel) = PatternRequest(parcel)
-        override fun newArray(size: Int): Array<PatternRequest?> = arrayOfNulls(size)
-    }
-
 }
 
 data class TaskRequest(

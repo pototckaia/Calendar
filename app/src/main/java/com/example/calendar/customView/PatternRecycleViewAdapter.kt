@@ -2,36 +2,78 @@ package com.example.calendar.customView
 
 import android.content.Context
 import android.text.InputType
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.example.calendar.R
 import com.example.calendar.repository.server.model.PatternRequest
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_event_pattern_request.view.*
+
+
+open class LifecycleOwnerViewHolder(containerView: View) :
+    RecyclerView.ViewHolder(containerView), LifecycleOwner {
+    private val lifecycleRegistry = LifecycleRegistry(this)
+
+    init {
+        lifecycleRegistry.markState(Lifecycle.State.INITIALIZED)
+    }
+
+    fun markAttach() {
+        // Lifecycle.State.CREATED doesn't work for this case
+        // lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
+        // lifecycleRegistry.markState(Lifecycle.State.RESUMED)
+    }
+
+    fun markDetach() {
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+    }
+
+    override fun getLifecycle(): Lifecycle {
+        return lifecycleRegistry
+    }
+}
+
+abstract class LifecycleOwnerRecycleAdapter<T : LifecycleOwnerViewHolder> : RecyclerView.Adapter<T>() {
+    override fun onViewAttachedToWindow(holder: T) {
+        super.onViewAttachedToWindow(holder)
+        holder.markAttach()
+    }
+
+    override fun onViewDetachedFromWindow(holder: T) {
+        super.onViewDetachedFromWindow(holder)
+        holder.markDetach()
+    }
+}
 
 
 class PatternRecycleViewAdapter(
     var patterns: ArrayList<PatternRequest>,
     val onRecurrenceRuleClick: (pos: Int, patter: PatternRequest) -> Unit,
-    val onTimeZoneClick: (pos: Int) -> Unit,
-// todo make model view
-    var getViewByPos : (Int) -> EventPatternRequestView
-) : RecyclerView.Adapter<PatternRecycleViewAdapter.PatternViewHolder>() {
+    val onTimeZoneClick: (pos: Int) -> Unit
+) : LifecycleOwnerRecycleAdapter<PatternRecycleViewAdapter.PatternViewHolder>() {
 
-    inner class PatternViewHolder constructor(val v: EventPatternRequestView) : RecyclerView.ViewHolder(v) {
+    inner class PatternViewHolder constructor(val v: EventPatternRequestView) : LifecycleOwnerViewHolder(v) {
         private var posItem = -1
 
         fun bind(item: PatternRequest, pos: Int) {
             posItem = pos
-            v.setPattern(item)
+
+            v.viewModel.liveData.postValue(item)
+            v.viewModel.liveData.observe(this, Observer {
+                patterns[posItem] = it!!
+            })
 
             v.tvNumber.text = (pos + 1).toString()
-            v.etRecurrenceRule.inputType = InputType.TYPE_NULL
-            v.etRecurrenceRule.setOnClickListener { onRecurrenceRuleClick(posItem, v.getPattern()) }
-            v.etRecurrenceRule.setOnFocusChangeListener { _, b -> if (b) onRecurrenceRuleClick(posItem, v.getPattern()) }
-
-            v.etTimezone.inputType = InputType.TYPE_NULL
-            v.etTimezone.setOnClickListener { onTimeZoneClick(posItem) }
-            v.etTimezone.setOnFocusChangeListener { _, b -> if (b) onTimeZoneClick(posItem) }
+            v.setRecurrenceOnClick { onRecurrenceRuleClick(posItem, it) }
+            v.setTimeZoneOnClick { onTimeZoneClick(posItem) }
         }
     }
 
@@ -62,7 +104,6 @@ class PatternRecycleViewAdapter(
 
             notifyItemRemoved(position)
             for (i in position until patterns.size) {
-                patterns[i] = getViewByPos(i).getPattern()
                 notifyItemChanged(i)
             }
         }
@@ -83,12 +124,12 @@ class PatternRecycleViewAdapter(
         notifyItemInserted(patterns.size - 1)
     }
 
-    fun updateItem(m: PatternRequest, pos: Int) {
+    fun updatePattern(m: PatternRequest, pos: Int) {
         patterns[pos] = m
         notifyItemChanged(pos)
     }
 
-    fun setItem(m: ArrayList<PatternRequest>) {
+    fun updatePatterns(m: ArrayList<PatternRequest>) {
         patterns = m
         notifyDataSetChanged()
     }

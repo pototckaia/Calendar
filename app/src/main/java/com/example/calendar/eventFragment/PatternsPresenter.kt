@@ -8,30 +8,20 @@ import org.threeten.bp.ZonedDateTime
 
 
 @InjectViewState
-class PatternListSavePresenter(
+class PatternsPresenter(
     val start: ZonedDateTime,
     val end: ZonedDateTime,
     var patterns: ArrayList<PatternRequest>
-) : MvpPresenter<PatternListSaveView>() {
+) : MvpPresenter<PatternsSaveView>() {
 
     constructor(start: ZonedDateTime, end: ZonedDateTime)
             : this(start, end, arrayListOf(getPatternStub(start, end)))
 
-
-    init {
-        viewState.setPatterns(patterns)
-    }
-
-    fun onAddPatterns() {
-        viewState.addPattern(getPatternStub(start, end))
-    }
+    val patternStub : PatternRequest
+        get() = getPatternStub(start, end)
 
     fun onSaveInstanceState(newPatterns: ArrayList<PatternRequest>) {
         patterns = newPatterns
-    }
-
-    fun onCreateView() {
-        viewState.setPatterns(patterns)
     }
 
     fun onCloseRecurrenceSelect(rrule: String, pos: Int) {
@@ -45,7 +35,7 @@ class PatternListSavePresenter(
     }
 
     companion object {
-        fun getPatternStub(start: ZonedDateTime, end: ZonedDateTime) =
+        private fun getPatternStub(start: ZonedDateTime, end: ZonedDateTime) =
             PatternRequest(
                 started_at = start,
                 ended_at = end,

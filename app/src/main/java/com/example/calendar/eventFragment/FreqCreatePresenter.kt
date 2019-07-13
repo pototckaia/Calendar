@@ -12,10 +12,10 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 
 @InjectViewState
-class FreqPresenter(
+class FreqCreatePresenter(
     ruleString: String,
     start_: ZonedDateTime) :
-    BaseMvpSubscribe<RecurrenceRuleView>() {
+    BaseMvpSubscribe<FreqCreateView>() {
 
     private val start = start_.withZoneSameInstant(ZoneId.systemDefault())
 

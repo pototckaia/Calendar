@@ -3,6 +3,7 @@ package com.example.calendar.repository.server.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.example.calendar.repository.zonedDateTime_cn
+import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
@@ -14,6 +15,7 @@ data class Event(
     val pattern: List<EventPatternServer>
 )
 
+@Parcelize
 data class EventInstance(
     val entity: EventServer,
     val pattern: EventPatternServer,
@@ -56,26 +58,8 @@ data class EventInstance(
         }
     }
 
-    constructor(parcel: Parcel) :
-            this(
-                entity = parcel.readParcelable<EventServer>(EventServer::class.java.classLoader),
-                pattern = parcel.readParcelable<EventPatternServer>(EventPatternServer::class.java.classLoader),
-                started_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!,
-                ended_at = zonedDateTime_cn.toZonedDateTime(parcel.readLong())!!
-            )
-
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        if (dest == null) return
-
-        dest.writeParcelable(entity, 0)
-        dest.writeParcelable(pattern, 0)
-        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(started_at)!!)
-        dest.writeLong(zonedDateTime_cn.fromZonedDateTime(ended_at)!!)
-    }
-
-    override fun describeContents() = 0
-    companion object CREATOR : Parcelable.Creator<EventInstance> {
-        override fun createFromParcel(parcel: Parcel) = EventInstance(parcel)
-        override fun newArray(size: Int): Array<EventInstance?> = arrayOfNulls(size)
+    fun setEndedAt(e: Duration) {
+        val newEndedAt = started_at.plus(e)
+        setEndedAt(newEndedAt)
     }
 }

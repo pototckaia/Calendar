@@ -12,6 +12,9 @@
         <item name="colorAccent">@color/orange</item>
     </style>
 
+    <style name="RippleBottomNavigation">
+        <item name="itemBackground">?android:selectableItemBackground</item>
+    </style>
 
     <style name="EventTextView">
         <item name="android:textSize">@dimen/calendar_header_text_size</item>

@@ -25,15 +25,15 @@ import org.threeten.bp.DayOfWeek
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
-class FreqFragment : MvpAppCompatFragment(),
-    RecurrenceRuleView, OnBackPressed {
+class FreqCreateFragment : MvpAppCompatFragment(),
+    FreqCreateView, OnBackPressed {
 
     companion object {
         fun newInstance(
             id: Int,
             start: ZonedDateTime,
             freq: String = ""
-        ): FreqFragment {
+        ): FreqCreateFragment {
             val args = Bundle()
             args.run {
                 this.putInt(ID_RECURRENCE_RULE, id)
@@ -41,26 +41,26 @@ class FreqFragment : MvpAppCompatFragment(),
                 this.putString(START_RECURRENCE_RULE, toStringFromZoned(start))
             }
 
-            val f = FreqFragment()
+            val f = FreqCreateFragment()
             f.arguments = args
             return f
         }
     }
 
     @InjectPresenter
-    lateinit var freqPresenter: FreqPresenter
+    lateinit var freqPresenter: FreqCreatePresenter
 
     @ProvidePresenter
-    fun provideFreqPresenter(): FreqPresenter {
+    fun provideFreqPresenter(): FreqCreatePresenter {
         val args = arguments!!
-        return FreqPresenter(
+        return FreqCreatePresenter(
             args.getString(RULE_RECURRENCE_RULE)!!,
             fromStringToZoned(args.getString(START_RECURRENCE_RULE)!!)
         )
     }
 
     lateinit var v: View
-    lateinit var recurrenceViewModel: EventPatternViewModel
+    lateinit var recurrenceViewModel: ExitEventPatternViewModel
     private val formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")
 
     var idResult = -1
@@ -77,7 +77,7 @@ class FreqFragment : MvpAppCompatFragment(),
             container, false
         )
         recurrenceViewModel = activity?.run {
-            ViewModelProviders.of(this).get(EventPatternViewModel::class.java)
+            ViewModelProviders.of(this).get(ExitEventPatternViewModel::class.java)
         } ?: throw Exception("Invalid scope to ViewModel")
 
         if (savedInstanceState == null) {
@@ -227,7 +227,7 @@ class FreqFragment : MvpAppCompatFragment(),
     }
 
     override fun onExit(r: String) {
-        recurrenceViewModel.recurrenceNew.postValue(Pair(idResult, r))
+        recurrenceViewModel.recurrence.postValue(Pair(idResult, r))
         InjectApplication.inject.router.exit()
     }
 

@@ -37,7 +37,7 @@ class TimeZoneSelectFragment : MvpAppCompatFragment(), OnBackPressed {
     }
 
     lateinit var v: View
-    lateinit var exitViewModel: EventPatternViewModel
+    lateinit var exitViewModel: ExitEventPatternViewModel
 
     var idResult = -1
 
@@ -53,7 +53,7 @@ class TimeZoneSelectFragment : MvpAppCompatFragment(), OnBackPressed {
         )
 
         exitViewModel = activity?.run {
-            ViewModelProviders.of(this).get(EventPatternViewModel::class.java)
+            ViewModelProviders.of(this).get(ExitEventPatternViewModel::class.java)
         } ?: throw Exception("Invalid scope to ViewModel")
 
         if (savedInstanceState == null) {

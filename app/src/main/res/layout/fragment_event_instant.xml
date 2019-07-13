@@ -9,7 +9,7 @@
 >
 
     <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tbNoteCreate"
+            android:id="@+id/tbEventInstance"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             android:background="@color/toolbarBackground"
@@ -25,11 +25,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            app:layout_constraintTop_toBottomOf="@id/tbNoteCreate"
+            app:layout_constraintTop_toBottomOf="@id/tbEventInstance"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
     >
     </com.example.calendar.customView.EventRequestView>
+
+    <EditText
+            android:id="@+id/etOwner"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            android:hint="Владелец"
+            android:textSize="20sp"
+            android:focusable="false"
+            android:inputType="none"
+            android:cursorVisible="false"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ivUser"
+            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
+    />
+
+    <ImageView
+            android:id="@+id/ivUser"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/users"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etOwner"
+            app:layout_constraintBottom_toBottomOf="@id/etOwner"
+    />
+
+    <EditText
+            android:id="@+id/etTasks"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="spread"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            android:hint="Просмотреть задачи"
+            android:textSize="20sp"
+            android:focusable="false"
+            android:inputType="none"
+            android:cursorVisible="false"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/ivUser"
+            app:layout_constraintTop_toBottomOf="@id/etOwner"
+    />
+
+    <ImageView
+            android:id="@+id/ivTask"
+            android:layout_height="35dp"
+            android:layout_width="40dp"
+            app:srcCompat="@drawable/list"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etTasks"
+            app:layout_constraintBottom_toBottomOf="@id/etTasks"
+    />
 
     <com.example.calendar.customView.EventPatternRequestView
             android:id="@+id/vEventPatternRequest"
@@ -37,9 +99,26 @@
             android:layout_height="0dp"
             app:layout_constraintHeight_default="spread"
 
-            app:layout_constraintTop_toBottomOf="@id/vEventRequest"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etTasks"
+            app:layout_constraintBottom_toTopOf="@id/bnvEventInstance"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
     >
     </com.example.calendar.customView.EventPatternRequestView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bnvEventInstance"
+            android:layout_width="0dp"
+            app:layout_constraintHeight_default="spread"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+
+            app:menu="@menu/bottom_menu_event_instance"
+            style="@style/RippleBottomNavigation"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

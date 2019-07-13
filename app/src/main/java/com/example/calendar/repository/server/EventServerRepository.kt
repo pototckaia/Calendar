@@ -99,7 +99,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         return api.updateEvent(event.entity.id, EventRequest(event.entity))
             .ignoreElements()
             .mergeWith(
-                api.updatePattern(event.pattern.id, event.pattern.getPatternRequest())
+                api.updatePattern(event.pattern.id, event.pattern.patternRequest)
                     .ignoreElements()
             )
     }
@@ -107,9 +107,9 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
     override fun deleteAll(event: EventInstance): Completable {
         return api.deletePatternById(event.pattern.id)
             .ignoreElements()
-            .andThen(
-                api.deleteEventById(event.entity.id)
-                    .ignoreElements()
-            )
+//            .andThen(
+//                api.deleteEventById(event.entity.id)
+//                    .ignoreElements()
+//            )
     }
 }

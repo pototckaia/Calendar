@@ -4,13 +4,13 @@ import android.content.Context
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import android.content.Intent
 import androidx.fragment.app.Fragment
-import com.example.calendar.eventFragment.FreqFragment
+import com.example.calendar.eventFragment.FreqCreateFragment
 import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
 import com.example.calendar.eventFragment.CreateEventFragment
-import com.example.calendar.eventFragment.EditEventFragment
+import com.example.calendar.eventFragment.EditEventInstanceFragment
 import com.example.calendar.AuthFragment
 import com.example.calendar.eventFragment.TimeZoneSelectFragment
 import com.example.calendar.repository.server.model.EventInstance
@@ -24,7 +24,7 @@ class Screens {
         }
 
         override fun getFragment(): Fragment =
-            EditEventFragment.newInstance(event)
+            EditEventInstanceFragment.newInstance(event)
     }
 
     class NewEventScreen(
@@ -65,7 +65,7 @@ class Screens {
         private val rule: String = ""
     ) : SupportAppScreen() {
         override fun getFragment(): Fragment =
-            FreqFragment.newInstance(id, start, rule)
+            FreqCreateFragment.newInstance(id, start, rule)
     }
 
     class AuthScreen : SupportAppScreen() {
