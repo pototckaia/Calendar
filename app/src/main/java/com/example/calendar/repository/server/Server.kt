@@ -1,8 +1,14 @@
 package com.example.calendar.repository.server
 
+import android.content.Context
+import com.example.calendar.helpers.USER_ID_TOKEN
+import com.example.calendar.helpers.USER_ID_TOKEN_PREF
+import com.example.calendar.inject.InjectApplication
+import com.example.calendar.navigation.Screens
 import com.example.calendar.repository.server.convertJson.DurationJsonConvert
 import com.example.calendar.repository.server.convertJson.ZoneIdJsonConvert
 import com.example.calendar.repository.server.convertJson.ZonedDateTimeJsonConvert
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.GsonBuilder
 import io.reactivex.schedulers.Schedulers
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,9 +35,13 @@ class Server {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(logging)
             .addInterceptor { chain ->
+                val token = InjectApplication.inject
+                    .getSharedPreferences(USER_ID_TOKEN_PREF, Context.MODE_PRIVATE)
+                    .getString(USER_ID_TOKEN, "")
+
                 val originalRequest = chain.request()
                 val headers = Headers.Builder()
-                    .add("X-Firebase-Auth", "serega_mem")
+                    .add("X-Firebase-Auth", token ?: "")
                     .build()
 
                 val newRequest = originalRequest.newBuilder()
