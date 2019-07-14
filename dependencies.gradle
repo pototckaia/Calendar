@@ -37,6 +37,11 @@ v.libRecuvVersion = "0.11.2"
 
 v.threetenVersion = "1.2.0"
 
+v.firebaseCoreVersion = "17.0.0"
+v.firebaseUiAuthVersion = "4.3.1"
+v.firebaseAuthVersion = "18.0.0"
+v.firebasePlayServiceAuthVersion = "17.0.0"
+
 ext.deps.support = [
         appCompat       : "androidx.appcompat:appcompat:$v.supportXLibraryVersion",
         design          : "com.google.android.material:material:$v.supportXLibraryVersion",
@@ -100,4 +105,11 @@ ext.deps.rrule = [
 
 ext.deps.time = [
         threeten: "com.jakewharton.threetenabp:threetenabp:$v.threetenVersion"
+]
+
+ext.deps.firebase = [
+        core: "com.google.firebase:firebase-core:$v.firebaseCoreVersion",
+        ui_auth: "com.firebaseui:firebase-ui-auth:$v.firebaseUiAuthVersion",
+        auth:  "com.google.firebase:firebase-auth:$v.firebaseAuthVersion",
+        play_services_auth: "com.google.android.gms:play-services-auth:$v.firebasePlayServiceAuthVersion"
 ]

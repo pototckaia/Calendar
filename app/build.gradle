@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion rootProject.ext.deps.androidCompileSdkVersion
@@ -78,6 +79,11 @@ dependencies {
 
     implementation deps.rrule.libRecur
     implementation deps.time.threeten
+
+    implementation deps.firebase.core
+    implementation deps.firebase.ui_auth
+    implementation deps.firebase.auth
+    implementation deps.firebase.play_services_auth
 
     testImplementation deps.test.junit
     androidTestImplementation deps.test.testRunner
