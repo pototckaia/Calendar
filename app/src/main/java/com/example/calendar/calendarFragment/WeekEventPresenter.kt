@@ -171,7 +171,7 @@ class WeekEventPresenter(
                 val eventFake = EventInstance(
                     entity = EventServer(
                         id = -1,
-                        owner_id = -1,
+                        owner_id = "-1",
                         created_at = ZonedDateTime.now(),
                         updated_at = ZonedDateTime.now(),
                         name = titleFake,

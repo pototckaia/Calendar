@@ -11,7 +11,7 @@ import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
 import com.example.calendar.eventFragment.CreateEventFragment
 import com.example.calendar.eventFragment.EditEventInstanceFragment
-import com.example.calendar.AuthFragment
+import com.example.calendar.auth.FirebaseSignInActivity
 import com.example.calendar.eventFragment.TimeZoneSelectFragment
 import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
@@ -68,8 +68,9 @@ class Screens {
     }
 
     class AuthScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment =
-                AuthFragment.newInstance()
+        override fun getActivityIntent(context: Context?): Intent {
+            return Intent(context, FirebaseSignInActivity::class.java)
+        }
     }
 
     class TimeZoneSelectScreen : SupportAppScreen() {

@@ -7,7 +7,7 @@ import org.threeten.bp.ZonedDateTime
 @Parcelize
 data class EventServer(
     val id: Long,
-    val owner_id: Long,
+    val owner_id: String,
 
     val created_at: ZonedDateTime,
     val updated_at: ZonedDateTime,

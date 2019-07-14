@@ -8,6 +8,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment.TypeView
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_navigation.view.*
 
 class NavigationFragment : MvpAppCompatFragment() {
@@ -45,6 +46,15 @@ class NavigationFragment : MvpAppCompatFragment() {
             // todo inject
             InjectApplication.inject.router.navigateTo(
                 Screens.WeekCalendarScreen(TypeView.DAY))
+        }
+
+        v.bSignOut.setOnClickListener {
+            AuthUI.getInstance()
+                .signOut(context!!)
+                .addOnCompleteListener {
+                    InjectApplication.inject.router.navigateTo(Screens.AuthScreen())
+                }
+
         }
 
         return v
