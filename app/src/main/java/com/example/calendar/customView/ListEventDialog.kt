@@ -20,7 +20,6 @@ import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import com.example.calendar.repository.server.model.EventInstance
 import kotlinx.android.synthetic.main.dialog_list_event.view.*
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
 
@@ -43,23 +42,18 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
 
     @ProvidePresenter
     fun provideListEventPresenter(): ListEventPresenter {
-        // todo !!
         val startString = arguments!!.getString(START_LIST_EVENT_KEY)!!
         val endString = arguments!!.getString(END_LIST_EVENT_KEY)!!
         return ListEventPresenter(
-            // todo inject
             InjectApplication.inject.repository,
             fromStringToZoned(startString),
             fromStringToZoned(endString)
         )
     }
 
-    // todo inject
     private val router = InjectApplication.inject.router
 
     lateinit var v: View
-    private var start = ZonedDateTime.now(ZoneId.systemDefault())
-    private var end = ZonedDateTime.now(ZoneId.systemDefault())
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -72,7 +66,7 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
             v.rvEvents.context,
             linerLayoutManager.orientation
         )
-        // todo add dot
+        // todo add dot view
         v.rvEvents.run {
             this.adapter = DurationEventRecycleViewAdapter { _, position ->
                 onClickEvent(position)
@@ -80,13 +74,8 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
             this.layoutManager = linerLayoutManager
             this.addItemDecoration(dividerItemDecoration)
         }
-        // ???
-        val b = savedInstanceState ?: arguments!!
 
-        // todo !!
-        start = fromStringToZoned(b.getString(START_LIST_EVENT_KEY)!!)
-        end = fromStringToZoned(b.getString(END_LIST_EVENT_KEY)!!)
-        setDuration(start, end)
+        setDuration(listEventPresenter.start, listEventPresenter.end)
 
 
         return AlertDialog.Builder(activity)
@@ -94,11 +83,6 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
             .setView(v)
             .setCancelable(false)
             .create()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(START_LIST_EVENT_KEY, toStringFromZoned(start))
-        outState.putString(END_LIST_EVENT_KEY, toStringFromZoned(end))
     }
 
     private fun onClickEvent(pos : Int) {
@@ -113,7 +97,8 @@ class ListEventDialog : MvpAppCompatDialogFragment(),
 
     override fun setEvents(it: List<EventInstance>) {
         v.rvEvents.adapter.run {
-            (this as DurationEventRecycleViewAdapter).setEvents(it, start, end)
+            (this as DurationEventRecycleViewAdapter)
+                .setEvents(it, listEventPresenter.start, listEventPresenter.end)
         }
     }
 

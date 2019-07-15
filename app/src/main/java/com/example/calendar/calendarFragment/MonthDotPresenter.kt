@@ -2,6 +2,7 @@ package com.example.calendar.calendarFragment
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.helpers.BaseMvpSubscribe
+import com.example.calendar.helpers.endOfDay
 import com.example.calendar.repository.server.EventRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.ZoneId
@@ -14,9 +15,8 @@ import kotlin.collections.HashSet
 @InjectViewState
 class MonthDotPresenter(
     private val eventRepository: EventRepository,
-    private var curMonth: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
-) :
-    BaseMvpSubscribe<MonthDotView>() {
+    private var curMonth: ZonedDateTime = ZonedDateTime.now()
+) : BaseMvpSubscribe<MonthDotView>() {
 
     private val dates = HashSet<ZonedDateTime>()
 
@@ -26,18 +26,18 @@ class MonthDotPresenter(
 
     fun onMonthChange(month: ZonedDateTime) {
         unsubscribeOnAll()
-        curMonth = month.withZoneSameInstant(ZoneId.systemDefault())
+        curMonth = ZonedDateTime.from(month)
         loadEvents()
     }
 
 
     private fun loadEvents() {
-        val monthStart = curMonth.with(TemporalAdjusters.firstDayOfMonth())
+        val monthStart = curMonth
+            .with(TemporalAdjusters.firstDayOfMonth())
             .truncatedTo(ChronoUnit.DAYS)
-        // todo [end]
-        val monthEnd = curMonth.with(TemporalAdjusters.lastDayOfMonth())
-            .truncatedTo(ChronoUnit.DAYS)
-            .plusDays(1)
+        val monthEnd = curMonth
+            .with(TemporalAdjusters.lastDayOfMonth())
+            .endOfDay()
 
         val subscription = eventRepository.fromToSet(monthStart, monthEnd)
             .observeOn(AndroidSchedulers.mainThread())

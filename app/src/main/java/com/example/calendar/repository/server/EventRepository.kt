@@ -18,7 +18,6 @@ interface EventRepository {
 
     fun getEventById(eventId: Long): Observable<Event>
 
-    // todo make list
     fun insertEvent(eventRequest: EventRequest, patternRequests: ArrayList<PatternRequest>): Completable
 
     fun updateAll(event: EventInstance): Completable

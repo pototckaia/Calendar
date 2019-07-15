@@ -5,19 +5,19 @@ import com.example.calendar.helpers.*
 import com.example.calendar.repository.server.EventRepository
 import com.example.calendar.repository.server.model.EventInstance
 import io.reactivex.android.schedulers.AndroidSchedulers
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 
 @InjectViewState
 class ListEventPresenter(
     private val eventRepository: EventRepository
-) :
-    BaseMvpSubscribe<ListEventView>() {
+) : BaseMvpSubscribe<ListEventView>() {
 
     private val events = ArrayList<EventInstance>()
-    private var start = ZonedDateTime.now(ZoneId.systemDefault())
-    private var end = ZonedDateTime.now(ZoneId.systemDefault())
+    var start : ZonedDateTime = ZonedDateTime.now()
+        private set
+    var end : ZonedDateTime = ZonedDateTime.now()
+        private set
 
     constructor(
         r: EventRepository,
@@ -28,16 +28,14 @@ class ListEventPresenter(
     }
 
     private fun setStartAndEnd(s: ZonedDateTime, e: ZonedDateTime) {
-        start = s.withZoneSameInstant(ZoneId.systemDefault())
-        end = e.withZoneSameInstant(ZoneId.systemDefault())
+        start = ZonedDateTime.from(s)
+        end = ZonedDateTime.from(e)
     }
 
     // todo not work on two click ???
     fun onDateSelected(day: ZonedDateTime) {
-        val dayLocal = day.withZoneSameInstant(ZoneId.systemDefault())
-        start = dayLocal.truncatedTo(ChronoUnit.DAYS)
-        // todo [end]
-        end = start.plusDays(1)
+        start = day.truncatedTo(ChronoUnit.DAYS)
+        end = start.endOfDay()
 
         unsubscribeOnAll()
         loadEvents()

@@ -57,7 +57,6 @@ data class PatternRequest(
         exrules: List<String>,
         timezone: ZoneId
     ) : this(
-        // todo check duration
         started_at = started_at.withZoneSameInstant(ZoneOffset.UTC),
         duration = Duration.between(started_at, ended_at),
         exrules = exrules.map { RruleStructure(it) },

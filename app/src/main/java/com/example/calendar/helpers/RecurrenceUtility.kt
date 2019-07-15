@@ -19,7 +19,6 @@ fun calculateEndedAt(
     rrule: String
 ): ZonedDateTime {
     val maxDate = zonedDateTime_cn.toZonedDateTime(Long.MAX_VALUE)
-    // todo check duration
     var newEndedAt = started_at.plus(duration)
 
     if (!isRecurrence(rrule)) {

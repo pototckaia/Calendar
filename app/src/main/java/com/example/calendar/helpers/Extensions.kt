@@ -66,6 +66,13 @@ fun moreDay(d1: ZonedDateTime, d2: ZonedDateTime): Boolean {
     return d1.truncatedTo(ChronoUnit.DAYS) > d2.truncatedTo(ChronoUnit.DAYS)
 }
 
+fun ZonedDateTime.endOfDay() : ZonedDateTime {
+    return this
+        .truncatedTo(ChronoUnit.DAYS)
+        .plusDays(1)
+        .plusSeconds(-1)
+}
+
 // Duration fun help
 
 //fun betweenIncludeMillis(s: ZonedDateTime, e: ZonedDateTime) : Duration {

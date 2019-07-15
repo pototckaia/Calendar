@@ -32,18 +32,15 @@ class NavigationFragment : MvpAppCompatFragment() {
         )
 
         v.bMonth.setOnClickListener {
-            // todo inject
             InjectApplication.inject.router.navigateTo(Screens.MonthCalendarScreen())
         }
 
         v.bWeek.setOnClickListener {
-            // todo inject
             InjectApplication.inject.router.navigateTo(
                 Screens.WeekCalendarScreen(TypeView.WEEK))
         }
 
         v.bDay.setOnClickListener {
-            // todo inject
             InjectApplication.inject.router.navigateTo(
                 Screens.WeekCalendarScreen(TypeView.DAY))
         }

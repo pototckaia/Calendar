@@ -50,15 +50,12 @@ class EditEventInstanceFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideEditEventPresenter(): EditEventInstancePresenter {
         return EditEventInstancePresenter(
-            // todo inject
             router,
             InjectApplication.inject.repository,
-            // todo !!
             arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)!!
         )
     }
 
-    // todo inject
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View

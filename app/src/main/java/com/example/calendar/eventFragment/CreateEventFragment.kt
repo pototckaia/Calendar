@@ -62,7 +62,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideCreateEventPresenter(): CreateEventPresenter {
         return CreateEventPresenter(
-            // todo inject
             router,
             InjectApplication.inject.repository
         )
@@ -80,7 +79,6 @@ class CreateEventFragment : MvpAppCompatFragment(),
         )
     }
 
-    // todo inject
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View

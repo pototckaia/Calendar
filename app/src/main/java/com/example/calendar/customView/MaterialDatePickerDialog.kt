@@ -39,7 +39,6 @@ class MaterialDatePickerDialog(
         widget.currentDate = widget.selectedDate
         widget.addDecorators(
             TodayDecorator(
-                // todo !!
                 context.getDrawable(
                     R.drawable.today_circle_background
                 )!!

@@ -49,19 +49,16 @@ class MainActivity : AppCompatActivity() {
 
 
         if (savedInstanceState == null) {
-            // todo inject
             InjectApplication.inject.router.newRootScreen(Screens.NavigationScreen())
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // todo inject
         InjectApplication.inject.navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
-        // todo inject
         InjectApplication.inject.navigatorHolder.removeNavigator()
         super.onPause()
     }
@@ -73,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         if (fragment != null) {
             fragment.onBackPressed()
         } else {
-            // todo inject
             InjectApplication.inject.router.exit()
         }
     }

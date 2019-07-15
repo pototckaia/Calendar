@@ -38,7 +38,6 @@ data class EventInstance(
     fun setStartedAt(s: ZonedDateTime) {
         val newStartedAt = s.withZoneSameInstant(ZoneOffset.UTC)
         if (newStartedAt != started_at) {
-            // todo check duration
             val d = Duration.between(started_at, newStartedAt)
             // update pattern started_at
             pattern.started_at = pattern.started_at.plus(d)

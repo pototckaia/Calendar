@@ -109,12 +109,10 @@ class WeekView
 
     fun getSelected() : List<RecurrenceRule.WeekdayNum> {
         val s = getAdapter().getSelectedPos()
-        // todo !!
         return s.map { eWeekView.fromPos(it)!!.toWeekNum() }
     }
 
     fun setSelected(s: List<RecurrenceRule.WeekdayNum>) {
-        // todo !!
         val u = s.map { eWeekView.fromWeekNum(it)!!.pos }
         getAdapter().setSelectedPos(u)
     }

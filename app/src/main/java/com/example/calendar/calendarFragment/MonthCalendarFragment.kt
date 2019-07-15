@@ -25,6 +25,7 @@ import com.example.calendar.helpers.convert.toCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import com.example.calendar.repository.server.model.EventInstance
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -40,7 +41,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
         }
     }
 
-    // todo inject
     private val router = InjectApplication.inject.router
 
     @InjectPresenter
@@ -60,7 +60,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideListEventPresenter(): ListEventPresenter {
         return ListEventPresenter(
-            // todo inject
             InjectApplication.inject.repository
         )
     }
@@ -71,7 +70,6 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun provideMonthEventPresenter(): MonthDotPresenter {
         return MonthDotPresenter(
-            // todo inject
             InjectApplication.inject.repository
         )
     }
@@ -152,7 +150,7 @@ class MonthCalendarFragment : MvpAppCompatFragment(),
     override fun onMonthChanged(
         widget: MaterialCalendarView, date: CalendarDay
     ) {
-        monthDotPresenter.onMonthChange(fromCalendar(date.calendar))
+        monthDotPresenter.onMonthChange(fromCalendar(date.calendar).withZoneSameLocal(ZoneId.systemDefault()))
     }
 
     override fun showError(e: String) {

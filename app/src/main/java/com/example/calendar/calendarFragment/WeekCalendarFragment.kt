@@ -19,6 +19,7 @@ import com.example.calendar.customView.ListEventDialog
 import com.example.calendar.helpers.convert.fromCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
+import org.threeten.bp.ZoneId
 import java.util.Calendar
 
 class WeekCalendarFragment : MvpAppCompatFragment(),
@@ -54,7 +55,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
         val resources = context!!.resources
         val typeView = TypeView.valueOf(arguments!!.getString(TYPE_VIEW_KEY)!!)
         return WeekEventPresenter(
-            // todo inject
             InjectApplication.inject.repository,
             typeView.maxIntersection,
             resources.getColor(R.color.event),
@@ -75,7 +75,6 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
     @InjectPresenter
     lateinit var weekSaveStatePresenter: WeekSaveStatePresenter
 
-    // todo inject
     private val router = InjectApplication.inject.router
 
     private lateinit var v: View
@@ -154,7 +153,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
             List<WeekViewDisplayable<EventWeekView>> {
         // todo remove flickering events
         weekSaveStatePresenter.onMonthChange()
-        return weekEventPresenter.onMonthChange(fromCalendar(startDate))
+        return weekEventPresenter.onMonthChange(fromCalendar(startDate).withZoneSameLocal(ZoneId.systemDefault()))
     }
 
     // todo update only on month change

@@ -3,7 +3,6 @@ package com.example.calendar.calendarFragment
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.calendar.navigation.Screens
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 import ru.terrakok.cicerone.Router
@@ -19,7 +18,6 @@ class OpenNewEventPresenter(private val router: Router) : MvpPresenter<OpenNewEv
         val start = dayLocal
             .truncatedTo(ChronoUnit.DAYS)
             .withHour(0)
-        // todo [end]
         val end = start
             .plusHours(1)
         openFromTo(start, end)
@@ -27,12 +25,13 @@ class OpenNewEventPresenter(private val router: Router) : MvpPresenter<OpenNewEv
 
     // open fragment with current date
     fun openOnTodayDay() =
-        openOnDay(ZonedDateTime.now(ZoneId.systemDefault()))
+        openOnDay(ZonedDateTime.now())
 
     fun openOnTime(timeLocal: ZonedDateTime) {
-        val start = timeLocal.withMinute(0)
-        // todo [end]
-        val end = start.plusHours(1)
+        val start = timeLocal
+            .withMinute(0)
+        val end = start
+            .plusHours(1)
         openFromTo(start, end)
     }
 
