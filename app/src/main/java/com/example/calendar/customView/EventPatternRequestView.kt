@@ -65,7 +65,7 @@ class EventPatternViewModel: MvvmViewModel<EventPatternViewState> {
 
     fun setDateView(start: ZonedDateTime, end: ZonedDateTime) {
         liveData.value?.setStartedAt(start)
-        liveData.value?.setDuration(end)
+        liveData.value?.set_duration(end)
         liveData.value = liveData.value
     }
 }
@@ -186,14 +186,14 @@ class EventPatternRequestView
             eventPattern.startedAtTimezone,
             // month start from 1
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                // TODO check it work
-                val newStart = withYearMonthDay(eventPattern.endedAtAtTimezone, year, monthOfYear, dayOfMonth)
+                val newStart = withYearMonthDay(eventPattern.startedAtTimezone, year, monthOfYear, dayOfMonth)
                 if (!validateStart(newStart)) {
                     return@OnDateSetListener
                 }
 
                 var newEnd = ZonedDateTime.from(eventPattern.endedAtAtTimezone)
                 if (newStart > newEnd) {
+                    Toast.makeText(context, "Начало не может быть позже конца", Toast.LENGTH_LONG).show()
                     newEnd = withYearMonthDay(newEnd, year, monthOfYear, dayOfMonth)
                 }
                 viewModel.setDateView(newStart, newEnd)
@@ -211,6 +211,7 @@ class EventPatternRequestView
 
                 var newEnd = ZonedDateTime.from(eventPattern.endedAtAtTimezone)
                 if (newStart >= newEnd) {
+                    Toast.makeText(context, "Начало не может быть позже конца", Toast.LENGTH_LONG).show()
                     newEnd = newStart.plusHours(1)
                 }
                 viewModel.setDateView(newStart, newEnd)
@@ -228,6 +229,7 @@ class EventPatternRequestView
 
                 var newStart = ZonedDateTime.from(eventPattern.startedAtTimezone)
                 if (newEnd < newStart) {
+                    Toast.makeText(context, "Конец не может быть раньше начала", Toast.LENGTH_LONG).show()
                     newStart = withYearMonthDay(newStart, year, monthOfYear, dayOfMonth)
                 }
                 viewModel.setDateView(newStart, newEnd)
@@ -245,6 +247,7 @@ class EventPatternRequestView
 
                 var newStart = ZonedDateTime.from(eventPattern.startedAtTimezone)
                 if (newEnd < newStart) {
+                    Toast.makeText(context, "Конец не может быть раньше начала", Toast.LENGTH_LONG).show()
                     newStart = newEnd.minusHours(1)
                 }
                 viewModel.setDateView(newStart, newEnd)

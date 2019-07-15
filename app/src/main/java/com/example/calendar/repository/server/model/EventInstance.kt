@@ -42,21 +42,27 @@ data class EventInstance(
 
     fun setStartedAt(s: ZonedDateTime) {
         val newStartedAt = s.withZoneSameInstant(ZoneOffset.UTC)
+
+        val patternRequest = pattern.patternRequest
         if (newStartedAt != started_at) {
             val d = Duration.between(started_at, newStartedAt)
-            // update pattern started_at
-            pattern.started_at = pattern.started_at.plus(d)
+
+            patternRequest.setStartedAt(pattern.started_at.plus(d))
             started_at = newStartedAt
+            pattern.patternRequest = patternRequest
         }
     }
 
     fun setEndedAt(e: ZonedDateTime) {
         val newEndedAt = e.withZoneSameInstant(ZoneOffset.UTC)
+
+        val patternRequest = pattern.patternRequest
         if (newEndedAt != ended_at) {
             val newDuration = Duration.between(started_at, newEndedAt)
 
-            pattern.duration = newDuration
+            patternRequest.set_duration(newDuration)
             ended_at = newEndedAt
+            pattern.patternRequest = patternRequest
         }
     }
 

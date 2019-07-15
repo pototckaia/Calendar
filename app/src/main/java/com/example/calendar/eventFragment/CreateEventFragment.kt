@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_event.view.*
 import org.threeten.bp.ZonedDateTime
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.calendar.repository.server.model.PatternRequest
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -173,5 +174,9 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     private fun onSave() {
         createEventPresenter.onSaveEvent(v.vEventRequest.eventRequest, adapter.patterns)
+    }
+
+    override fun showError(e: String) {
+        Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
 }

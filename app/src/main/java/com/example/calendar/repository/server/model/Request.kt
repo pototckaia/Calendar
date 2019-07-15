@@ -8,6 +8,7 @@ import kotlinx.android.parcel.Parcelize
 import org.dmfs.rfc5545.DateTime
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.*
+import java.lang.IllegalArgumentException
 import java.util.*
 
 
@@ -58,12 +59,15 @@ data class PatternRequest(
         timezone: ZoneId
     ) : this(
         started_at = started_at.withZoneSameInstant(ZoneOffset.UTC),
-        duration = Duration.between(started_at, ended_at),
+        duration = Duration.between(
+            started_at.withZoneSameInstant(ZoneOffset.UTC),
+            ended_at.withZoneSameInstant(ZoneOffset.UTC)
+        ),
         exrules = exrules.map { RruleStructure(it) },
         timezone = timezone,
         rrule = rrule,
         ended_at = calculateEndedAt(
-            started_at,
+            started_at.withZoneSameInstant(ZoneOffset.UTC),
             Duration.between(started_at, ended_at),
             rrule
         )
@@ -89,10 +93,16 @@ data class PatternRequest(
 
     fun setStartedAt(s: ZonedDateTime) {
         started_at = s.withZoneSameInstant(ZoneOffset.UTC)
+        ended_at = calculateEndedAt(started_at, duration, rrule)
     }
 
-    fun setDuration(e: ZonedDateTime) {
-        duration = Duration.between(started_at, e.withZoneSameInstant(ZoneOffset.UTC))
+    fun set_duration(e: ZonedDateTime) {
+        set_duration(Duration.between(started_at, e.withZoneSameInstant(ZoneOffset.UTC)))
+    }
+
+    fun set_duration(d: Duration) {
+        duration = d
+        ended_at = calculateEndedAt(started_at, duration, rrule)
     }
 
     fun setRecurrence(r: String) {

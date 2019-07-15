@@ -114,7 +114,7 @@ class PatternRecycleViewAdapter(
         return patterns.size
     }
 
-    val maxItem = 20
+    val maxItem = 6
     fun addItem(m: PatternRequest, context: Context) {
         if (patterns.size > maxItem) {
             Toast.makeText(context, "Больше создать нельзя", Toast.LENGTH_LONG).show()
