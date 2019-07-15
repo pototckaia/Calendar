@@ -1,22 +1,8 @@
 package com.example.calendar.repository.server.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.example.calendar.helpers.fromDateTimeUTC
-import com.example.calendar.helpers.fromLongUTC
-import com.example.calendar.helpers.max
-import com.example.calendar.helpers.toDateTimeUTC
-import com.example.calendar.repository.db.convert.DurationConverter
-import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
-import com.example.calendar.repository.db.convert.ZoneIdConverter
-import com.example.calendar.repository.duration_cn
-import com.example.calendar.repository.zoneId_cn
-import com.example.calendar.repository.zonedDateTime_cn
 import kotlinx.android.parcel.Parcelize
-import org.dmfs.rfc5545.DateTime
-import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.*
-import java.util.*
 
 @Parcelize
 data class EventPatternServer(

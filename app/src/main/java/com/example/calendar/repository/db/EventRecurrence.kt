@@ -4,10 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.calendar.repository.db.convert.DurationConverter
-import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
-import com.example.calendar.repository.db.convert.ZoneIdConverter
 import com.example.calendar.helpers.*
+import com.example.calendar.helpers.convert.*
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset

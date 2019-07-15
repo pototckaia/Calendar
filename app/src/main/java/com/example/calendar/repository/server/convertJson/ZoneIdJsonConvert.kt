@@ -1,6 +1,6 @@
 package com.example.calendar.repository.server.convertJson
 
-import com.example.calendar.repository.zoneId_cn
+import com.example.calendar.helpers.convert.zoneId_cn
 import com.google.gson.*
 import org.threeten.bp.ZoneId
 import java.lang.reflect.Type

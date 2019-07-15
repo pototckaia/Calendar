@@ -1,6 +1,6 @@
 package com.example.calendar.repository.server.convertJson
 
-import com.example.calendar.repository.duration_cn
+import com.example.calendar.helpers.convert.duration_cn
 import com.google.gson.*
 import org.threeten.bp.Duration
 import java.lang.reflect.Type

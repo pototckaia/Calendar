@@ -1,8 +1,6 @@
-package com.example.calendar.repository.db.convert
+package com.example.calendar.helpers.convert
 
 import androidx.room.TypeConverter
-import com.example.calendar.helpers.fromLongUTC
-import com.example.calendar.helpers.toLongUTC
 import org.threeten.bp.ZonedDateTime
 
 

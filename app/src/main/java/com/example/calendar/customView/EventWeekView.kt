@@ -2,7 +2,7 @@ package com.example.calendar.customView
 
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
-import com.example.calendar.helpers.toCalendar
+import com.example.calendar.helpers.convert.toCalendar
 import com.example.calendar.repository.server.model.EventInstance
 
 class EventWeekView (

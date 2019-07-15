@@ -16,8 +16,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.calendar.R
+import com.example.calendar.helpers.convert.fromDateTimeUTC
 import com.example.calendar.inject.InjectApplication
-import com.example.calendar.repository.getRecurrenceName
+import com.example.calendar.helpers.getRecurrenceName
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.view_event_pattern_request.view.*
 import org.dmfs.rfc5545.recur.RecurrenceRule

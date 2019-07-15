@@ -1,11 +1,10 @@
 package com.example.calendar.repository.server
 
-import com.example.calendar.helpers.toLongUTC
+import com.example.calendar.helpers.convert.toLongUTC
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime

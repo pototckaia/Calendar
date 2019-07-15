@@ -2,9 +2,9 @@ package com.example.calendar.repository.db
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.example.calendar.repository.db.convert.DurationConverter
-import com.example.calendar.helpers.fromLongUTC
-import com.example.calendar.helpers.toLongUTC
+import com.example.calendar.helpers.convert.DurationConverter
+import com.example.calendar.helpers.convert.fromLongUTC
+import com.example.calendar.helpers.convert.toLongUTC
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset

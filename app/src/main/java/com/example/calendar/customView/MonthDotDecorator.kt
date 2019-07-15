@@ -1,7 +1,7 @@
 package com.example.calendar.customView
 
 import android.graphics.Color
-import com.example.calendar.helpers.toCalendar
+import com.example.calendar.helpers.convert.toCalendar
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.CalendarDay

@@ -1,12 +1,9 @@
 package com.example.calendar.repository.server.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.example.calendar.helpers.toDateTimeUTC
-import com.example.calendar.repository.*
-import com.example.calendar.repository.db.convert.DurationConverter
-import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
-import com.example.calendar.repository.db.convert.ZoneIdConverter
+import com.example.calendar.helpers.calculateEndedAt
+import com.example.calendar.helpers.convert.toDateTimeUTC
+import com.example.calendar.helpers.isRecurrence
 import kotlinx.android.parcel.Parcelize
 import org.dmfs.rfc5545.DateTime
 import org.dmfs.rfc5545.recur.RecurrenceRule
@@ -66,7 +63,11 @@ data class PatternRequest(
         exrules = exrules.map { RruleStructure(it) },
         timezone = timezone,
         rrule = rrule,
-        ended_at = calculateEndedAt(started_at, Duration.between(started_at, ended_at), rrule)
+        ended_at = calculateEndedAt(
+            started_at,
+            Duration.between(started_at, ended_at),
+            rrule
+        )
     )
 
     fun getRecurrenceRuleWithZoneId(): RecurrenceRule? {

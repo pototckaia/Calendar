@@ -3,7 +3,7 @@ package com.example.calendar.eventFragment
 import android.app.DatePickerDialog
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.helpers.BaseMvpSubscribe
-import com.example.calendar.helpers.fromDateTimeUTC
+import com.example.calendar.helpers.convert.fromDateTimeUTC
 import com.example.calendar.helpers.withYearMonthDay
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.ZoneId

@@ -16,7 +16,7 @@ import com.example.calendar.helpers.TYPE_VIEW_KEY
 import kotlinx.android.synthetic.main.fragment_week_calendar.view.*
 import com.example.calendar.customView.EventWeekView
 import com.example.calendar.customView.ListEventDialog
-import com.example.calendar.helpers.fromCalendar
+import com.example.calendar.helpers.convert.fromCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import java.util.Calendar

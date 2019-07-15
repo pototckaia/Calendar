@@ -1,8 +1,6 @@
 package com.example.calendar.repository.server.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.example.calendar.repository.zonedDateTime_cn
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId

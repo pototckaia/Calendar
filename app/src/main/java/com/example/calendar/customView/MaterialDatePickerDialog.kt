@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
 import com.example.calendar.helpers.*
+import com.example.calendar.helpers.convert.toCalendar
 import kotlinx.android.synthetic.main.dialog_date_picker.view.*
 import org.threeten.bp.ZonedDateTime
 import java.util.*

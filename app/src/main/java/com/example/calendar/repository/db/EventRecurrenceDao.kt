@@ -1,7 +1,7 @@
 package com.example.calendar.repository.db
 
 import androidx.room.*
-import com.example.calendar.repository.db.convert.ZonedDateTimeConverter
+import com.example.calendar.helpers.convert.ZonedDateTimeConverter
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.threeten.bp.ZonedDateTime

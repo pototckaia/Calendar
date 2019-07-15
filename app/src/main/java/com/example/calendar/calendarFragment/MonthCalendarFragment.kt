@@ -20,8 +20,8 @@ import com.example.calendar.customView.MonthDotDecorator
 import com.example.calendar.customView.TodayDecorator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.calendar.helpers.fromCalendar
-import com.example.calendar.helpers.toCalendar
+import com.example.calendar.helpers.convert.fromCalendar
+import com.example.calendar.helpers.convert.toCalendar
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
 import com.example.calendar.repository.server.model.EventInstance
