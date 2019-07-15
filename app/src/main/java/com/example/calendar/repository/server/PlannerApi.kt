@@ -76,9 +76,10 @@ interface PlannerApi {
     ) : Observable<EventPatternResponse>
 
     @GET("$request/patterns")
-    fun getPatternsConsistently(
-        @Query("event_id") event_id: Long
-    ) : EventPatternResponse
+    fun getPatternsFromTo(
+        @Query("from") from: Long,
+        @Query("to") to: Long
+    ) : Observable<EventPatternResponse>
 
     @POST("$request/patterns")
     fun createPattern(

@@ -83,9 +83,11 @@ class EditEventInstancePresenter(
         eventInstance = instance
         editEventPattern = instance.pattern.patternRequest
         editEventPattern.setStartedAt(instance.started_at)
+        editEventPattern.setDuration(instance.ended_at)
+
         val eventRequest = eventInstance.entity.eventRequest
         viewState.updateEventInfo(
-            eventInstance.entity.owner_id.toString(),
+            eventInstance.entity.owner_id,
             eventRequest,
             editEventPattern)
     }

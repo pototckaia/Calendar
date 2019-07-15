@@ -2,9 +2,9 @@ package com.example.calendar.repository.server
 
 open class NetworkException(message: String) : RuntimeException(message)
 
-class NoContent : NetworkException("No content")
+class NoContent(val s: String) : NetworkException("No content: $s")
 
-class BadRequest : NetworkException("Bad request")
+class BadRequest(val s: String) : NetworkException("Bad request: $s")
 
 class NotAuthorized : NetworkException("You are not authorized to view the resource")
 

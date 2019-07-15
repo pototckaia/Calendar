@@ -88,453 +88,461 @@
         <item>Etc/GMT | Прочeе/GMT</item>
         <item>UTC | UTC</item>
 
-        <item>Asia/Srednekolymsk | Среднеколымск/Россия</item>
-        <item>Asia/Kamchatka | Камчатка/Россия</item>
+
+        <item>Asia/Aden | Адана/Турция</item>
+		<item>Asia/Almaty | Алма-Ата/Казахстан</item>
         <item>Asia/Anadyr | Анадырь/Россия</item>
-        <item>Asia/Magadan | Магадан/Россия</item>
-        <item>Asia/Sakhalin | Сахалин/Россия</item>
-        <item>Asia/Vladivostok | Владивосток/Россия</item>
-        <item>Asia/Ust-Nera | Усть-Нера/Россия</item>
-        <item>Asia/Chita | Чита/Россия</item>
-        <item>Asia/Dili | Дили/Восточный Тимор</item>
-        <item>Asia/Jayapura | Джаяпура/Индонезия</item>
-        <item>Asia/Yakutsk | Якутск/Россия</item>
-        <item>Asia/Seoul | Сеул/Республика Корея</item>
-        <item>Asia/Khandyga | Хандыга/Россия</item>
-        <item>Asia/Tokyo | Токио/Япония</item>
-        <item>Asia/Pyongyang | Пхеньян/КНДР</item>
-        <item>Asia/Kuching | Кучинг/Малайзия</item>
-        <item>Asia/Macau | Макао/Китай</item>
-        <item>Asia/Choibalsan | Чойбалсан/Монголия</item>
-        <item>Asia/Shanghai | Шанхай/Китай</item>
-        <item>Asia/Chongqing | Чунцин/Китай</item>
-        <item>Asia/Ulaanbaatar | Улан-Батор/Монголия</item>
-        <item>Asia/Taipei | Тайбэй/Китайская Республика</item>
-        <item>Asia/Manila | Манила/Филиппины</item>
-        <item>Asia/Harbin | Харбин/Китай</item>
-        <item>Asia/Brunei | Бандар-Сери-Бегаван/Бруней</item>
-        <item>Asia/Hong_Kong | Гонконг/Китай</item>
-        <item>Asia/Makassar | Макассар/Индонезия</item>
-        <item>Asia/Kuala_Lumpur | Куала-Лумпур/Малайзия</item>
-        <item>Asia/Irkutsk | Иркутск/Россия</item>
-        <item>Asia/Singapore | Сингапур/Республика Сингапур</item>
-        <item>Asia/Pontianak | Понтианак/Индонезия</item>
-        <item>Asia/Phnom_Penh | Пномпень/Камбоджа</item>
-        <item>Asia/Novosibirsk | Новосибирск/Россия</item>
-        <item>Asia/Tomsk | Томск/Россия</item>
-        <item>Asia/Jakarta | Джакарта/Индонезия</item>
-        <item>Asia/Barnaul | Барнаул/Россия</item>
-        <item>Asia/Ho_Chi_Minh | Хошимин/Вьетнам</item>
-        <item>Asia/Hovd | Ховд/Монголия</item>
-        <item>Asia/Bangkok | Бангкок/Таиланд</item>
-        <item>Asia/Vientiane | Вьентьян/Лаос</item>
-        <item>Asia/Novokuznetsk | Новокузнецк/Россия</item>
-        <item>Asia/Krasnoyarsk | Красноярск/Россия</item>
-        <item>Asia/Yangon | Янгон/Мьянма</item>
-        <item>Asia/Kashgar | Кашгар/Китай</item>
-        <item>Asia/Almaty | Алма-Ата/Казахстан</item>
-        <item>Asia/Omsk | Омск/Россия</item>
-        <item>Asia/Dhaka | Дакка/Бангладеш</item>
-        <item>Asia/Qyzylorda | Кызылорда/Казахстан</item>
-        <item>Asia/Bishkek | Бишкек/Кыргызстан</item>
-        <item>Asia/Urumqi | Урумчи/Китай</item>
-        <item>Asia/Thimphu | Тхимпху/Бутан</item>
-        <item>Asia/Kathmandu | Катманду/Непал</item>
-        <item>Asia/Kolkata | Калькутта/Индия</item>
-        <item>Asia/Colombo | Коломбо/Шри-Ланка</item>
+        <item>Asia/Amman | Амман/Иордания</item>
         <item>Asia/Aqtau | Актау/Казахстан</item>
-        <item>Asia/Samarkand | Самарканд/Узбекистан</item>
-        <item>Asia/Karachi | Карачи/Пакистан</item>
-        <item>Asia/Yekaterinburg | Екатеринбург/Россия</item>
-        <item>Asia/Dushanbe | Душанбе/Таджикистан</item>
-        <item>Asia/Oral | Уральск/Казахстан</item>
-        <item>Asia/Tashkent | Ташкент/Узбекистан</item>
         <item>Asia/Aqtobe | Актобе/Казахстан</item>
         <item>Asia/Ashgabat | Ашхабад/Туркмения</item>
         <item>Asia/Atyrau | Атырау/Казахстан</item>
-        <item>Asia/Tehran | Тегеран/Иран</item>
-        <item>Asia/Kabul | Кабул/Афганистан</item>
-        <item>Asia/Yerevan | Ереван/Армения</item>
-        <item>Asia/Dubai | Дубай/Объединённые Арабские Эмираты</item>
-        <item>Asia/Baku | Баку/Азербайджан</item>
-        <item>Asia/Muscat | Маскат/Оман</item>
-        <item>Asia/Tbilisi | Тбилиси/Грузия</item>
-        <item>Asia/Aden | Адана/Турция</item>
-        <item>Asia/Istanbul | Стамбул/Турция/Азия</item>
-        <item>Asia/Jerusalem  | Иерусалим/Израиль</item>
-        <item>Asia/Beirut | Бейрут/Ливан</item>
-        <item>Asia/Gaza | Сектор Газа/Азия</item>
         <item>Asia/Baghdad | Багдад/Ирак</item>
-        <item>Asia/Damascus | Дамаск/Сирия</item>
-        <item>Asia/Riyadh | Эр-Рияд/Саудовская Аравия</item>
-        <item>Asia/Kuwait | Эль-Кувейт/Кувейт</item>
-        <item>Asia/Qatar | Доха/Катар</item>
         <item>Asia/Bahrain | Манама/Бахрейн</item>
-        <item>Asia/Nicosia | Никосия/Азия</item>
+        <item>Asia/Baku | Баку/Азербайджан</item>
+        <item>Asia/Bangkok | Бангкок/Таиланд</item>
+        <item>Asia/Barnaul | Барнаул/Россия</item>
+        <item>Asia/Beirut | Бейрут/Ливан</item>
+        <item>Asia/Bishkek | Бишкек/Кыргызстан</item>
+		<item>Asia/Brunei | Бандар-Сери-Бегаван/Бруней</item>
+        <item>Asia/Chita | Чита/Россия</item>
+        <item>Asia/Choibalsan | Чойбалсан/Монголия</item>
+        <!-- <item>Asia/Chongqing | Чунцин/Китай</item> -->
+        <item>Asia/Colombo | Коломбо/Шри-Ланка</item>
+        <item>Asia/Damascus | Дамаск/Сирия</item>
+        <item>Asia/Dhaka | Дакка/Бангладеш</item>
+        <item>Asia/Dili | Дили/Восточный Тимор</item>
+        <item>Asia/Dubai | Дубай/Объединённые Арабские Эмираты</item>
+        <item>Asia/Dushanbe | Душанбе/Таджикистан</item>
         <item>Asia/Famagusta | Фамагуста/Кипр</item>
+        <item>Asia/Gaza | Сектор Газа/Азия</item>
+        <!-- <item>Asia/Harbin | Харбин/Китай</item> -->
         <item>Asia/Hebron | Эль-Халиль(Хеброн)/Западный берег реки Иордан</item>
-        <item>Asia/Amman | Амман/Иордания</item>
+        <item>Asia/Ho_Chi_Minh | Хошимин/Вьетнам</item>
+        <item>Asia/Hong_Kong | Гонконг/Китай</item>
+        <item>Asia/Hovd | Ховд/Монголия</item>
+        <item>Asia/Irkutsk | Иркутск/Россия</item>
+        <item>Asia/Istanbul | Стамбул/Турция/Азия</item>
+        <item>Asia/Jakarta | Джакарта/Индонезия</item>
+        <item>Asia/Jayapura | Джаяпура/Индонезия</item>
+        <item>Asia/Jerusalem  | Иерусалим/Израиль</item>
+        <item>Asia/Kabul | Кабул/Афганистан</item>
+        <item>Asia/Kamchatka | Камчатка/Россия</item>
+        <item>Asia/Karachi | Карачи/Пакистан</item>
+        <item>Asia/Kathmandu | Катманду/Непал</item>
+        <item>Asia/Khandyga | Хандыга/Россия</item>
+        <item>Asia/Kolkata | Калькутта/Индия</item>
+        <item>Asia/Krasnoyarsk | Красноярск/Россия</item>
+        <item>Asia/Kuala_Lumpur | Куала-Лумпур/Малайзия</item>
+        <item>Asia/Kuching | Кучинг/Малайзия</item>
+        <item>Asia/Kuwait | Эль-Кувейт/Кувейт</item>
+        <!-- <item>Asia/Kashgar | Кашгар/Китай</item> -->
+        <item>Asia/Macau | Макао/Китай</item>
+        <item>Asia/Magadan | Магадан/Россия</item>
+        <item>Asia/Makassar | Макассар/Индонезия</item>
+        <item>Asia/Manila | Манила/Филиппины</item>
+        <item>Asia/Muscat | Маскат/Оман</item>
+        <item>Asia/Nicosia | Никосия/Азия</item>
+        <item>Asia/Novokuznetsk | Новокузнецк/Россия</item>
+        <item>Asia/Novosibirsk | Новосибирск/Россия</item>
+        <item>Asia/Omsk | Омск/Россия</item>
+        <item>Asia/Oral | Уральск/Казахстан</item>
+        <item>Asia/Phnom_Penh | Пномпень/Камбоджа</item>
+        <item>Asia/Pontianak | Понтианак/Индонезия</item>
+        <item>Asia/Pyongyang | Пхеньян/КНДР</item>
+        <item>Asia/Qatar | Доха/Катар</item>
+        <item>Asia/Qyzylorda | Кызылорда/Казахстан</item>
+        <item>Asia/Riyadh | Эр-Рияд/Саудовская Аравия</item>
+        <item>Asia/Sakhalin | Сахалин/Россия</item>
+        <item>Asia/Samarkand | Самарканд/Узбекистан</item>
+        <item>Asia/Seoul | Сеул/Республика Корея</item>
+        <item>Asia/Shanghai | Шанхай/Китай</item>
+        <item>Asia/Singapore | Сингапур/Республика Сингапур</item>
+        <item>Asia/Srednekolymsk | Среднеколымск/Россия</item>
+        <item>Asia/Taipei | Тайбэй/Китайская Республика</item>
+        <item>Asia/Tashkent | Ташкент/Узбекистан</item>
+        <item>Asia/Tbilisi | Тбилиси/Грузия</item>
+        <item>Asia/Tehran | Тегеран/Иран</item>
+        <item>Asia/Thimphu | Тхимпху/Бутан</item>
+        <item>Asia/Tokyo | Токио/Япония</item>
+        <item>Asia/Tomsk | Томск/Россия</item>
+        <item>Asia/Ulaanbaatar | Улан-Батор/Монголия</item>
+        <item>Asia/Urumqi | Урумчи/Китай</item>
+        <item>Asia/Ust-Nera | Усть-Нера/Россия</item>
+        <item>Asia/Vientiane | Вьентьян/Лаос</item>
+        <item>Asia/Vladivostok | Владивосток/Россия</item>
+        <item>Asia/Yakutsk | Якутск/Россия</item>
+        <item>Asia/Yangon | Янгон/Мьянма</item>
+        <item>Asia/Yekaterinburg | Екатеринбург/Россия</item>
+        <item>Asia/Yerevan | Ереван/Армения</item>
 
-        <item>America/Adak | Адак/США</item>
-        <item>America/Juneau | Джуно/США</item>
-        <item>America/Metlakatla | Метлакатла/США</item>
-        <item>America/Yakutat | Якутат/США</item>
-        <item>America/Sitka | Ситка/США</item>
-        <item>America/Anchorage | Анкоридж/США</item>
-        <item>America/Nome | Ном/США</item>
-        <item>America/Dawson_Creek | Досон-Крик/Канада</item>
-        <item>America/Dawson | Доусон/Канада</item>
-        <item>America/Tijuana | Тихуана/Мексика</item>
-        <item>America/Creston | Крестон/Канада</item>
-        <item>America/Hermosillo | Эрмосильо/Мексика</item>
-        <item>America/Santa_Isabel | Санта-Исабель/Мексика</item>
-        <item>America/Vancouver | Ванкувер/Канада</item>
-        <item>America/Phoenix | Финикс/США</item>
-        <item>America/Whitehorse | Уайтхорс/Канада</item>
-        <item>America/Fort_Nelson | Форт Нельсон/Канада</item>
-        <item>America/Los_Angeles | Лос-Анджелес/США</item>
-        <item>America/El_Salvador | Сальвадор/Республика Эль-Сальвадор </item>
-        <item>America/Guatemala | Гватемала/Республика Гватемала</item>
-        <item>America/Belize | Бельмопан/Белиз</item>
-        <item>America/Managua | Манагуа/Никарагуа</item>
-        <item>America/Tegucigalpa | Тегусигальпа/Гондурас</item>
-        <item>America/Regina | Реджайна/Канада</item>
-        <item>America/Denver | Денвер/США</item>
-        <item>America/Yellowknife | Йеллоунайф/Канада</item>
-        <item>America/Swift_Current | Свифт Керрент/Канада</item>
-        <item>America/Inuvik | Инувик/Канада</item>
-        <item>America/Mazatlan | Масатлан/Мексика</item>
-        <item>America/Boise | Бойсе/США</item>
-        <item>America/Costa_Rica | Сан-Хосе/Коста-Рика</item>
-        <item>America/Chihuahua | Чихуахуа/Мексика</item>
-        <item>America/Ojinaga | Охинага/Мексика</item>
-        <item>America/Edmonton | Эдмонтон/Канада</item>
-        <item>America/Cambridge_Bay | Кеймбридж-Бей/Канада</item>
-        <item>America/Shiprock | Шипрок/США</item>
-        <item>America/Panama | Панама/Республика Панама</item>
-        <item>America/Chicago| Чикаго/США</item>
-        <item>America/Eirunepe | Эйрунепе/Бразилия</item>
-        <item>America/Porto_Acre | Порту-Акри/Бразилия</item>
-        <item>America/Guayaquil | Гуаякиль/Эквадор</item>
-        <item>America/Rankin_Inlet | Ранкин-Инлет/Канада</item>
-        <item>America/Rainy_River | Рейни Ривер/Канада</item>
+
+        <item>America/Indiana/Indianapolis | Индианаполис/Индиана/США</item>
         <item>America/Indiana/Knox| Нокс/Индиана/США</item>
-        <item>America/North_Dakota/Beulah | Беула/Северная Дакота/США</item>
-        <item>America/Monterrey | Монтеррей/Мексика</item>
-        <item>America/Jamaica | Кингстон/Ямайка</item>
-        <item>America/Atikokan | Атикокан/Канада</item>
-        <item>America/North_Dakota/Center | Сентер/Северная Дакота/США</item>
-        <item>America/Cayman | Каймановы острова/Великобритания</item>
-        <item>America/Indiana/Tell_City | Телл Сити/Индиана/США</item>
-        <item>America/Mexico_City | Мехико/Мексика</item>
-        <item>America/Matamoros | Матаморос/Мексика</item>
-        <item>America/Bogota | Богота/Колумбия</item>
-        <item>America/Menominee | Меномини/США</item>
-        <item>America/Resolute | Ресольют/Канада</item>
-        <item>America/Cancun | Канкун/Мексика</item>
-        <item>America/Lima | Лима/Перу</item>
-        <item>America/Bahia_Banderas | Баия де Бандерас/Мексика</item>
-        <item>America/Rio_Branco | Риу-Бранку/Бразилия</item>
-        <item>America/Merida | Мерида/Мексика</item>
-        <item>America/North_Dakota/New_Salem | Новый Салем/Северная Дакота/США</item>
-        <item>America/Winnipeg | Виннипег/Канада</item>
-        <item>America/Cuiaba | Куяба/Бразилия</item>
-        <item>America/Marigot | Мариго/Франция</item>
+        <item>America/Indiana/Marengo | Маренго/Индиана/США</item>
         <item>America/Indiana/Petersburg | Петербург/Индиана/США</item>
-        <item>America/Grand_Turk | Гранд-Терк/Великобритания</item>
-        <item>America/Manaus | Манаус/Бразилия</item>
-        <item>America/St_Thomas | Сент-Томас/США</item>
-        <item>America/Anguilla | Ангилья/Великобритания</item>
-        <item>America/Havana | Гавана/Куба</item>
-        <item>America/Barbados | Бриджтаун/Барбадос</item>
-        <item>America/Curacao | Виллемстад/Кюрасао</item>
-        <item>America/Guyana | Джорджтаун/Гайана</item>
-        <item>America/Martinique | Мартиника/Франция</item>
-        <item>America/Puerto_Rico | Пуэрто-Рико/США</item>
-        <item>America/Port_of_Spain | Порт-оф-Спейн/Тринидад и Тобаго</item>
+        <item>America/Indiana/Tell_City | Телл Сити/Индиана/США</item>
         <item>America/Indiana/Vevay | Вевай/Индиана/США</item>
         <item>America/Indiana/Vincennes | Винсеннес/Индиана/США</item>
-        <item>America/Kralendijk | Кралендейк/Нидерланды</item>
-        <item>America/Antigua | Антигуа/Антигуа и Барбуда</item>
-        <item>America/Iqaluit | Икалуит/Канада</item>
-        <item>America/St_Vincent | Кингстаун/Сент-Винсент</item>
-        <item>America/Kentucky/Louisville | Луисвилл/Кентукки/США</item>
-        <item>America/Dominica | Розо/Доминика</item>
-        <item>America/Asuncion | Асунсьон/Парагвай</item>
-        <item>America/Nassau | Нассау/Багамские Острова</item>
-        <item>America/Kentucky/Monticello | Монтиселло/Кентукки/США</item>
-        <item>America/Aruba | Ораньестад/Аруба</item>
-        <item>America/Indiana/Indianapolis | Индианаполис/Индиана/США</item>
-        <item>America/Santiago | Сантьяго/Чили</item>
-        <item>America/La_Paz | Ла-Пас/Боливия</item>
-        <item>America/Thunder_Bay | Тандер-Бей/Канада</item>
-        <item>America/Indiana/Marengo | Маренго/Индиана/США</item>
-        <item>America/Blanc-Sablon | Блан-Саблон/Канада</item>
-        <item>America/Santo_Domingo | Санто-Доминго/Доминиканская Республика</item>
-        <item>America/Port-au-Prince | Порт-о-Пренс/Гаити</item>
-        <item>America/St_Barthelemy | Сен-Бартелеми/Франция</item>
-        <item>America/Nipigon | Нипигон/Канада</item>
-        <item>America/St_Lucia | Кастри/Сент-Люсия</item>
-        <item>America/Montserrat | Монтсеррат/Великобритания</item>
-        <item>America/Lower_Princes | Лоуэр-Принс-Куотер/Синт-Мартен</item>
-        <item>America/Detroit | Детройт/США</item>
-        <item>America/Tortola | Тортола/Великобритания</item>
-        <item>America/Porto_Velho | Порту-Велью/Бразилия</item>
-        <item>America/Campo_Grande | Кампу-Гранди/Бразилия</item>
-        <item>America/Pangnirtung | Пангниртунг/Канада</item>
-        <item>America/Montreal | Монреаль/Канада</item>
         <item>America/Indiana/Winamac | Винамак/Индиана/США</item>
-        <item>America/Boa_Vista | Боа-Вишта/Кабо-Верде</item>
-        <item>America/Grenada | Сент-Джорджес/Гренада</item>
-        <item>America/New_York | Нью-Йорк/США</item>
-        <item>America/St_Kitts | Бастер/Сент-Китс и Невис</item>
-        <item>America/Caracas | Каракас/Венесуэла</item>
-        <item>America/Guadeloupe | Гваделупа/Франция</item>
-        <item>America/Toronto | Торонто/Канада</item>
+        <item>America/Argentina/Buenos_Aires | Буэнос-Айрес/Аргентина</item>
         <item>America/Argentina/Catamarca | Катамарка/Аргентина</item>
         <item>America/Argentina/Cordoba | Кордова/Аргентина</item>
-        <item>America/Araguaina | Арагуаина/Бразилия</item>
-        <item>America/Argentina/Salta | Сальта/Аргентина </item>
-        <item>America/Montevideo | Монтевидео/Уругвай</item>
+        <item>America/Argentina/Jujuy | Жужуй/Аргентина</item>
+        <item>America/Argentina/La_Rioja | Ла-Риоха/Аргентина</item>
         <item>America/Argentina/Mendoza | Мендоса/Аргентина</item>
         <item>America/Argentina/Rio_Gallegos | Рио-Гальегос/Аргентина</item>
-        <item>America/Sao_Paulo | Сан-Паулу/Бразилия</item>
-        <item>America/Argentina/Jujuy | Жужуй/Аргентина</item>
-        <item>America/Cayenne | Кайенна/Франция</item>
-        <item>America/Recife | Ресифи/Бразилия</item>
-        <item>America/Paramaribo | Парамарибо/Суринам</item>
-        <item>America/Moncton | Монктон/Канада</item>
-        <item>America/Santarem | Сантарен/Бразилия</item>
-        <item>America/Maceio | Масейо/Бразилия</item>
-        <item>America/Halifax | Галифакс(Новая Шотландия)/Канада</item>
+        <item>America/Argentina/Salta | Сальта/Аргентина </item>        
         <item>America/Argentina/San_Luis | Сан-Луис/Аргентина</item>
-        <item>America/Argentina/Ushuaia | Ушуая/Аргентина</item>
-        <item>America/Punta_Arenas | Пунта-Аренас/Чили</item>
-        <item>America/Glace_Bay | Глас Бэй/Канада</item>
-        <item>America/Fortaleza | Форталеза/Бразилия</item>
-        <item>America/Thule | Туле(авиабаза)/Гренландия</item>
-        <item>America/Argentina/La_Rioja | Ла-Риоха/Аргентина</item>
-        <item>America/Belem | Санта-Мария-ди-Белен/Португалия</item>
-        <item>America/Bahia | Баия/Бразилия</item>
-        <item>America/Goose_Bay | Хаппи Вэлли-Гуз Бэй/Канада</item>
         <item>America/Argentina/San_Juan | Сан-Хуан/Аргентина</item>
-        <item>America/Argentina/ComodRivadavia | Комодоро Ривадавия/Аргентина</item>
         <item>America/Argentina/Tucuman | Сан-Мигель-де-Тукуман/Аргентина</item>
-        <item>America/Rosario | Росарио/Аргентина</item>
-        <item>America/Argentina/Buenos_Aires | Буэнос-Айрес/Аргентина</item>
-        <item>America/St_Johns | Сент-Джонс/Антигуа и Барбуда</item>
-        <item>America/Miquelon | Сен-Пьер и Микелон/Франция</item>
-        <item>America/Godthab | Нуук(Готхоб)/Гренландия</item>
-        <item>America/Noronha | Фернандо де Норонья/Бразилия</item>
+        <item>America/Argentina/Ushuaia | Ушуая/Аргентина</item>
+        <!-- <item>America/Argentina/ComodRivadavia | Комодоро Ривадавия/Аргентина</item> -->
+        <item>America/Kentucky/Louisville | Луисвилл/Кентукки/США</item>
+        <item>America/Kentucky/Monticello | Монтиселло/Кентукки/США</item>
+        <item>America/North_Dakota/Beulah | Беула/Северная Дакота/США</item>
+        <item>America/North_Dakota/Center | Сентер/Северная Дакота/США</item>
+        <item>America/North_Dakota/New_Salem | Новый Салем/Северная Дакота/США</item>
+        <item>America/Adak | Адак/США</item>
+        <item>America/Anchorage | Анкоридж/США</item>
+        <item>America/Anguilla | Ангилья/Великобритания</item>
+        <item>America/Antigua | Антигуа/Антигуа и Барбуда</item>
+        <item>America/Araguaina | Арагуаина/Бразилия</item>
+        <item>America/Aruba | Ораньестад/Аруба</item>
+        <item>America/Asuncion | Асунсьон/Парагвай</item>
+        <item>America/Atikokan | Атикокан/Канада</item>
+        <item>America/Bahia | Баия/Бразилия</item>
+        <item>America/Bahia_Banderas | Баия де Бандерас/Мексика</item>
+        <item>America/Barbados | Бриджтаун/Барбадос</item>
+        <item>America/Belem | Санта-Мария-ди-Белен/Португалия</item>
+        <item>America/Belize | Бельмопан/Белиз</item>
+        <item>America/Blanc-Sablon | Блан-Саблон/Канада</item>
+        <item>America/Boa_Vista | Боа-Вишта/Кабо-Верде</item>
+        <item>America/Bogota | Богота/Колумбия</item>
+        <item>America/Boise | Бойсе/США</item>
+        <item>America/Cambridge_Bay | Кеймбридж-Бей/Канада</item>
+        <item>America/Campo_Grande | Кампу-Гранди/Бразилия</item>
+        <item>America/Cancun | Канкун/Мексика</item>
+        <item>America/Caracas | Каракас/Венесуэла</item>
+        <item>America/Cayenne | Кайенна/Франция</item>
+        <item>America/Cayman | Каймановы острова/Великобритания</item>
+        <item>America/Chicago| Чикаго/США</item>
+        <item>America/Chihuahua | Чихуахуа/Мексика</item>
+        <item>America/Costa_Rica | Сан-Хосе/Коста-Рика</item>
+        <item>America/Creston | Крестон/Канада</item>
+        <item>America/Cuiaba | Куяба/Бразилия</item>
+        <item>America/Curacao | Виллемстад/Кюрасао</item>
         <item>America/Danmarkshavn | Данмарксхавн/Гренландия</item>
+        <item>America/Dawson | Доусон/Канада</item>
+        <item>America/Dawson_Creek | Досон-Крик/Канада</item>
+        <item>America/Denver | Денвер/США</item>
+        <item>America/Detroit | Детройт/США</item>
+        <item>America/Dominica | Розо/Доминика</item>
+        <item>America/Edmonton | Эдмонтон/Канада</item>
+        <item>America/Eirunepe | Эйрунепе/Бразилия</item>
+        <item>America/El_Salvador | Сальвадор/Республика Эль-Сальвадор </item>
+        <item>America/Fortaleza | Форталеза/Бразилия</item>
+        <item>America/Fort_Nelson | Форт Нельсон/Канада</item>
+        <item>America/Glace_Bay | Глас Бэй/Канада</item>
+        <item>America/Godthab | Нуук(Готхоб)/Гренландия</item>
+        <item>America/Goose_Bay | Хаппи Вэлли-Гуз Бэй/Канада</item>
+        <item>America/Grand_Turk | Гранд-Терк/Великобритания</item>
+        <item>America/Grenada | Сент-Джорджес/Гренада</item>
+        <item>America/Guadeloupe | Гваделупа/Франция</item>
+        <item>America/Guatemala | Гватемала/Республика Гватемала</item>
+        <item>America/Guayaquil | Гуаякиль/Эквадор</item>
+        <item>America/Guyana | Джорджтаун/Гайана</item>
+        <item>America/Halifax | Галифакс(Новая Шотландия)/Канада</item>
+        <item>America/Havana | Гавана/Куба</item>
+        <item>America/Hermosillo | Эрмосильо/Мексика</item>
+        <item>America/Inuvik | Инувик/Канада</item>
+        <item>America/Iqaluit | Икалуит/Канада</item>
+        <item>America/Jamaica | Кингстон/Ямайка</item>
+        <item>America/Juneau | Джуно/США</item>
+        <item>America/Kralendijk | Кралендейк/Нидерланды</item>
+        <item>America/La_Paz | Ла-Пас/Боливия</item>
+        <item>America/Lima | Лима/Перу</item>
+        <item>America/Los_Angeles | Лос-Анджелес/США</item>
+        <item>America/Lower_Princes | Лоуэр-Принс-Куотер/Синт-Мартен</item>
+        <item>America/Maceio | Масейо/Бразилия</item>
+        <item>America/Managua | Манагуа/Никарагуа</item>
+        <item>America/Manaus | Манаус/Бразилия</item>
+        <item>America/Marigot | Мариго/Франция</item>
+        <item>America/Martinique | Мартиника/Франция</item>
+        <item>America/Matamoros | Матаморос/Мексика</item>
+        <item>America/Mazatlan | Масатлан/Мексика</item>
+        <item>America/Menominee | Меномини/США</item>
+        <item>America/Merida | Мерида/Мексика</item>
+        <item>America/Metlakatla | Метлакатла/США</item>
+        <item>America/Mexico_City | Мехико/Мексика</item>
+        <item>America/Miquelon | Сен-Пьер и Микелон/Франция</item>
+        <item>America/Moncton | Монктон/Канада</item>
+        <item>America/Monterrey | Монтеррей/Мексика</item>
+        <item>America/Montevideo | Монтевидео/Уругвай</item>
+        <item>America/Montserrat | Монтсеррат/Великобритания</item>
+        <!-- <item>America/Montreal | Монреаль/Канада</item> -->
+        <item>America/Nassau | Нассау/Багамские Острова</item>
+        <item>America/New_York | Нью-Йорк/США</item>
+        <item>America/Nipigon | Нипигон/Канада</item>
+        <item>America/Nome | Ном/США</item>
+        <item>America/Noronha | Фернандо де Норонья/Бразилия</item>
+        <item>America/Ojinaga | Охинага/Мексика</item>
+        <item>America/Panama | Панама/Республика Панама</item>
+        <item>America/Pangnirtung | Пангниртунг/Канада</item>
+        <item>America/Paramaribo | Парамарибо/Суринам</item>
+        <item>America/Phoenix | Финикс/США</item>
+        <item>America/Port-au-Prince | Порт-о-Пренс/Гаити</item>
+        <item>America/Port_of_Spain | Порт-оф-Спейн/Тринидад и Тобаго</item>
+        <item>America/Porto_Velho | Порту-Велью/Бразилия</item>
+        <item>America/Puerto_Rico | Пуэрто-Рико/США</item>
+        <item>America/Punta_Arenas | Пунта-Аренас/Чили</item>
+        <!-- <item>America/Porto_Acre | Порту-Акри/Бразилия</item> -->
+        <item>America/Rainy_River | Рейни Ривер/Канада</item>
+        <item>America/Rankin_Inlet | Ранкин-Инлет/Канада</item>
+        <item>America/Recife | Ресифи/Бразилия</item>
+        <item>America/Regina | Реджайна/Канада</item>
+        <item>America/Resolute | Ресольют/Канада</item>
+        <item>America/Rio_Branco | Риу-Бранку/Бразилия</item>
+        <!-- <item>America/Rosario | Росарио/Аргентина</item> -->
+        <item>America/Santarem | Сантарен/Бразилия</item>
+        <item>America/Santiago | Сантьяго/Чили</item>
+        <item>America/Santo_Domingo | Санто-Доминго/Доминиканская Республика</item>
+        <item>America/Sao_Paulo | Сан-Паулу/Бразилия</item>
         <item>America/Scoresbysund | Сермерсоок/Гренландия</item>
+        <item>America/Sitka | Ситка/США</item>
+        <item>America/St_Barthelemy | Сен-Бартелеми/Франция</item>
+        <item>America/St_Johns | Сент-Джонс/Антигуа и Барбуда</item>
+        <item>America/St_Kitts | Бастер/Сент-Китс и Невис</item>
+        <item>America/St_Lucia | Кастри/Сент-Люсия</item>
+        <item>America/St_Thomas | Сент-Томас/США</item>
+        <item>America/St_Vincent | Кингстаун/Сент-Винсент</item>
+        <item>America/Swift_Current | Свифт Керрент/Канада</item>
+        <!-- <item>America/Santa_Isabel | Санта-Исабель/Мексика</item> -->
+        <!-- <item>America/Shiprock | Шипрок/США</item> -->
+        <item>America/Tegucigalpa | Тегусигальпа/Гондурас</item>
+        <item>America/Thule | Туле(авиабаза)/Гренландия</item>
+        <item>America/Thunder_Bay | Тандер-Бей/Канада</item>
+        <item>America/Tijuana | Тихуана/Мексика</item>
+        <item>America/Toronto | Торонто/Канада</item>
+        <item>America/Tortola | Тортола/Великобритания</item>
+        <item>America/Vancouver | Ванкувер/Канада</item>
+        <item>America/Whitehorse | Уайтхорс/Канада</item>
+        <item>America/Winnipeg | Виннипег/Канада</item>
+        <item>America/Yakutat | Якутат/США</item>
+        <item>America/Yellowknife | Йеллоунайф/Канада</item>
 
+
+        <item>Antarctica/Casey | Кейси Стейшен/Антарктида</item>
+        <item>Antarctica/Davis | Станция Дэвис/Антарктида</item>
+        <item>Antarctica/DumontDUrville | Станция Дюмон-д\'Юрвиль/Антарктида</item>
+        <item>Antarctica/Macquarie | Остров Маккуори/Антарктида</item>
+        <item>Antarctica/Mawson | Станция Моусон/Антарктида</item>
+        <item>Antarctica/McMurdo | Мак-Мердо/Антарктида</item>
         <item>Antarctica/Palmer | Станция Палмер/Антарктида</item>
         <item>Antarctica/Rothera | Станция Ротера/Антарктида</item>
-        <item>Antarctica/McMurdo | Мак-Мердо/Антарктида</item>
-        <item>Antarctica/Macquarie | Остров Маккуори/Антарктида</item>
-        <item>Antarctica/Casey | Кейси Стейшен/Антарктида</item>
-        <item>Antarctica/DumontDUrville | Станция Дюмон-д\'Юрвиль/Антарктида</item>
-        <item>Antarctica/Vostok | Станция Восток/Антарктида</item>
-        <item>Antarctica/Troll | Станция/Антарктида Тролль</item>
         <item>Antarctica/Syowa | Сёва/Антарктида</item>
-        <item>Antarctica/Mawson | Станция Моусон/Антарктида</item>
-        <item>Antarctica/Davis | Станция Дэвис/Антарктида</item>
+        <item>Antarctica/Troll | Станция/Антарктида Тролль</item>
+        <item>Antarctica/Vostok | Станция Восток/Антарктида</item>
+
 
         <item>Arctic/Longyearbyen | Лонгьир/Норвегия</item>
 
-        <item>Atlantic/Stanley | Стэнли/Фолклендские острова</item>
+
+        <item>Atlantic/Azores | Азорские острова/Португалия</item>
         <item>Atlantic/Bermuda | Бермуды/Великобритания</item>
-        <item>Atlantic/South_Georgia | Южная Георгия/Великобритания</item>
+        <item>Atlantic/Canary | Канарские острова/Испания</item>
         <item>Atlantic/Cape_Verde | Прая/Кабо-Верде</item>
         <item>Atlantic/Faroe | Фарерские острова/Дания</item>
         <item>Atlantic/Madeira | Мадейра/Португалия</item>
-        <item>Atlantic/Canary | Канарские острова/Испания</item>
-        <item>Atlantic/St_Helena | Остров Святой Елены/Великобритания</item>
-        <item>Atlantic/Azores | Азорские острова/Португалия</item>
         <item>Atlantic/Reykjavik | Рейкьявик/Исландия</item>
+        <item>Atlantic/South_Georgia | Южная Георгия/Великобритания</item>
+        <item>Atlantic/St_Helena | Остров Святой Елены/Великобритания</item>
+        <item>Atlantic/Stanley | Стэнли/Фолклендские острова</item>
 
 
-        <item>Pacific/Guadalcanal |  Гуадалканал/Соломоновы Острова</item>
-        <item>Pacific/Port_Moresby | Порт-Морсби/Папуа — Новая Гвинея</item>
-        <item>Pacific/Chuuk | Трук/Микронезия </item>
-        <item>Pacific/Guam | Гуам/США</item>
-        <item>Pacific/Saipan | Сайпан/Северные Марианские Острова</item>
-        <item>Pacific/Palau | Нгерулмуд/Палау</item>
-        <item>Pacific/Pago_Pago | Паго-Паго/Американское Самоа</item>
-        <item>Pacific/Niue | Алофи/Ниуэ</item>
-        <item>Pacific/Midway | Мидуэй/США</item>
-        <item>Pacific/Honolulu | Гонолулу/США</item>
-        <item>Pacific/Rarotonga | Раротонга/Острова Кука</item>
-        <item>Pacific/Tahiti | Таити/Франция</item>
-        <item>Pacific/Johnston | Джонстон/США</item>
-        <item>Pacific/Marquesas | Маркизские острова/Франция</item>
-        <item>Pacific/Gambier | Гамбье/Франция</item>
-        <item>Pacific/Pitcairn | Острова Питкэрн/Великобритания</item>
-        <item>Pacific/Galapagos | Галапагос/Эквадор</item>
-        <item>Pacific/Kiritimati | Остров Рождества(Кристмас)/Кирибати</item>
-        <item>Pacific/Fakaofo | Факаофо/Токелау</item>
-        <item>Pacific/Enderbury | Эндербери/Кирибати</item>
         <item>Pacific/Apia | Апиа/Самоа</item>
-        <item>Pacific/Tongatapu | Тонгатапу/Тонга</item>
+        <item>Pacific/Auckland | Окленд/Новая Зеландия</item>
+        <item>Pacific/Bougainville | Бугенвиль/Папуа — Новая Гвинея</item>
         <item>Pacific/Chatham | Чатем Айлендс/Новая Зеландия</item>
-        <item>Pacific/Kwajalein | Кваджалейн/Маршалловы Острова</item>
-        <item>Pacific/Wallis | Увеа/Уоллис и Футуна</item>
+        <item>Pacific/Chuuk | Трук/Микронезия </item>
+        <item>Pacific/Efate | Эфате/Вануату</item>
+        <item>Pacific/Enderbury | Эндербери/Кирибати</item>
+        <item>Pacific/Fakaofo | Факаофо/Токелау</item>
         <item>Pacific/Fiji | Сува/Фиджи/</item>
         <item>Pacific/Funafuti | Фунафути/Тувалу</item>
-        <item>Pacific/Nauru | Ярен/Науру</item>
-        <item>Pacific/Wake | Уэйк/США</item>
-        <item>Pacific/Tarawa | Тарава/Кирибати</item>
-        <item>Pacific/Auckland | Окленд/Новая Зеландия</item>
-        <item>Pacific/Majuro | Маджуро/Маршалловы Острова</item>
-        <item>Pacific/Bougainville | Бугенвиль/Папуа — Новая Гвинея</item>
-        <item>Pacific/Pohnpei | Понпеи/Микронезия </item>
-        <item>Pacific/Efate | Эфате/Вануату</item>
-        <item>Pacific/Norfolk | Норфолк/Великобритания</item>
+        <item>Pacific/Galapagos | Галапагос/Эквадор</item>
+        <item>Pacific/Gambier | Гамбье/Франция</item>
+        <item>Pacific/Guadalcanal |  Гуадалканал/Соломоновы Острова</item>
+        <item>Pacific/Guam | Гуам/США</item>
+        <item>Pacific/Honolulu | Гонолулу/США</item>
+        <item>Pacific/Kiritimati | Остров Рождества(Кристмас)/Кирибати</item>
         <item>Pacific/Kosrae | Косраэ/Микронезия </item>
+        <item>Pacific/Kwajalein | Кваджалейн/Маршалловы Острова</item>
+        <item>Pacific/Majuro | Маджуро/Маршалловы Острова</item>
+        <item>Pacific/Marquesas | Маркизские острова/Франция</item>
+        <item>Pacific/Midway | Мидуэй/США</item>
+        <item>Pacific/Nauru | Ярен/Науру</item>
+        <item>Pacific/Niue | Алофи/Ниуэ</item>
+        <item>Pacific/Norfolk | Норфолк/Великобритания</item>
         <item>Pacific/Noumea | Нумеа/Новая Каледония</item>
+        <item>Pacific/Pago_Pago | Паго-Паго/Американское Самоа</item>
+        <item>Pacific/Palau | Нгерулмуд/Палау</item>
+        <item>Pacific/Pitcairn | Острова Питкэрн/Великобритания</item>
+        <item>Pacific/Pohnpei | Понпеи/Микронезия </item>
+        <item>Pacific/Port_Moresby | Порт-Морсби/Папуа — Новая Гвинея</item>
+        <item>Pacific/Rarotonga | Раротонга/Острова Кука</item>
+        <item>Pacific/Saipan | Сайпан/Северные Марианские Острова</item>
+        <item>Pacific/Tahiti | Таити/Франция</item>
+        <item>Pacific/Tarawa | Тарава/Кирибати</item>
+        <item>Pacific/Tongatapu | Тонгатапу/Тонга</item>
+        <item>Pacific/Wake | Уэйк/США</item>
+        <item>Pacific/Wallis | Увеа/Уоллис и Футуна</item>
+        <!-- <item>Pacific/Johnston | Джонстон/США</item> -->
 
-        <item>Australia/Lord_Howe | Лорд-Хау/Австралия</item>
-        <item>Australia/Hobart | Хобарт/Австралия</item>
-        <item>Australia/Currie | Тасмания/Австралия</item>
-        <item>Australia/Sydney | Сидней/Австралия</item>
-        <item>Australia/Brisbane | Брисбен/Австралия</item>
-        <item>Australia/Melbourne | Мельбурн/Австралия</item>
-        <item>Australia/Lindeman | Линдман/Австралия</item>
+
         <item>Australia/Adelaide | Аделаида/Австралия</item>
+        <item>Australia/Brisbane | Брисбен/Австралия</item>
         <item>Australia/Broken_Hill | Брокен-Хилл/Австралии</item>
+        <item>Australia/Currie | Тасмания/Австралия</item>
         <item>Australia/Darwin | Дарвин/Австралии</item>
         <item>Australia/Eucla | Евкла/Австралия</item>
+        <item>Australia/Hobart | Хобарт/Австралия</item>
+        <item>Australia/Lindeman | Линдман/Австралия</item>
+        <item>Australia/Lord_Howe | Лорд-Хау/Австралия</item>
+        <item>Australia/Melbourne | Мельбурн/Австралия</item>
         <item>Australia/Perth | Перт/Австралии</item>
+        <item>Australia/Sydney | Сидней/Австралия</item>
 
+
+        <item>Indian/Antananarivo | Антананариву/Мадагаскар</item>
+        <item>Indian/Chagos | Чагос/Индийский океан</item>
         <item>Indian/Christmas | Остров Рождества/Австралии</item>
         <item>Indian/Cocos | Кокосовые острова/Великобритания</item>
-        <item>Indian/Chagos | Чагос/Индийский океан</item>
-        <item>Indian/Maldives | Мале/Мальдивы</item>
-        <item>Indian/Kerguelen | Кергелен/Франция</item>
-        <item>Indian/Reunion | Реюньон/Франция</item>
-        <item>Indian/Mauritius | Порт-Луи/Маврикий</item>
-        <item>Indian/Mahe | Маэ/Сейшельские Острова</item>
         <item>Indian/Comoro | Морони/Коморы</item>
-        <item>Indian/Antananarivo | Антананариву/Мадагаскар</item>
+        <item>Indian/Kerguelen | Кергелен/Франция</item>
+        <item>Indian/Mahe | Маэ/Сейшельские Острова</item>
+        <item>Indian/Maldives | Мале/Мальдивы</item>
+        <item>Indian/Mauritius | Порт-Луи/Маврикий</item>
         <item>Indian/Mayotte | Майотта/Франция</item>
+        <item>Indian/Reunion | Реюньон/Франция</item>
 
 
-        <item>Europe/Saratov | Саратов/Россия</item>
-        <item>Europe/Samara | Самара/Россия</item>
+        <item>Europe/Amsterdam | Амстердам/Нидерланды</item>
+        <item>Europe/Andorra | Андорра/Европа</item>
         <item>Europe/Astrakhan | Астрахань/Россия</item>
-        <item>Europe/Ulyanovsk | Ульяновск/Россия</item>
-        <item>Europe/Istanbul | Стамбул/Турция/Европа</item>
-        <item>Europe/Zaporozhye | Запорожье/Украина</item>
+        <item>Europe/Athens | Афины/Греция</item>
+        <item>Europe/Belgrade | Белград/Сербия</item>
+        <item>Europe/Berlin | Берлин/Германия</item>
+        <!-- <item>Europe/Belfast | Белфаст/Северная Ирландия</item> -->
+        <item>Europe/Bratislava | Братислава/Словакия</item>
+        <item>Europe/Brussels | Брюссель/Бельгия</item>
         <item>Europe/Bucharest | Бухарест/Румыния</item>
-        <item>Europe/Mariehamn | Мариехамн/Финляндия</item>
-        <item>Europe/Tiraspol | Тирасполь/Молдавия</item>
-        <item>Europe/Moscow | Москва/Россия</item>
+        <item>Europe/Budapest | Будапешт/Венгрия</item>
+        <item>Europe/Busingen | Бюзинген-на-Верхнем-Рейне/Германия</item>
         <item>Europe/Chisinau | Кишинёв/Молдавия</item>
+        <item>Europe/Copenhagen | Копенгаген/Дания</item>
+        <item>Europe/Dublin | Дублин/Ирландия</item>
+        <item>Europe/Gibraltar | Гибралтар/Великобритания</item>
+        <item>Europe/Guernsey | Гернси/Великобритания</item>
         <item>Europe/Helsinki | Хельсинки/Финляндия</item>
-        <item>Europe/Simferopol | Симферополь/Россия</item>
-        <item>Europe/Sofia | София/Болгария</item>
-        <item>Europe/Riga | Рига/Латвия</item>
-        <item>Europe/Uzhgorod | Ужгород/Украина</item>
-        <item>Europe/Kirov | Киров/Россия</item>
-        <item>Europe/Minsk | Минск/Белоруссия</item>
+        <item>Europe/Isle_of_Man | Остров Мэн/Великобритания</item>
+        <item>Europe/Istanbul | Стамбул/Турция/Европа</item>
+        <item>Europe/Jersey | Джерси/Великобритания</item>
+        <item>Europe/Kaliningrad | Калининград/Россия</item>
         <item>Europe/Kiev | Киев/Украина</item>
+        <item>Europe/Kirov | Киров/Россия</item>
+        <item>Europe/Lisbon | Лиссабон/Португалия</item>
+        <item>Europe/Ljubljana | Любляна/ Словения</item>
+        <item>Europe/London | Великобритания/Лондон</item>
+        <item>Europe/Luxembourg | Люксембург/Европа</item>
+        <item>Europe/Madrid | Мадрид/Испания</item>
+        <item>Europe/Malta | Мальта/Республика Мальта</item>
+        <item>Europe/Mariehamn | Мариехамн/Финляндия</item>
+        <item>Europe/Minsk | Минск/Белоруссия</item>
+        <item>Europe/Monaco | Монако/Европа</item>
+        <item>Europe/Moscow | Москва/Россия</item>
+        <item>Europe/Nicosia | Никосия/Кипр/Европа</item>
+        <item>Europe/Oslo | Осло/Норвегия</item>
+        <item>Europe/Paris | Париж/Франция</item>
+        <item>Europe/Podgorica | Подгорица/Черногория</item>
+        <item>Europe/Prague | Прага/Чехия</item>
+        <item>Europe/Riga | Рига/Латвия</item>
+        <item>Europe/Rome | Рим/Италия</item>
+        <item>Europe/Samara | Самара/Россия</item>
+        <item>Europe/San_Marino | Сан-Марино/Европа</item>
+        <item>Europe/Sarajevo | Сараево/Босния и Герцеговина</item>
+        <item>Europe/Saratov | Саратов/Россия</item>
+        <item>Europe/Simferopol | Симферополь/Россия</item>
+        <item>Europe/Skopje | Скопье/Северная Македония</item>
+        <item>Europe/Sofia | София/Болгария</item>
+        <item>Europe/Stockholm | Стокгольм/Швеция</item>
+        <item>Europe/Tallinn | Таллин/Эстония</item>
+        <item>Europe/Tirane | Тирана/Албания</item>
+        <!-- <item>Europe/Tiraspol | Тирасполь/Молдавия</item> -->
+        <item>Europe/Ulyanovsk | Ульяновск/Россия</item>
+        <item>Europe/Uzhgorod | Ужгород/Украина</item>
+        <item>Europe/Vaduz | Вадуц/Лихтенштейн</item>
+        <item>Europe/Vatican | Ватикан/Европа</item>
+        <item>Europe/Vienna | Вена/Австрия</item>
         <item>Europe/Vilnius | Вильнюс/Литва</item>
         <item>Europe/Volgograd | Волгоград/Россия</item>
-        <item>Europe/Tallinn | Таллин/Эстония</item>
-        <item>Europe/Nicosia | Никосия/Кипр/Европа</item>
-        <item>Europe/Athens | Афины/Греция</item>
-        <item>Europe/Brussels | Брюссель/Бельгия</item>
         <item>Europe/Warsaw | Варшава/Польша</item>
-        <item>Europe/Luxembourg | Люксембург/Европа</item>
-        <item>Europe/Kaliningrad | Калининград/Россия</item>
-        <item>Europe/Malta | Мальта/Республика Мальта</item>
-        <item>Europe/Busingen | Бюзинген-на-Верхнем-Рейне/Германия</item>
-        <item>Europe/Skopje | Скопье/Северная Македония</item>
-        <item>Europe/Sarajevo | Сараево/Босния и Герцеговина</item>
-        <item>Europe/Rome | Рим/Италия</item>
-        <item>Europe/Zurich | Цюрих/Швейцария</item>
-        <item>Europe/Gibraltar | Гибралтар/Великобритания</item>
-        <item>Europe/Vaduz | Вадуц/Лихтенштейн</item>
-        <item>Europe/Ljubljana | Любляна/ Словения</item>
-        <item>Europe/Berlin | Берлин/Германия</item>
-        <item>Europe/Stockholm | Стокгольм/Швеция</item>
-        <item>Europe/Budapest | Будапешт/Венгрия</item>
         <item>Europe/Zagreb | Загреб/Хорватия</item>
-        <item>Europe/Paris | Париж/Франция</item>
-        <item>Europe/Prague | Прага/Чехия</item>
-        <item>Europe/Copenhagen | Копенгаген/Дания</item>
-        <item>Europe/Vienna | Вена/Австрия</item>
-        <item>Europe/Tirane | Тирана/Албания</item>
-        <item>Europe/Amsterdam | Амстердам/Нидерланды</item>
-        <item>Europe/San_Marino | Сан-Марино/Европа</item>
-        <item>Europe/Andorra | Андорра/Европа</item>
-        <item>Europe/Oslo | Осло/Норвегия</item>
-        <item>Europe/Podgorica | Подгорица/Черногория</item>
-        <item>Europe/Madrid | Мадрид/Испания</item>
-        <item>Europe/Belgrade | Белград/Сербия</item>
-        <item>Europe/Bratislava | Братислава/Словакия</item>
-        <item>Europe/Vatican | Ватикан/Европа</item>
-        <item>Europe/Monaco | Монако/Европа</item>
-        <item>Europe/London | Великобритания/Лондон</item>
-        <item>Europe/Jersey | Джерси/Великобритания</item>
-        <item>Europe/Guernsey | Гернси/Великобритания</item>
-        <item>Europe/Isle_of_Man | Остров Мэн/Великобритания</item>
-        <item>Europe/Dublin | Дублин/Ирландия</item>
-        <item>Europe/Lisbon | Лиссабон/Португалия</item>
-        <item>Europe/Belfast | Белфаст/Северная Ирландия</item>
+        <item>Europe/Zaporozhye | Запорожье/Украина</item>
+        <item>Europe/Zurich | Цюрих/Швейцария</item>
 
-        <item>Africa/Djibouti | Джибути/Республика Джибути</item>
-        <item>Africa/Nairobi | Найроби/Кения</item>
-        <item>Africa/Mogadishu | Могадишо/Сомали</item>
-        <item>Africa/Dar_es_Salaam | Дар-эс-Салам/Танзания</item>
-        <item>Africa/Addis_Ababa | Аддис-Абеба/Эфиопия</item>
-        <item>Africa/Asmara | Асмара/Эритрея</item>
-        <item>Africa/Cairo | Каир/Египет</item>
-        <item>Africa/Kampala | Кампала/Уганда</item>
-        <item>Africa/Khartoum | Хартум/Судан</item>
-        <item>Africa/Juba | Джуба/Южный Судан</item>
-        <item>Africa/Mbabane | Мбабане/Эсватини</item>
-        <item>Africa/Kigali | Кигали/Руанда</item>
-        <item>Africa/Tripoli | Триполи/Ливия</item>
-        <item>Africa/Lubumbashi | Лубумбаши/Демократическая Республика Конго</item>
-        <item>Africa/Ceuta | Сеута/Испании</item>
-        <item>Africa/Gaborone | Габороне/Ботсвана</item>
-        <item>Africa/Maputo | Мапуто/Мозамбик</item>
-        <item>Africa/Bujumbura | Бужумбура/Бурунди</item>
-        <item>Africa/Maseru | Масеру/Лесото</item>
-        <item>Africa/Blantyre | Блантайр/Малави</item>
-        <item>Africa/Lusaka | Лусака/Замбия</item>
-        <item>Africa/Harare | Хараре/Зимбабве</item>
-        <item>Africa/Johannesburg | Йоханнесбург/Южно-Африканская Республика</item>
-        <item>Africa/Tunis | Тунис/Тунис</item>
-        <item>Africa/Windhoek | Виндхук/Намибия</item>
-        <item>Africa/Malabo | Малабо/Экваториальная Гвинея</item>
-        <item>Africa/Lagos | Лагос/Нигерия</item>
-        <item>Africa/Algiers | Алжир/Алжир</item>
-        <item>Africa/Ndjamena | Нджамена/Чад</item>
-        <item>Africa/Libreville | Либревиль/Габон</item>
-        <item>Africa/El_Aaiun | Эль-Аюн/Западная Сахара</item>
-        <item>Africa/Douala | Дуала/Камерун</item>
-        <item>Africa/Brazzaville | Браззавиль/Республика Конго</item>
-        <item>Africa/Porto-Novo  | Порто-Ново/Бенин</item>
-        <item>Africa/Casablanca | Касабланка/Марокко</item>
-        <item>Africa/Luanda | Луанда/Ангола</item>
-        <item>Africa/Kinshasa | Киншаса/Демократическая Республика Конго</item>
-        <item>Africa/Bangui | Банги/Центральноафриканская Республика</item>
-        <item>Africa/Niamey | Ниамей/Нигер</item>
-        <item>Africa/Banjul | Банжул/Гамбия</item>
-        <item>Africa/Freetown | Фритаун/Сьерра-Леоне</item>
-        <item>Africa/Bamako | Бамако/Мали</item>
-        <item>Africa/Conakry | Конакри/Гвинея</item>
-        <item>Africa/Sao_Tome | Сан-Томе/Сан-Томе и Принсипи</item>
-        <item>Africa/Nouakchott | Нуакшот/Мавритания</item>
+
         <item>Africa/Abidjan | Абиджан/Кот-д\'Ивуаре</item>
         <item>Africa/Accra | Аккра/Гана</item>
-        <item>Africa/Ouagadougou | Уагадугу/Буркина-Фасо</item>
-        <item>Africa/Lome | Ломе/Того</item>
+        <item>Africa/Addis_Ababa | Аддис-Абеба/Эфиопия</item>
+        <item>Africa/Algiers | Алжир/Алжир</item>
+        <item>Africa/Asmara | Асмара/Эритрея</item>
+        <item>Africa/Bamako | Бамако/Мали</item>
+        <item>Africa/Bangui | Банги/Центральноафриканская Республика</item>
+        <item>Africa/Banjul | Банжул/Гамбия</item>
+		<item>Africa/Bissau | Бисау/Гвинеи-Бисау</item>
+        <item>Africa/Blantyre | Блантайр/Малави</item>
+        <item>Africa/Brazzaville | Браззавиль/Республика Конго</item>
+        <item>Africa/Bujumbura | Бужумбура/Бурунди</item>
+        <item>Africa/Cairo | Каир/Египет</item>
+        <item>Africa/Casablanca | Касабланка/Марокко</item>
+        <item>Africa/Ceuta | Сеута/Испании</item>
+        <item>Africa/Conakry | Конакри/Гвинея</item>
         <item>Africa/Dakar | Дакар/Сенегал</item>
-        <item>Africa/Bissau | Бисау/Гвинеи-Бисау</item>
-        <item>Africa/Timbuktu | Томбукту/Мали</item>
+        <item>Africa/Dar_es_Salaam | Дар-эс-Салам/Танзания</item>
+        <item>Africa/Djibouti | Джибути/Республика Джибути</item>        
+        <item>Africa/Douala | Дуала/Камерун</item>
+        <item>Africa/El_Aaiun | Эль-Аюн/Западная Сахара</item>
+        <item>Africa/Freetown | Фритаун/Сьерра-Леоне</item>
+        <item>Africa/Gaborone | Габороне/Ботсвана</item>
+        <item>Africa/Harare | Хараре/Зимбабве</item>
+        <item>Africa/Johannesburg | Йоханнесбург/Южно-Африканская Республика</item>
+        <item>Africa/Juba | Джуба/Южный Судан</item>
+        <item>Africa/Kampala | Кампала/Уганда</item>
+        <item>Africa/Khartoum | Хартум/Судан</item>
+        <item>Africa/Kigali | Кигали/Руанда</item>
+        <item>Africa/Kinshasa | Киншаса/Демократическая Республика Конго</item>
+        <item>Africa/Lagos | Лагос/Нигерия</item>
+        <item>Africa/Libreville | Либревиль/Габон</item>
+        <item>Africa/Lome | Ломе/Того</item>
+        <item>Africa/Luanda | Луанда/Ангола</item>
+        <item>Africa/Lubumbashi | Лубумбаши/Демократическая Республика Конго</item>
+        <item>Africa/Lusaka | Лусака/Замбия</item>
+        <item>Africa/Malabo | Малабо/Экваториальная Гвинея</item>
+        <item>Africa/Maputo | Мапуто/Мозамбик</item>
+        <item>Africa/Maseru | Масеру/Лесото</item>
+        <item>Africa/Mbabane | Мбабане/Эсватини</item>
+        <item>Africa/Mogadishu | Могадишо/Сомали</item>
+        <item>Africa/Nairobi | Найроби/Кения</item>
+        <item>Africa/Ndjamena | Нджамена/Чад</item>
+        <item>Africa/Niamey | Ниамей/Нигер</item>
+        <item>Africa/Nouakchott | Нуакшот/Мавритания</item>        
+        <item>Africa/Ouagadougou | Уагадугу/Буркина-Фасо</item>
+        <item>Africa/Porto-Novo  | Порто-Ново/Бенин</item>
+        <item>Africa/Sao_Tome | Сан-Томе/Сан-Томе и Принсипи</item>
+        <item>Africa/Tripoli | Триполи/Ливия</item>
+        <item>Africa/Tunis | Тунис/Тунис</item>
+        <item>Africa/Windhoek | Виндхук/Намибия</item>
+        <!-- <item>Africa/Timbuktu | Томбукту/Мали</item> -->
     </string-array>
 </resources>

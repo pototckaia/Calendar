@@ -37,7 +37,7 @@ class DayEventViewHolder(
         }
 
         var first = e.started_at_local.format(fmtHour)
-        var second = e.started_at_local.format(fmtHour)
+        var second = e.ended_at_local.format(fmtHour)
 
         if (lessDay(e.started_at_local, day) && moreDay(e.ended_at_local, day)) {
             view.tvEventHourDuration.text = allDay

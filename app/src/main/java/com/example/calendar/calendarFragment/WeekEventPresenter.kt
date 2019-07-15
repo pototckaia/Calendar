@@ -62,8 +62,7 @@ class WeekEventPresenter(
     }
 
     private fun isFromPeriod(it: EventWeekView, start: ZonedDateTime, end: ZonedDateTime) : Boolean {
-        // (started_at >= :start and ended_at < :end) or (started_at < :end and ended_at > :start)
-        return (it.event.started_at_local >= start && it.event.ended_at_local < end) ||
+        return (it.event.started_at_local >= start && it.event.ended_at_local <= end) ||
                 (it.event.started_at_local < end && it.event.ended_at_local > start)
     }
 

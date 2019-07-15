@@ -55,8 +55,8 @@ class Server {
                 val response = chain.proceed(request)
 
                 when (response.code()) {
-                    204 -> throw NoContent()
-                    400 -> throw BadRequest()
+                    204 -> throw NoContent(response.message())
+                    400 -> throw BadRequest(response.message())
                     401 -> throw NotAuthorized()
                     403 -> throw AccessDenied()
                     404 -> throw NotFind()

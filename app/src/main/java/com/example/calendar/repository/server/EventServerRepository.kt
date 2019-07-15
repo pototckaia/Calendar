@@ -1,6 +1,7 @@
 package com.example.calendar.repository.server
 
 import com.example.calendar.helpers.convert.toLongUTC
+import com.example.calendar.helpers.getEventInstances
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -12,31 +13,58 @@ import org.threeten.bp.temporal.ChronoUnit
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
 
-    private fun getEventInstance(e: EventInstanceServer): Observable<EventInstance> {
-        return api.getEventById(e.event_id)
-            .zipWith(
-                api.getPatternById(e.pattern_id),
-                BiFunction { event: EventResponse, pattern: EventPatternResponse ->
-                    EventInstance(
-                        // todo check data
-                        entity = event.data[0],
-                        pattern = pattern.data[0],
-                        started_at = e.started_at,
-                        ended_at = e.ended_at
-                    )
-                }
-            )
-    }
+//    private fun getEventInstance(e: EventInstanceServer): Observable<EventInstance> {
+//        return api.getEventById(e.event_id)
+//            .zipWith(
+//                api.getPatternById(e.pattern_id),
+//                BiFunction { event: EventResponse, pattern: EventPatternResponse ->
+//                    EventInstance(
+//                        // todo check data
+//                        entity = event.data[0],
+//                        pattern = pattern.data[0],
+//                        started_at = e.started_at,
+//                        ended_at = e.ended_at
+//                    )
+//                }
+//            )
+//    }
+//
+//    override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<List<EventInstance>> {
+//        val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
+//        val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
+//
+//        return api.getEventsInstancesFromTo(startUTC, endUTC)
+//            .map { it.data }
+//            .flatMap { Observable.fromIterable(it) }
+//            .flatMap { getEventInstance(it) }
+//            .toList()
+//            .toObservable()
+//    }
 
     override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<List<EventInstance>> {
         val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
         val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
 
-        return api.getEventsInstancesFromTo(startUTC, endUTC)
+        return api.getEventsFromTo(startUTC, endUTC)
             .map { it.data }
             .flatMap { Observable.fromIterable(it) }
-            .flatMap { getEventInstance(it) }
+            .flatMap { entity ->
+                api.getPatterns(entity.id)
+                    .map { it.data }
+                    .map { patterns ->
+                        val list = ArrayList<EventInstance>()
+                        patterns.forEach { pattern ->
+                            list.addAll(getEventInstances(entity, pattern, startLocal, endLocal))
+                        }
+                        Pair(entity.id, list)
+                    }
+            }
             .toList()
+            .map {
+                val list = ArrayList<EventInstance>()
+                it.forEach { l -> list.addAll(l.second) }
+                list as List<EventInstance>
+            }
             .toObservable()
     }
 
@@ -44,11 +72,9 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
     private fun daysInEvent(event: EventInstance): List<ZonedDateTime> {
         val dates = arrayListOf<ZonedDateTime>()
 
-        // todo local or timezone
-        dates.add(event.started_at_zoneid)
-        var day = ZonedDateTime.from(event.started_at_zoneid)
-        // todo check between
-        val durationZoneId = Duration.between(event.started_at_zoneid, event.ended_at_zoneid)
+        dates.add(event.started_at_local)
+        var day = ZonedDateTime.from(event.started_at_local)
+        val durationZoneId = Duration.between(event.started_at_local, event.ended_at_local)
         for (i in 1..durationZoneId.toDays()) {
             day = day.plusDays(1)
                 .truncatedTo(ChronoUnit.DAYS)

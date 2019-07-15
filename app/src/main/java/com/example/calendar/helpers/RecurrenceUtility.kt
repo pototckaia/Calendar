@@ -1,8 +1,9 @@
 package com.example.calendar.helpers
 
-import com.example.calendar.helpers.convert.fromDateTimeUTC
-import com.example.calendar.helpers.convert.toDateTimeUTC
-import com.example.calendar.helpers.convert.zonedDateTime_cn
+import com.example.calendar.helpers.convert.*
+import com.example.calendar.repository.server.model.EventInstance
+import com.example.calendar.repository.server.model.EventPatternServer
+import com.example.calendar.repository.server.model.EventServer
 import org.dmfs.rfc5545.Weekday
 import org.dmfs.rfc5545.recur.Freq
 import org.dmfs.rfc5545.recur.RecurrenceRule
@@ -12,6 +13,70 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 fun isRecurrence(rrule: String) = rrule.isNotEmpty()
+
+fun isFromPeriod(start_event: ZonedDateTime, end_event: ZonedDateTime,
+                         start: ZonedDateTime, end: ZonedDateTime) : Boolean {
+    return (start_event <= end && end_event >= start)
+}
+
+// [start, end]
+fun getEventInstances(
+    event: EventServer,
+    pattern: EventPatternServer,
+    start: ZonedDateTime,
+    end: ZonedDateTime
+): List<EventInstance> {
+
+    val maxInstances = 100000
+    val instances = arrayListOf<EventInstance>()
+
+    val startLocal = start.withZoneSameInstant(ZoneId.systemDefault())
+    val endLocal = end.withZoneSameInstant(ZoneId.systemDefault())
+
+    val startRange = toDateTime(startLocal, toTimeZone(pattern.timezone))
+    val endRange = toDateTime(endLocal, toTimeZone(pattern.timezone))
+
+    if (!isRecurrence(pattern.rrule)) {
+        val eventInstance = EventInstance(event, pattern, pattern.started_at, pattern.started_at.plus(pattern.duration))
+        if (isFromPeriod(
+                eventInstance.started_at_local, eventInstance.ended_at_local,
+                startLocal, endLocal)) {
+            instances.add(eventInstance)
+        }
+        return instances
+    }
+
+    val patternRequest = pattern.patternRequest
+    val recurrence = patternRequest.getRecurrenceRuleWithZoneId()!!
+    val startRecurrence = toDateTime(pattern.started_at, toTimeZone(pattern.timezone))
+
+    val it = recurrence.iterator(startRecurrence)
+    var counter = 0
+    while (it.hasNext() && (!recurrence.isInfinite || counter < maxInstances)) {
+        val startInstance = it.nextDateTime()
+
+        if (recurrence.until != null &&
+            (startInstance.after(recurrence.until) || startInstance == recurrence.until)
+        ) {
+            break
+        }
+
+        if (startInstance.after(endRange) || startInstance == endRange) {
+            break;
+        }
+        val startNewEvent = fromDateTime(startInstance)
+        val eventInstance = EventInstance(event, pattern, startNewEvent, startNewEvent.plus(pattern.duration))
+
+        if (isFromPeriod(
+                eventInstance.started_at_local, eventInstance.ended_at_local,
+                startLocal, endLocal)) {
+            instances.add(eventInstance)
+            counter++
+        }
+    }
+    return instances
+}
+
 
 fun calculateEndedAt(
     started_at: ZonedDateTime,

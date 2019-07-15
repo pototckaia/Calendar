@@ -71,7 +71,6 @@ class EventPatternViewModel: MvvmViewModel<EventPatternViewState> {
 }
 
 
-// todo make model view
 class EventPatternRequestView
 @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -194,7 +193,7 @@ class EventPatternRequestView
                 }
 
                 var newEnd = ZonedDateTime.from(eventPattern.endedAtAtTimezone)
-                if (newStart > eventPattern.endedAtAtTimezone) {
+                if (newStart > newEnd) {
                     newEnd = withYearMonthDay(newEnd, year, monthOfYear, dayOfMonth)
                 }
                 viewModel.setDateView(newStart, newEnd)

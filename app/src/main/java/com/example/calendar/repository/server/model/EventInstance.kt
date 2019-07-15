@@ -23,6 +23,11 @@ data class EventInstance(
     var ended_at: ZonedDateTime
 ) : Parcelable {
 
+    init {
+        started_at = started_at.withZoneSameInstant(ZoneId.systemDefault())
+        ended_at = ended_at.withZoneSameInstant(ZoneId.systemDefault())
+    }
+
     val started_at_zoneid: ZonedDateTime
         get() = started_at.withZoneSameInstant(pattern.timezone)
 
