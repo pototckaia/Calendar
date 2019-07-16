@@ -4,6 +4,7 @@ import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.http.*
 
 
@@ -13,9 +14,10 @@ interface PlannerApi {
 
     // iCal
     @GET("$request/export")
-    fun exportICal() : Observable<String>
+    @Streaming
+    fun exportICal() : Observable<ResponseBody>
 
-    @POST("$request/import")
+    @POST("$request/export")
     fun importICal(@Part file: MultipartBody.Part) : Completable
 
     // Event

@@ -6,6 +6,7 @@ import com.example.calendar.repository.server.model.EventRequest
 import com.example.calendar.repository.server.model.PatternRequest
 import io.reactivex.Completable
 import io.reactivex.Observable
+import okhttp3.ResponseBody
 import org.threeten.bp.ZonedDateTime
 import kotlin.collections.HashSet
 
@@ -27,4 +28,6 @@ interface EventRepository {
     fun deleteAll(event: EventInstance): Completable
 
 //    fun deleteFuture(entity: EventInstance): Completable
+
+    fun export(uri: String): Observable<ResponseBody>
 }

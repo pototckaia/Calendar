@@ -1,15 +1,19 @@
 package com.example.calendar.repository.server
 
+import android.os.Environment
+import android.util.Log
 import com.example.calendar.helpers.convert.toLongUTC
 import com.example.calendar.helpers.getEventInstances
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import okhttp3.ResponseBody
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
+import java.io.*
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
 
@@ -136,5 +140,9 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 //                api.deleteEventById(event.entity.id)
 //                    .ignoreElements()
 //            )
+    }
+
+    override fun export(uri: String): Observable<ResponseBody> {
+        return api.exportICal()
     }
 }
