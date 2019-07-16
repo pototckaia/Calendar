@@ -3,6 +3,7 @@ package com.example.calendar.repository.server
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 
@@ -12,7 +13,10 @@ interface PlannerApi {
 
     // iCal
     @GET("$request/export")
-    fun getICal() : Observable<String>
+    fun exportICal() : Observable<String>
+
+    @POST("$request/import")
+    fun importICal(@Part file: MultipartBody.Part) : Completable
 
     // Event
     @GET("$request/events")
@@ -105,14 +109,16 @@ interface PlannerApi {
     @GET("$request/grant")
     fun getGrant(
         @Query("action") action: PermissionAction,
-        @Query("entity_id") entity_id: Long,
-        @Query("entity_type") entity_type: EntityType,
-        @Query("user_id") user_id: String
-    ) : Completable
+        @Query("entity_id") entity_id: Long?, //  Grant all entities of requested type if not set
+        @Query("entity_type") entity_type: EntityType, // EVENT, PATTERN, TASK
+        @Query("user_id") user_id: String // READ, UPDATE, DELETE
+    ) : Observable<PermissionResponse>
 
-    // Get all granted permission for your resources
+    // Get granted permission for resources
     @GET("$request/permissions")
     fun getPermissions(
+    	@Query("entity_type") entity_type: EntityType, // Get only entities of specified type
+    	@Query("mine") meni: Boolean = true,
         @Query("count") count: Int = 100,
         @Query("offset") offset: Long = 0
     ) : Observable<PermissionResponse>
@@ -124,7 +130,7 @@ interface PlannerApi {
     @GET("$request/share")
     fun getLink(
         @Query("action") action: PermissionAction,
-        @Query("entity_id") entity_id: Long,
+        @Query("entity_id") entity_id: Long?,
         @Query("entity_type") entity_type: EntityType
     ) : Observable<String>
 
@@ -136,7 +142,15 @@ interface PlannerApi {
 
     // Activate generated share-link
     @GET("$request/share/{token}")
-    fun activateLink(@Path("token") token: String) : Completable
+    fun activateLink(@Path("token") token: String) : Observable<PermissionResponse>
+
+    // Find user
+    @GET("$request/user")
+    fun getUser(
+    	@Query("user_id") user_id: String?,
+    	@Query("phone") phone: String?,
+    	@Query("email") email: String?) : Observable<UserResponse>
+
 
     // TaskServer
 

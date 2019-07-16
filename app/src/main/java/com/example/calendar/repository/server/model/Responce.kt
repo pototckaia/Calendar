@@ -44,3 +44,14 @@ data class TaskResponse(
     val status: Int,
     val success: Boolean
 )
+
+data class UserResponse(
+    val id: String,
+    val username: String,
+    val photo: String,
+
+    val enabled: Boolean,
+    val credentials_non_expired: Boolean,
+    val account_non_locked: Boolean,
+    val account_non_expired: Boolean   
+)
