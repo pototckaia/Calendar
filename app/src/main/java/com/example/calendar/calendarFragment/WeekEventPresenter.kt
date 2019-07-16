@@ -52,6 +52,10 @@ class WeekEventPresenter(
         return events.filter { isStartFromPeriod(it, monthStart, monthEnd) }
     }
 
+    fun onStop() {
+        monthsLoad.clear()
+    }
+
     private fun isLoad(yearAndMonth: Pair<Int, Int>) : Boolean {
         return monthsLoad.contains(yearAndMonth)
     }

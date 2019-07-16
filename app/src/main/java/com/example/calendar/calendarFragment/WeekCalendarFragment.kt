@@ -111,6 +111,7 @@ class WeekCalendarFragment : MvpAppCompatFragment(),
 
     override fun onStop() {
         weekSaveStatePresenter.onStop()
+        weekEventPresenter.onStop()
         super.onStop()
     }
 
