@@ -112,6 +112,7 @@ class EditEventInstancePresenter(
 
     private fun onUpdateLoading(newEventInstance: EventInstance) {
         viewUpdate(newEventInstance)
+        viewState.showError("Update")
     }
 
     private fun onDeleteLoading() {

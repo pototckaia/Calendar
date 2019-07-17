@@ -53,7 +53,21 @@
             android:id="@+id/bPermission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Все доступные права доступа"
+            android:text="Доступные права доступа"
+            android:background="?selectableItemBackground"
+    />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+    />
+
+    <Button
+            android:id="@+id/bCreatePermissionAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Доступ на календарь"
             android:background="?selectableItemBackground"
     />
 

@@ -48,13 +48,16 @@ class NavigationFragment :
         }
     }
 
+    val router = InjectApplication.inject.router
+    val repository = InjectApplication.inject.repository
+
     @InjectPresenter
     lateinit var exportImportPresenter: ExportImportPresenter
 
     @ProvidePresenter
     fun provideExportImportPresenter(): ExportImportPresenter {
         return ExportImportPresenter(
-            InjectApplication.inject.repository,
+            repository,
             InjectApplication.inject.contentResolver
         )
     }
@@ -64,7 +67,7 @@ class NavigationFragment :
 
     @ProvidePresenter
     fun provideActivateTokenPresenter(): ActivateTokenPresenter {
-        return ActivateTokenPresenter(InjectApplication.inject.repository)
+        return ActivateTokenPresenter(repository)
     }
 
     lateinit var progressDialog: ProgressBarDialog
@@ -83,24 +86,22 @@ class NavigationFragment :
         progressDialog = ProgressBarDialog(context!!)
 
         v.bMonth.setOnClickListener {
-            InjectApplication.inject.router.navigateTo(Screens.MonthCalendarScreen())
+            router.navigateTo(Screens.MonthCalendarScreen())
         }
 
         v.bWeek.setOnClickListener {
-            InjectApplication.inject.router.navigateTo(
-                Screens.WeekCalendarScreen(TypeView.WEEK))
+            router.navigateTo(Screens.WeekCalendarScreen(TypeView.WEEK))
         }
 
         v.bDay.setOnClickListener {
-            InjectApplication.inject.router.navigateTo(
-                Screens.WeekCalendarScreen(TypeView.DAY))
+            router.navigateTo(Screens.WeekCalendarScreen(TypeView.DAY))
         }
 
         v.bSignOut.setOnClickListener {
             AuthUI.getInstance()
                 .signOut(context!!)
                 .addOnCompleteListener {
-                    InjectApplication.inject.router.navigateTo(Screens.AuthScreen())
+                    router.navigateTo(Screens.AuthScreen())
                 }
 
         }
@@ -109,6 +110,10 @@ class NavigationFragment :
         v.bImport.setOnClickListener { onImport() }
 
         v.bActivateToken.setOnClickListener { activateTokenPresenter.onActivateClick() }
+
+        v.bCreatePermissionAll.setOnClickListener {
+            router.navigateTo(Screens.CreateEventPermissionScreen())
+        }
 
         return v
     }
