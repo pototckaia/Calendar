@@ -18,6 +18,8 @@ data class EventInstance(
     val entity: EventServer,
     val pattern: EventPatternServer,
 
+    val user: UserServer,
+
     // [start, end]
     var started_at: ZonedDateTime,
     var ended_at: ZonedDateTime

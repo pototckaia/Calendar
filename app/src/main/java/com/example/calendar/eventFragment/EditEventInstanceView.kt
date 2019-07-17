@@ -9,7 +9,7 @@ import com.example.calendar.repository.server.model.*
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface EditEventInstanceView : MvpView {
 
-    fun updateEventInfo(ownerName: String, e: EventRequest, p: PatternRequest)
+    fun updateEventInfo(user: UserServer, e: EventRequest, p: PatternRequest)
 
     @StateStrategyType(SingleStateStrategy::class)
     fun showError(e: String)

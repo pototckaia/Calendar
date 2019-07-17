@@ -87,7 +87,7 @@ class EditEventInstancePresenter(
 
         val eventRequest = eventInstance.entity.eventRequest
         viewState.updateEventInfo(
-            eventInstance.entity.owner_id,
+            eventInstance.user,
             eventRequest,
             editEventPattern)
     }

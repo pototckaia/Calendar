@@ -21,6 +21,12 @@ class ActivateTokenPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 viewState.dismissDialog()
+            }, {
+                var mes = it.toString()
+                if (it is NetworkException) {
+                    mes ="Token not valid"
+                }
+                viewState.showToast(mes)
             })
         unsubscribeOnDestroy(u)
     }

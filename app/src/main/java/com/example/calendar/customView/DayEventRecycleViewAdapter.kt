@@ -4,6 +4,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.example.calendar.R
+import com.example.calendar.auth.getCurrentFirebaseUser
+import com.example.calendar.auth.isCurrentFirebaseUser
 import com.example.calendar.helpers.*
 import com.example.calendar.repository.server.model.EventInstance
 import kotlinx.android.synthetic.main.view_day_event_holder.view.*
@@ -34,6 +36,11 @@ class DayEventViewHolder(
             view.tvEventTitle.text = emptyTitle
         } else {
             view.tvEventTitle.text = e.entity.name
+        }
+        view.tvUser.visibility = View.GONE
+        if (!isCurrentFirebaseUser(e.user)) {
+            view.tvUser.text = "Владелец: ${e.user.username}"
+            view.tvUser.visibility = View.VISIBLE
         }
 
         var first = e.started_at_local.format(fmtHour)

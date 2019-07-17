@@ -68,8 +68,8 @@ class ListEventPresenter(
 
     private fun onLoadingSuccess(rep: List<EventInstance>) {
         events.clear()
-        events.addAll(rep)
-        viewState.setEvents(rep.sortedWith(compareBy({ it.started_at }, { it.ended_at })) )
+        events.addAll(rep.sortedWith(compareBy({ it.started_at }, { it.ended_at })))
+        viewState.setEvents(events)
     }
 }
 

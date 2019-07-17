@@ -8,6 +8,7 @@ import com.example.calendar.repository.server.EventRepository
 import com.example.calendar.repository.server.model.EventInstance
 import com.example.calendar.repository.server.model.EventPatternServer
 import com.example.calendar.repository.server.model.EventServer
+import com.example.calendar.repository.server.model.UserServer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
@@ -196,6 +197,7 @@ class WeekEventPresenter(
                         rrule = "",
                         timezone = startIntersection.zone
                     ),
+                    user = UserServer("-1", "-1"),
                     started_at = startIntersection,
                     ended_at = endIntersection
                 )

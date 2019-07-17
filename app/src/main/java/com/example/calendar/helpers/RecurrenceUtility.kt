@@ -4,6 +4,7 @@ import com.example.calendar.helpers.convert.*
 import com.example.calendar.repository.server.model.EventInstance
 import com.example.calendar.repository.server.model.EventPatternServer
 import com.example.calendar.repository.server.model.EventServer
+import com.example.calendar.repository.server.model.UserServer
 import org.dmfs.rfc5545.Weekday
 import org.dmfs.rfc5545.recur.Freq
 import org.dmfs.rfc5545.recur.RecurrenceRule
@@ -14,8 +15,10 @@ import org.threeten.bp.format.DateTimeFormatter
 
 fun isRecurrence(rrule: String) = rrule.isNotEmpty()
 
-fun isFromPeriod(start_event: ZonedDateTime, end_event: ZonedDateTime,
-                         start: ZonedDateTime, end: ZonedDateTime) : Boolean {
+fun isFromPeriod(
+    start_event: ZonedDateTime, end_event: ZonedDateTime,
+    start: ZonedDateTime, end: ZonedDateTime
+): Boolean {
     return (start_event <= end && end_event >= start)
 }
 
@@ -23,6 +26,7 @@ fun isFromPeriod(start_event: ZonedDateTime, end_event: ZonedDateTime,
 fun getEventInstances(
     event: EventServer,
     pattern: EventPatternServer,
+    user: UserServer,
     start: ZonedDateTime,
     end: ZonedDateTime
 ): List<EventInstance> {
@@ -37,10 +41,15 @@ fun getEventInstances(
     val endRange = toDateTime(endLocal, toTimeZone(pattern.timezone))
 
     if (!isRecurrence(pattern.rrule)) {
-        val eventInstance = EventInstance(event, pattern, pattern.started_at, pattern.started_at.plus(pattern.duration))
+        val eventInstance = EventInstance(
+            event, pattern, user,
+            pattern.started_at, pattern.started_at.plus(pattern.duration)
+        )
         if (isFromPeriod(
                 eventInstance.started_at_local, eventInstance.ended_at_local,
-                startLocal, endLocal)) {
+                startLocal, endLocal
+            )
+        ) {
             instances.add(eventInstance)
         }
         return instances
@@ -65,11 +74,17 @@ fun getEventInstances(
             break;
         }
         val startNewEvent = fromDateTime(startInstance)
-        val eventInstance = EventInstance(event, pattern, startNewEvent, startNewEvent.plus(pattern.duration))
+        val eventInstance = EventInstance(
+            event, pattern,
+            user,
+            startNewEvent, startNewEvent.plus(pattern.duration)
+        )
 
         if (isFromPeriod(
                 eventInstance.started_at_local, eventInstance.ended_at_local,
-                startLocal, endLocal)) {
+                startLocal, endLocal
+            )
+        ) {
             instances.add(eventInstance)
             counter++
         }
@@ -112,21 +127,23 @@ fun calculateEndedAt(
 }
 
 private fun getPosName(p: Int?) = when (p) {
-        0, null -> { "" }
-        else -> {
-            var first = p.toString()
-            if (p < 0) {
-                first += " с конца"
-            }
-            first
-        }
+    0, null -> {
+        ""
     }
+    else -> {
+        var first = p.toString()
+        if (p < 0) {
+            first += " с конца"
+        }
+        first
+    }
+}
 
 // list of days of the week - all
 // pos - 1..53, -53..-1
-private fun getBYDAY(w: RecurrenceRule.WeekdayNum) : String {
+private fun getBYDAY(w: RecurrenceRule.WeekdayNum): String {
     var week = ""
-    when(w.weekday) {
+    when (w.weekday) {
         Weekday.SU -> week = "вс"
         Weekday.MO -> week = "пн"
         Weekday.TU -> week = "вт"
@@ -134,7 +151,8 @@ private fun getBYDAY(w: RecurrenceRule.WeekdayNum) : String {
         Weekday.WE -> week = "ср"
         Weekday.TH -> week = "чт"
         Weekday.SA -> week = "сб"
-        null -> {}
+        null -> {
+        }
     }
     val first = getPosName(w.pos)
     if (first.isEmpty())
@@ -145,19 +163,45 @@ private fun getBYDAY(w: RecurrenceRule.WeekdayNum) : String {
 // list of months of the year - all
 // 1..12
 private fun getBYMONTH(p: Int?) = when (p) {
-    1 -> { "янв." }
-    2 -> { "фев."}
-    3 -> { "мар." }
-    4 -> { "апр." }
-    5 -> { "май" }
-    6 -> { "июн." }
-    7 -> { "июл." }
-    8 -> { "авг." }
-    9 -> { "сент." }
-    10 -> { "окт." }
-    11 -> { "нояб." }
-    12 -> { "дек." }
-    else -> { "" }
+    1 -> {
+        "янв."
+    }
+    2 -> {
+        "фев."
+    }
+    3 -> {
+        "мар."
+    }
+    4 -> {
+        "апр."
+    }
+    5 -> {
+        "май"
+    }
+    6 -> {
+        "июн."
+    }
+    7 -> {
+        "июл."
+    }
+    8 -> {
+        "авг."
+    }
+    9 -> {
+        "сент."
+    }
+    10 -> {
+        "окт."
+    }
+    11 -> {
+        "нояб."
+    }
+    12 -> {
+        "дек."
+    }
+    else -> {
+        ""
+    }
 }
 
 //BYMONTHDAY
@@ -181,7 +225,8 @@ private fun getListPos(
     r: RecurrenceRule,
     p: RecurrenceRule.Part,
     prefix: String = "", postfix: String = "",
-    getPos: (Int?) -> String = ::getPosName) : String {
+    getPos: (Int?) -> String = ::getPosName
+): String {
     val part = r.getByPart(p)
     part?.run {
         val v = part.map { getPos(it) }.joinToString(separator = ", ")
@@ -189,8 +234,9 @@ private fun getListPos(
     }
     return ""
 }
+
 // Freq.HOURLY, Freq.MINUTELY, FREQ.SECONDLY
-fun getRecurrenceName(r: String) : String {
+fun getRecurrenceName(r: String): String {
     if (!isRecurrence(r)) {
         return r
     }
@@ -200,11 +246,20 @@ fun getRecurrenceName(r: String) : String {
 
     var freq = ""
     when (rrule.freq) {
-        Freq.DAILY -> { freq = "Ежедневно" }
-        Freq.WEEKLY -> { freq = "Еженедельно" }
-        Freq.MONTHLY ->  { freq = "Ежемесячно" }
-        Freq.YEARLY -> { freq = "Ежегодно" }
-        else -> {}
+        Freq.DAILY -> {
+            freq = "Ежедневно"
+        }
+        Freq.WEEKLY -> {
+            freq = "Еженедельно"
+        }
+        Freq.MONTHLY -> {
+            freq = "Ежемесячно"
+        }
+        Freq.YEARLY -> {
+            freq = "Ежегодно"
+        }
+        else -> {
+        }
     }
 
     var interval = ""

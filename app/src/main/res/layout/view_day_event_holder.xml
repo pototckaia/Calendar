@@ -29,4 +29,13 @@
             tool:text="Hour Duration Event"
     />
 
+    <TextView
+            android:id="@+id/tvUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center"
+            tool:text="Владелец: hhhhhh"
+    />
+
 </LinearLayout>

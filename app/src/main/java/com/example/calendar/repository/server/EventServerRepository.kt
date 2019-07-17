@@ -1,7 +1,5 @@
 package com.example.calendar.repository.server
 
-import android.os.Environment
-import android.util.Log
 import com.example.calendar.helpers.convert.toLongUTC
 import com.example.calendar.helpers.getEventInstances
 import com.example.calendar.repository.server.model.*
@@ -16,8 +14,6 @@ import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
-import retrofit2.http.POST
-import retrofit2.http.Part
 import java.io.*
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
@@ -59,11 +55,18 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .flatMap { Observable.fromIterable(it) }
             .flatMap { entity ->
                 api.getPatterns(entity.id)
-                    .map { it.data }
-                    .map { patterns ->
+                    .zipWith(api.getUser(entity.owner_id, null, null),
+                        BiFunction { p: EventPatternResponse, u: UserResponse ->
+                            Pair(p.data, UserServer(u.id, u.username))
+                        }
+                    )
+                    .map {
                         val list = ArrayList<EventInstance>()
-                        patterns.forEach { pattern ->
-                            list.addAll(getEventInstances(entity, pattern, startLocal, endLocal))
+                        val user = it.second
+                        it.first.forEach { pattern ->
+                            list.addAll(
+                                getEventInstances(entity, pattern, user, startLocal, endLocal)
+                            )
                         }
                         Pair(entity.id, list)
                     }
@@ -157,7 +160,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         return api.importICal(body)
     }
 
-    override fun getToken(permissions: List<PermissionRequest>) : Observable<String> {
+    override fun getToken(permissions: List<PermissionRequest>): Observable<String> {
         return api.getLink(permissions)
             .map { it.string() }
     }

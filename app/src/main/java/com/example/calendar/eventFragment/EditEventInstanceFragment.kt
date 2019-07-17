@@ -12,6 +12,8 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
+import com.example.calendar.auth.getCurrentFirebaseUser
+import com.example.calendar.auth.isCurrentFirebaseUser
 import com.example.calendar.helpers.EVENT_INSTANCE_KEY
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.navigation.Screens
@@ -114,8 +116,11 @@ class EditEventInstanceFragment : MvpAppCompatFragment(),
         }
     }
 
-    override fun updateEventInfo(ownerName: String, e: EventRequest, p: PatternRequest) {
-        v.etOwner.setText(ownerName)
+    override fun updateEventInfo(user: UserServer, e: EventRequest, p: PatternRequest) {
+        v.etOwner.setText(user.username)
+        if (isCurrentFirebaseUser(user)) {
+            v.etOwner.setText("Вы")
+        }
         v.vEventRequest.eventRequest = e
         v.vEventPatternRequest.viewModel.liveData.postValue(p)
     }

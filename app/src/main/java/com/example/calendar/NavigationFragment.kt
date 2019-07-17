@@ -70,9 +70,6 @@ class NavigationFragment :
     lateinit var progressDialog: ProgressBarDialog
     lateinit var activateTokenDialog: AlertDialog
 
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

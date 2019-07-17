@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.calendar.auth.getCurrentFirebaseUser
 import com.example.calendar.helpers.OnBackPressed
 import com.example.calendar.helpers.USER_ID_TOKEN
 import com.example.calendar.helpers.USER_ID_TOKEN_PREF
@@ -24,16 +25,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val user = FirebaseAuth.getInstance().currentUser
-        if (user == null) {
-            // No user is signed in
-            // might not finished initializing
-            InjectApplication.inject.router.newRootChain(Screens.NavigationScreen(), Screens.AuthScreen())
-            return
-        }
-        // User is signed in
+        // UserServer is signed in
         // token might not valid : local token has not refreshed
-        user.getIdToken(true)
+        getCurrentFirebaseUser().getIdToken(true)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val idToken = task.result!!.token
