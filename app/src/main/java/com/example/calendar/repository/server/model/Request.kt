@@ -149,8 +149,9 @@ enum class EntityType {
     EVENT, PATTERN, TASK;
 }
 
+@Parcelize
 data class PermissionRequest(
     val action: PermissionAction,
-    val entity_id: Long,
+    val entity_id: Long?,
     val entity_type: EntityType
-)
+) : Parcelable

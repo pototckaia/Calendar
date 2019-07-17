@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+>
+    <TextView
+            android:id="@+id/tvTitleAccess"
+            tools:text="Предоставления доступа для записи id: 1234"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="?attr/editTextBackground"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+    >
+        <ImageView
+                android:id="@+id/ivUser"
+                android:layout_height="35dp"
+                android:layout_width="40dp"
+                app:srcCompat="@drawable/users"
+        />
+
+        <EditText
+                android:id="@+id/etUserEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+        />
+    </LinearLayout>
+
+    <CheckBox
+            android:id="@+id/cbRead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:clickable="false"
+            android:text="Чтение"
+    />
+
+    <CheckBox
+            android:id="@+id/cbUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Редактирование"
+    />
+
+    <CheckBox
+            android:id="@+id/cbDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Удаление"
+    />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    >
+        <Button
+                android:id="@+id/bToken"
+                android:text="Токен"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/bGrant"
+        />
+        <Button
+                android:id="@+id/bGrant"
+                android:text="Доступ"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_default="spread"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/bToken"
+                app:layout_constraintRight_toRightOf="parent"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

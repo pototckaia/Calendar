@@ -50,6 +50,34 @@
     />
 
     <Button
+            android:id="@+id/bPermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Все доступные permission"
+            android:background="?selectableItemBackground"
+    />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+    />
+
+    <Button
+            android:id="@+id/bActivateToken"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Активировать токен"
+            android:background="?selectableItemBackground"
+    />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+    />
+
+    <Button
             android:id="@+id/bImport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

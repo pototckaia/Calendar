@@ -74,6 +74,7 @@ dependencies {
 
     implementation deps.retrofit.core
     implementation deps.retrofit.gsonConverter
+    implementation deps.retrofit.scalars
     implementation deps.retrofit.rxJava2
     implementation deps.retrofit.logging
 

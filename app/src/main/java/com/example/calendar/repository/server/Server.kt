@@ -21,6 +21,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 class Server {
@@ -78,6 +79,7 @@ class Server {
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(json))
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addCallAdapterFactory(rxAdapter)
             .build()
 

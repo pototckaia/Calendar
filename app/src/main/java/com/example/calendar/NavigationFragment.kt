@@ -21,8 +21,10 @@ import android.net.Uri
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.ProgressBarDialog
-import com.example.calendar.impor.ExportImportPresenter
-import com.example.calendar.impor.LoadingView
+import com.example.calendar.export.ExportImportPresenter
+import com.example.calendar.export.FileUtils
+import com.example.calendar.export.LoadingView
+import java.io.File
 
 
 class NavigationFragment :
@@ -95,6 +97,9 @@ class NavigationFragment :
         return v
     }
 
+    private fun onActivateToken() {
+
+    }
 
     private fun isPermissionGranted(c: Context, permission: String) =
         ContextCompat.checkSelfPermission(c, permission) == PackageManager.PERMISSION_GRANTED
@@ -124,7 +129,8 @@ class NavigationFragment :
     }
 
     private fun onImport(uri: Uri) {
-        // todo
+        val path = FileUtils.getPath(activity!!, uri)
+        exportImportPresenter.onImport(File(path))
     }
 
     private fun onExport(uri: Uri) {

@@ -8,11 +8,16 @@ import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
+import retrofit2.http.POST
+import retrofit2.http.Part
 import java.io.*
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
@@ -145,4 +150,16 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
     override fun export(uri: String): Observable<ResponseBody> {
         return api.exportICal()
     }
+
+    override fun import(file: File): Completable {
+        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+        return api.importICal(body)
+    }
+
+    override fun getLink(permissions: List<PermissionRequest>) : Observable<String> {
+        return api.getLink(permissions)
+            .map { it.string() }
+    }
+
 }

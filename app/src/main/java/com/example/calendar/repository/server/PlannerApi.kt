@@ -18,6 +18,10 @@ interface PlannerApi {
     fun exportICal() : Observable<ResponseBody>
 
     @POST("$request/export")
+    @Multipart
+    @Headers(
+        "Content-Type: multipart/form-data",
+        "accept: application/json")
     fun importICal(@Part file: MultipartBody.Part) : Completable
 
     // Event
@@ -140,7 +144,7 @@ interface PlannerApi {
     @POST("$request/share")
     fun getLink(
         @Body permissions: List<PermissionRequest>
-    ) : Observable<String>
+    ) : Observable<ResponseBody>
 
     // Activate generated share-link
     @GET("$request/share/{token}")

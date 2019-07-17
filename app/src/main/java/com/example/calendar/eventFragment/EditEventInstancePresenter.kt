@@ -13,7 +13,7 @@ import ru.terrakok.cicerone.Router
 class EditEventInstancePresenter(
     private val router: Router,
     private val eventRepository: EventRepository,
-    private var eventInstance: EventInstance
+    var eventInstance: EventInstance
 ) : BaseMvpSubscribe<EditEventInstanceView>() {
 
     private var editEventPattern = eventInstance.pattern.patternRequest

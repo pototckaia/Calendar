@@ -18,7 +18,6 @@ import com.example.calendar.navigation.Screens
 import com.example.calendar.repository.server.model.*
 import kotlinx.android.synthetic.main.fragment_event_instant.view.*
 import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset
 
 
 //enum class ModifyView {
@@ -172,7 +171,10 @@ class EditEventInstanceFragment : MvpAppCompatFragment(),
     }
 
     private fun onShareClick() {
-        Toast.makeText(context, "Не работает", Toast.LENGTH_LONG).show()
+        router.navigateTo(Screens.CreateEventPermissionScreen(
+            editEventPresenter.eventInstance.entity.id,
+            editEventPresenter.eventInstance.pattern.id
+        ))
     }
 
     private fun onTaskClick() {

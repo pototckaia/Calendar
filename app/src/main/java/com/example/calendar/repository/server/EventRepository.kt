@@ -1,13 +1,12 @@
 package com.example.calendar.repository.server
 
-import com.example.calendar.repository.server.model.Event
-import com.example.calendar.repository.server.model.EventInstance
-import com.example.calendar.repository.server.model.EventRequest
-import com.example.calendar.repository.server.model.PatternRequest
+import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import org.threeten.bp.ZonedDateTime
+import retrofit2.http.Body
+import java.io.File
 import kotlin.collections.HashSet
 
 
@@ -30,4 +29,8 @@ interface EventRepository {
 //    fun deleteFuture(entity: EventInstance): Completable
 
     fun export(uri: String): Observable<ResponseBody>
+
+    fun import(file: File): Completable
+
+    fun getLink(permissions: List<PermissionRequest>) : Observable<String>
 }

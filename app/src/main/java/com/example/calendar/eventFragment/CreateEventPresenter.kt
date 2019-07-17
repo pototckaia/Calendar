@@ -30,9 +30,11 @@ class CreateEventPresenter(
         val subscription = eventRepository.insertEvent(event, pattern)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+            .subscribe ({
                 router.exit()
-            }
+            }, {
+                viewState.showError(it.toString())
+            })
 
         unsubscribeOnDestroy(subscription)
     }
