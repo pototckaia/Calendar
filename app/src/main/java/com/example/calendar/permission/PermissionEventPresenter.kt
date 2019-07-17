@@ -1,8 +1,6 @@
 package com.example.calendar.permission
 
-import android.content.ContentResolver
 import com.arellomobile.mvp.InjectViewState
-import com.example.calendar.export.LoadingView
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.repository.server.EventRepository
 import com.example.calendar.repository.server.model.EntityType
@@ -33,7 +31,7 @@ class PermissionEventPresenter(
         }
 
 
-        val u = eventRepository.getLink(request)
+        val u = eventRepository.getToken(request)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 viewState.addToClipboard(getTokenFromLink(it))

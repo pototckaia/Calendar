@@ -32,5 +32,7 @@ interface EventRepository {
 
     fun import(file: File): Completable
 
-    fun getLink(permissions: List<PermissionRequest>) : Observable<String>
+    fun getToken(permissions: List<PermissionRequest>) : Observable<String>
+
+    fun activateToken(token: String) : Completable
 }

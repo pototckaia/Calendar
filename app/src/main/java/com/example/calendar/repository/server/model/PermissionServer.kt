@@ -4,9 +4,9 @@ import org.threeten.bp.ZonedDateTime
 
 data class PermissionServer(
     val id: Long,
-    val owner_id: Long,
-    val user_id: Long,
-    val entity_id: Long,
+    val owner_id: String,
+    val user_id: String,
+    val entity_id: String,
 
     val name: String,
     val created_at: ZonedDateTime,

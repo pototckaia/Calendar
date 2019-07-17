@@ -157,9 +157,14 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         return api.importICal(body)
     }
 
-    override fun getLink(permissions: List<PermissionRequest>) : Observable<String> {
+    override fun getToken(permissions: List<PermissionRequest>) : Observable<String> {
         return api.getLink(permissions)
             .map { it.string() }
+    }
+
+    override fun activateToken(token: String): Completable {
+        return api.activateLink(token)
+            .ignoreElements()
     }
 
 }

@@ -17,19 +17,24 @@ import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_navigation.view.*
 import android.content.Intent
 import android.app.Activity
+import android.app.AlertDialog
 import android.net.Uri
+import android.widget.LinearLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.ProgressBarDialog
 import com.example.calendar.export.ExportImportPresenter
 import com.example.calendar.export.FileUtils
 import com.example.calendar.export.LoadingView
+import com.example.calendar.permission.ActivateTokenPresenter
+import com.example.calendar.permission.ActivateTokenView
+import kotlinx.android.synthetic.main.dialog_acivate_token.view.*
 import java.io.File
 
 
 class NavigationFragment :
     MvpAppCompatFragment(),
-    LoadingView {
+    LoadingView, ActivateTokenView {
 
 
     companion object {
@@ -54,7 +59,19 @@ class NavigationFragment :
         )
     }
 
+    @InjectPresenter
+    lateinit var activateTokenPresenter: ActivateTokenPresenter
+
+    @ProvidePresenter
+    fun provideActivateTokenPresenter(): ActivateTokenPresenter {
+        return ActivateTokenPresenter(InjectApplication.inject.repository)
+    }
+
     lateinit var progressDialog: ProgressBarDialog
+    lateinit var activateTokenDialog: AlertDialog
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,11 +111,31 @@ class NavigationFragment :
         v.bExport.setOnClickListener { onExport() }
         v.bImport.setOnClickListener { onImport() }
 
+        v.bActivateToken.setOnClickListener { activateTokenPresenter.onActivateClick() }
+
         return v
     }
 
-    private fun onActivateToken() {
+    override fun showDialog() {
+        val v = View.inflate(context, R.layout.dialog_acivate_token, null)
+        val alertBuilder = AlertDialog.Builder(activity)
+        alertBuilder
+            .setView(v)
+            .setCancelable(true)
+            .setPositiveButton(context!!.getString(android.R.string.ok), null)
 
+        activateTokenDialog = alertBuilder.create()
+        activateTokenDialog.setOnShowListener {
+                val button = activateTokenDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                button.setOnClickListener {
+                    activateTokenPresenter.activate(v.etToken.text.toString())
+                }
+            }
+        activateTokenDialog.show()
+    }
+
+    override fun dismissDialog() {
+        activateTokenDialog.dismiss()
     }
 
     private fun isPermissionGranted(c: Context, permission: String) =
