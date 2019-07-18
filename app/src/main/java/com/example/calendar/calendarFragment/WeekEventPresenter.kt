@@ -74,7 +74,6 @@ class WeekEventPresenter(
     private fun loadEvents(monthStart: ZonedDateTime, monthEnd: ZonedDateTime) {
         onLoadingStart()
         val subscription = eventRepository.fromTo(monthStart, monthEnd)
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
                     onLoadingStop()

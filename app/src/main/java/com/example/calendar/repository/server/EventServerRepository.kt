@@ -5,6 +5,7 @@ import com.example.calendar.helpers.getEventInstances
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -76,8 +77,10 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 val list = ArrayList<EventInstance>()
                 it.forEach { l -> list.addAll(l.second) }
                 list as List<EventInstance>
+
             }
             .toObservable()
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
 
@@ -106,6 +109,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     .collect({ hashSetOf<ZonedDateTime>() }, { set, z -> set.add(z) })
                     .toObservable()
             }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun getEventById(eventId: Long): Observable<Event> {
@@ -116,6 +120,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     Event(e.data[0], p.data)
                 }
             )
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun insertEvent(
@@ -130,6 +135,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 Observable.merge(observables)
             }
             .ignoreElements()
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun updateAll(event: EventInstance): Completable {
@@ -139,11 +145,13 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 api.updatePattern(event.pattern.id, event.pattern.patternRequest)
                     .ignoreElements()
             )
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun deleteAll(event: EventInstance): Completable {
         return api.deletePatternById(event.pattern.id)
             .ignoreElements()
+            .observeOn(AndroidSchedulers.mainThread())
 //            .andThen(
 //                api.deleteEventById(event.entity.id)
 //                    .ignoreElements()
@@ -152,22 +160,48 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 
     override fun export(uri: String): Observable<ResponseBody> {
         return api.exportICal()
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun import(file: File): Completable {
         val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         return api.importICal(body)
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun getToken(permissions: List<PermissionRequest>): Observable<String> {
         return api.getLink(permissions)
             .map { it.string() }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun activateToken(token: String): Completable {
         return api.activateLink(token)
             .ignoreElements()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun getUserByEmail(email: String): Observable<UserServer> {
+        return api.getUser(null, null, email)
+            .map {
+                UserServer(it.id, it.username)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun getPermission(user_id: String, permissions: List<PermissionRequest>) : Completable {
+        if (permissions.isEmpty()) {
+            return Completable.fromRunnable {  }
+        }
+        val c = permissions.map {
+            api.getGrant(it.action, it.entity_id, it.entity_type, user_id)
+                .onErrorResumeNext(Observable.empty<PermissionResponse>())
+                .ignoreElements()
+        }
+        // on exist permission throw NoContent
+        return Completable.merge(c)
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
 }

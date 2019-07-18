@@ -40,7 +40,6 @@ class MonthDotPresenter(
             .endOfDay()
 
         val subscription = eventRepository.fromToSet(monthStart, monthEnd)
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
                     onLoadingSuccess(repositories)

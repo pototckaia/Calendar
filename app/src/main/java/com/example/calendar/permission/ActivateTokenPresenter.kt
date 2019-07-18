@@ -18,7 +18,6 @@ class ActivateTokenPresenter(
 
     fun activate(token: String) {
         val u = eventRepository.activateToken(token)
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 viewState.dismissDialog()
             }, {

@@ -38,17 +38,13 @@ class EditEventInstancePresenter(
         pattern.timezone = editEventPattern.timezone
         newEventInstance.pattern.patternRequest = pattern
 
-//        if (newEventInstance == eventInstance) {
-//            return
-//        }
-
-        Log.d("Update__", "update", null)
         val sub = eventRepository.updateAll(newEventInstance)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     onUpdateLoading(newEventInstance)
+                    // todo forbined
+                    // todo auth
+                    // todo notfind
                 },
                 { error ->
                     onLoadingFailed(error.toString())
@@ -63,8 +59,6 @@ class EditEventInstancePresenter(
 
         isDelete = true
         val sub = eventRepository.deleteAll(eventInstance)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     onDeleteLoading()
@@ -98,8 +92,6 @@ class EditEventInstancePresenter(
 
     private fun loadEvent(id: Long) {
         val subscription = eventRepository.getEventById(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
                     onFirstLoading(repositories)

@@ -51,7 +51,6 @@ class ListEventPresenter(
 
     private fun loadEvents() {
         val subscription = eventRepository.fromTo(start, end)
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { repositories ->
                     onLoadingSuccess(repositories)

@@ -112,7 +112,7 @@ class NavigationFragment :
         v.bActivateToken.setOnClickListener { activateTokenPresenter.onActivateClick() }
 
         v.bCreatePermissionAll.setOnClickListener {
-            router.navigateTo(Screens.CreateEventPermissionScreen())
+//            router.navigateTo(Screens.CreateEventPermissionScreen())
         }
 
         return v

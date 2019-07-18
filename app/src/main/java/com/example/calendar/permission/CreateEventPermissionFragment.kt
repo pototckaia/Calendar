@@ -109,7 +109,7 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
     }
 
     private fun onGrant() {
-        showToast("Не работает")
+        permissionPresenter.getPermission(v.etUserEmail.text.toString(), getAction())
     }
 
     override fun showToast(mes: String) {
@@ -121,5 +121,9 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
         val clip = ClipData.newPlainText("label", s)
         clipboard.primaryClip = clip
         showToast("В буфер добавлена ссылка")
+    }
+
+    override fun showEmailError() {
+        v.etUserEmail.error = "Email not find"
     }
 }

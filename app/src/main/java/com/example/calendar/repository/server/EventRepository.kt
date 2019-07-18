@@ -34,5 +34,9 @@ interface EventRepository {
 
     fun getToken(permissions: List<PermissionRequest>) : Observable<String>
 
+    fun getPermission(user_id: String, permissions: List<PermissionRequest>) : Completable
+
+    fun getUserByEmail(email: String): Observable<UserServer>
+
     fun activateToken(token: String) : Completable
 }

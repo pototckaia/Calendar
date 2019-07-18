@@ -24,8 +24,6 @@ class ExportImportPresenter(
     fun onExport(uri: Uri) {
         viewState.showLoading()
         val result = eventRepository.export(uri.toString())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .map {
                 writeResponseBodyToUri(uri, it)
             }
@@ -43,7 +41,6 @@ class ExportImportPresenter(
         viewState.showLoading()
         val result = eventRepository.import(file)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 viewState.stopLoading()
                 viewState.showToast("Import complete")
