@@ -3,6 +3,8 @@ package com.example.calendar.permission
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.repository.server.EventRepository
+import com.example.calendar.repository.server.model.EntityType
+import com.example.calendar.repository.server.model.PermissionAction
 import com.example.calendar.repository.server.model.PermissionModel
 
 
@@ -12,27 +14,29 @@ class PermissionEventListPresenter(
 ) : BaseMvpSubscribe<PermissionListView>() {
     var iOwnerPermission = ArrayList<PermissionModel>()
     var iUserPermission = ArrayList<PermissionModel>()
-    var curMine : Boolean? = null
+    var curMine: Boolean? = null
 
 
     init {
         // мне дали доступ
-        viewState.showLoading()
-        loadPermission(I_OWNER, iOwnerPermission) { viewState.stopLoading() }
+        loadPermission(I_OWNER, iOwnerPermission) { }
         // я дал доступ - true
-        loadPermission(I_USER, iUserPermission) {  viewState.stopLoading() }
+        loadPermission(I_USER, iUserPermission) { }
     }
 
     private fun getPermission(m: Boolean) = if (m == I_USER) iUserPermission else iOwnerPermission
 
     private fun loadPermission(mine: Boolean, outPermissions: ArrayList<PermissionModel>, onSuccess: () -> Unit) {
+        viewState.showLoading()
         val u = eventRepository.getEventPermissions(mine, "Все события", "Имя не задано")
             .subscribe({
                 outPermissions.clear()
                 outPermissions.addAll(it)
                 onSuccess()
+                viewState.stopLoading()
             }, {
                 viewState.showToast(it.toString())
+                viewState.stopLoading()
             })
         unsubscribeOnDestroy(u)
     }
@@ -51,17 +55,42 @@ class PermissionEventListPresenter(
         viewState.showLoading()
         loadPermission(curMine, p) {
             viewState.setPermission(curMine, p)
-            viewState.stopLoading()
         }
         loadPermission(!curMine, getPermission(!curMine)) {}
     }
 
     fun onDelete(p: PermissionModel, pos: Int) {
-        if (curMine == p.mine) {
-            // todo server
-            getPermission(curMine!!).removeAt(pos)
-            viewState.remove(pos)
+        if (curMine != p.mine) {
+            return
         }
+
+        val permissions = getPermission(curMine!!)
+
+        val update = ArrayList<Pair<Int, PermissionModel>>()
+        update.add(Pair(pos, p))
+        if (p.actionType == PermissionAction.READ) {
+            val l = permissions
+                .withIndex()
+                .filter { (i, it) ->
+                    it.entity_id == p.entity_id &&
+                            (it.actionType == PermissionAction.UPDATE || it.actionType == PermissionAction.DELETE)
+
+                }.map { (i, value) -> Pair(i, value) }
+            update.addAll(l)
+        }
+
+        val u = eventRepository.revokeEventPermission(update.map { it.second })
+            .subscribe({
+                update.forEach {
+                    val p = it.first
+                    viewState.remove(pos)
+                    permissions.removeAt(pos)
+                }
+            }, {
+                viewState.showToast(it.toString())
+            })
+
+
     }
 
     companion object {

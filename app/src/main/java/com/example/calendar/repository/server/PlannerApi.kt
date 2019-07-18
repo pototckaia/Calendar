@@ -130,6 +130,13 @@ interface PlannerApi {
         @Query("offset") offset: Long = 0
     ) : Single<PermissionResponse>
 
+    // Get granted permission for resources
+    @GET("$request/permissions")
+    fun getPermissionsById(
+        @Query("entity_type") entity_type: EntityType,
+    	@Query("id") id: List<Long>
+    ) : Single<PermissionResponse>
+
     @DELETE("$request/permissions/{id}")
     fun revokePermissionById(@Path("id") id: Long) : Single<PermissionResponse>
 

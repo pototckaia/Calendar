@@ -11,4 +11,11 @@ data class PermissionServer(
     val name: String,
     val created_at: ZonedDateTime,
     val updated_at: ZonedDateTime
-)
+) {
+
+    val action_type: PermissionAction
+        get() {
+            val l = name.split("_".toRegex(), 2)
+            return PermissionAction.valueOf(l[0])
+        }
+}

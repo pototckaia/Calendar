@@ -31,7 +31,11 @@ interface EventRepository {
 
     fun getPermission(user_id: String, permissions: List<PermissionRequest>): Completable
 
-    fun getEventPermissions(mine: Boolean, namePermissionAll: String, nameUserNotFind: String): Single<List<PermissionModel>>
+    fun getEventPermissions(
+        mine: Boolean, namePermissionAll: String, nameUserNotFind: String
+    ): Single<List<PermissionModel>>
+
+    fun revokeEventPermission(event_permissions: List<PermissionModel>): Completable
 
     fun getUserByEmail(email: String): Single<UserServer>
 

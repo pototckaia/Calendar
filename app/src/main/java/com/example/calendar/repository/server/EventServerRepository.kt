@@ -1,7 +1,5 @@
 package com.example.calendar.repository.server
 
-import android.util.Log
-import com.example.calendar.auth.getCurrentFirebaseUser
 import com.example.calendar.auth.isFindCurrentUser
 import com.example.calendar.helpers.convert.toLongUTC
 import com.example.calendar.helpers.getEventInstances
@@ -20,6 +18,7 @@ import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 import java.io.*
+import java.lang.IllegalArgumentException
 
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
@@ -218,13 +217,12 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 
     private fun getUserIdByMine(it: PermissionServer, mine: Boolean) = if (mine) it.user_id else it.owner_id
 
-    private fun getActionTypeByName(it: String): PermissionAction {
-        val l = it.split("_".toRegex(), 2)
-        return PermissionAction.valueOf(l[0])
-    }
-
     // todo refactor
-    override fun getEventPermissions(mine: Boolean, namePermissionAll: String, nameUserNotFind: String): Single<List<PermissionModel>> {
+    override fun getEventPermissions(
+        mine: Boolean,
+        namePermissionAll: String,
+        nameUserNotFind: String
+    ): Single<List<PermissionModel>> {
         val entityType = EntityType.EVENT
         return api.getPermissions(entityType, mine)
             .map { it.data }
@@ -245,10 +243,10 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                             it.data[0]
                         }
                         .map { user ->
-                            val actionType = getActionTypeByName(it.name)
                             PermissionModel(
-                                it.id, mine, entityType,
-                                namePermissionAll, user.id, user.username, actionType, true)
+                                it.id, it.entity_id, mine, entityType,
+                                namePermissionAll, user.username, it.action_type, true
+                            )
                         }
                 } else {
                     // permission for entity
@@ -267,14 +265,58 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                                 },
                             BiFunction { event: EventResponse, user: UserModel ->
                                 val e = event.data[0]
-                                val actionType = getActionTypeByName(it.name)
-                                PermissionModel(it.id, mine, entityType,
-                                    e.name, user.id, user.username, actionType, false)
+                                PermissionModel(
+                                    it.id, it.entity_id, mine, entityType,
+                                    e.name, user.username, it.action_type, false
+                                )
                             })
                 }
                 single.toFlowable()
             }
             .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    private fun revokeEventPermission(event_permission: PermissionModel): Completable {
+        if (event_permission.entityType != EntityType.EVENT) {
+            throw IllegalArgumentException()
+        }
+        val start = api.revokePermissionById(event_permission.id)
+
+        if (event_permission.isAll) {
+            return start.toCompletable()
+        }
+
+        val event_id = event_permission.entity_id.toLong()
+
+        return start
+            .flatMap { api.getPatterns(event_id) }
+            .map { it.data }
+            .flatMap {
+                api.getPermissionsById(EntityType.PATTERN, it.map { p -> p.id })
+                    .map { it.data }
+                    .map { l ->
+                        l.filter { p -> p.action_type == event_permission.actionType }
+                    }
+                    .flatMap {
+                        Observable.fromIterable(it)
+                            .flatMap {
+                                api.revokePermissionById(it.id)
+                                    .toObservable()
+                            }
+                            .toList()
+                    }
+            }
+            .toCompletable()
+    }
+
+    override fun revokeEventPermission(event_permissions: List<PermissionModel>): Completable {
+        val e = event_permissions.map {
+            revokeEventPermission(it)
+                .onErrorComplete()
+        }
+
+        return Completable.merge(e)
             .observeOn(AndroidSchedulers.mainThread())
     }
 }
