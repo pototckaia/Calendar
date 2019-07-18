@@ -18,8 +18,9 @@ import kotlinx.android.synthetic.main.fragment_navigation.view.*
 import android.content.Intent
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.net.Uri
-import android.widget.LinearLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.customView.ProgressBarDialog
@@ -28,13 +29,17 @@ import com.example.calendar.export.FileUtils
 import com.example.calendar.export.LoadingView
 import com.example.calendar.permission.ActivateTokenPresenter
 import com.example.calendar.permission.ActivateTokenView
+import com.example.calendar.permission.PermissionEventPresenter
+import com.example.calendar.permission.PermissionView
+import com.example.calendar.repository.server.model.PermissionAction
 import kotlinx.android.synthetic.main.dialog_acivate_token.view.*
+import kotlinx.android.synthetic.main.dialog_create_link.*
 import java.io.File
 
 
 class NavigationFragment :
     MvpAppCompatFragment(),
-    LoadingView, ActivateTokenView {
+    LoadingView, ActivateTokenView, PermissionView {
 
 
     companion object {
@@ -59,6 +64,19 @@ class NavigationFragment :
         return ExportImportPresenter(
             repository,
             InjectApplication.inject.contentResolver
+        )
+    }
+
+    @InjectPresenter
+    lateinit var permissionPresenter: PermissionEventPresenter
+
+    @ProvidePresenter
+    fun providePermissionPresenter(): PermissionEventPresenter {
+        return PermissionEventPresenter(
+            null,
+            null,
+            repository,
+            router
         )
     }
 
@@ -112,7 +130,20 @@ class NavigationFragment :
         v.bActivateToken.setOnClickListener { activateTokenPresenter.onActivateClick() }
 
         v.bCreatePermissionAll.setOnClickListener {
-//            router.navigateTo(Screens.CreateEventPermissionScreen())
+            AlertDialog.Builder(activity)
+                .setView(R.layout.dialog_create_link)
+                .setPositiveButton(context!!.getString(android.R.string.ok)) { d, i ->
+                    val dialog = d as AlertDialog
+                    val action = arrayListOf(PermissionAction.READ)
+                    if (dialog.cbUpdate.isChecked) {
+                        action.add(PermissionAction.UPDATE)
+                    }
+                    if (dialog.cbUpdate.isChecked) {
+                        action.add(PermissionAction.UPDATE)
+                    }
+                    permissionPresenter.getLink(action)
+                }
+                .show()
         }
 
         return v
@@ -139,6 +170,15 @@ class NavigationFragment :
     override fun dismissDialog() {
         activateTokenDialog.dismiss()
     }
+
+    override fun addToClipboard(s: String) {
+        val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label", s)
+        clipboard.primaryClip = clip
+        showToast("В буфер добавлена ссылка")
+    }
+
+    override fun showEmailError() {}
 
     private fun isPermissionGranted(c: Context, permission: String) =
         ContextCompat.checkSelfPermission(c, permission) == PackageManager.PERMISSION_GRANTED

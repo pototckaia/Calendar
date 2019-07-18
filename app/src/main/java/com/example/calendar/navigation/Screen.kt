@@ -81,16 +81,12 @@ class Screens {
     }
 
     class CreateEventPermissionScreen(
-        val entity_id: Long? = null,
-        val pattern_id: Long? = null
+        val entity_id: Long,
+        val pattern_id: Long
     ): SupportAppScreen() {
 
         override fun getFragment(): Fragment =
-            if (entity_id == null) {
-                CreateEventPermissionFragment.newInstance()
-            } else {
-                CreateEventPermissionFragment.newInstance(entity_id, pattern_id!!)
-            }
+                CreateEventPermissionFragment.newInstance(entity_id, pattern_id)
 
     }
 }

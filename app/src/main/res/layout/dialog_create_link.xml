@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+>
+
+    <TextView
+            android:id="@+id/tvTitleAccess"
+            android:text="Предоставления доступа на календарь"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="?attr/editTextBackground"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorDark"
+    />
+
+    <CheckBox
+            android:id="@+id/cbRead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:clickable="false"
+            android:text="Чтение"
+    />
+
+    <CheckBox
+            android:id="@+id/cbUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Редактирование"
+    />
+
+    <CheckBox
+            android:id="@+id/cbDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Удаление"
+    />
+
+</LinearLayout>

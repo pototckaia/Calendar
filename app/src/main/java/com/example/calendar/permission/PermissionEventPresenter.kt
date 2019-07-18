@@ -36,10 +36,8 @@ class PermissionEventPresenter(
 
     fun getLink(actions: List<PermissionAction>) {
         val u = eventRepository.getToken(getPermissions(actions))
-
             .subscribe ({
                 viewState.addToClipboard(getTokenFromLink(it))
-                router.exit()
             }, {
                 viewState.showToast(it.toString())
             })
@@ -47,6 +45,10 @@ class PermissionEventPresenter(
     }
 
     fun getPermission(email: String, actions: List<PermissionAction>) {
+        if (event_id == null) {
+            return
+        }
+
         val u = eventRepository.getUserByEmail(email)
             .subscribe({
                 val u = eventRepository.getPermission(it.id, getPermissions(actions))

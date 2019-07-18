@@ -36,10 +36,6 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
             f.arguments = args
             return f
         }
-
-        fun newInstance(): CreateEventPermissionFragment {
-            return CreateEventPermissionFragment()
-        }
     }
 
     @InjectPresenter
@@ -76,12 +72,12 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
             container, false
         )
 
-        var text = "Предоставления доступа для "
+        var text = "Предоставления доступа "
         if (!permissionPresenter.allEntity) {
             val id = permissionPresenter.event_id!!
-            text = "$text события \nid: $id"
+            text = "$text для события \nid: $id"
         } else {
-            text = "$text событий"
+            text = "$text на событий"
         }
         v.tvTitleAccess.text = text
 

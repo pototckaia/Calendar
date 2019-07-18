@@ -4,14 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calendar.R
-import com.example.calendar.auth.getCurrentFirebaseUser
 import com.example.calendar.auth.isCurrentFirebaseUser
 import com.example.calendar.helpers.*
 import com.example.calendar.repository.server.model.EventInstance
-import kotlinx.android.synthetic.main.view_day_event_holder.view.*
 import kotlinx.android.synthetic.main.view_duration_event_holder.view.*
-import kotlinx.android.synthetic.main.view_duration_event_holder.view.tvEventHourDuration
-import kotlinx.android.synthetic.main.view_duration_event_holder.view.tvEventTitle
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
