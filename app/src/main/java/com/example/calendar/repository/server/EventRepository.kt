@@ -2,41 +2,38 @@ package com.example.calendar.repository.server
 
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Single
 import okhttp3.ResponseBody
 import org.threeten.bp.ZonedDateTime
-import retrofit2.http.Body
 import java.io.File
 import kotlin.collections.HashSet
 
 
 interface EventRepository {
 
-    fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<List<EventInstance>>
+    fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Single<List<EventInstance>>
 
-    fun fromToSet(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<HashSet<ZonedDateTime>>
+    fun fromToSet(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Single<HashSet<ZonedDateTime>>
 
-    fun getEventById(eventId: Long): Observable<Event>
+    fun getEventById(eventId: Long): Single<Event>
 
     fun insertEvent(eventRequest: EventRequest, patternRequests: ArrayList<PatternRequest>): Completable
 
-    fun updateAll(event: EventInstance): Completable
+    fun updateEvent(event: EventInstance): Completable
 
-//    fun updateFuture(entity: EventInstance): Completable
+    fun deleteEvent(event: EventInstance): Completable
 
-    fun deleteAll(event: EventInstance): Completable
-
-//    fun deleteFuture(entity: EventInstance): Completable
-
-    fun export(uri: String): Observable<ResponseBody>
+    fun export(uri: String): Single<ResponseBody>
 
     fun import(file: File): Completable
 
-    fun getToken(permissions: List<PermissionRequest>) : Observable<String>
+    fun getToken(permissions: List<PermissionRequest>): Single<String>
 
-    fun getPermission(user_id: String, permissions: List<PermissionRequest>) : Completable
+    fun getPermission(user_id: String, permissions: List<PermissionRequest>): Completable
 
-    fun getUserByEmail(email: String): Observable<UserServer>
+    fun getEventPermissions(mine: Boolean, namePermissionAll: String, nameUserNotFind: String): Single<List<PermissionModel>>
 
-    fun activateToken(token: String) : Completable
+    fun getUserByEmail(email: String): Single<UserServer>
+
+    fun activateToken(token: String): Completable
 }

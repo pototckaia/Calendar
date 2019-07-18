@@ -141,8 +141,8 @@ data class TaskRequest(
     val status: String
 )
 
-enum class PermissionAction {
-    READ, UPDATE, DELETE;
+enum class PermissionAction(val title: String) {
+    READ("Чтение"), UPDATE("Обновление"), DELETE("Удаление");
 }
 
 enum class EntityType {

@@ -1,6 +1,8 @@
 package com.example.calendar.repository.server
 
 import android.content.Context
+import android.util.Log
+import com.example.calendar.auth.getCurrentFirebaseUser
 import com.example.calendar.helpers.USER_ID_TOKEN
 import com.example.calendar.helpers.USER_ID_TOKEN_PREF
 import com.example.calendar.inject.InjectApplication
@@ -41,6 +43,8 @@ class Server {
                     .getString(USER_ID_TOKEN, "")
 
                 val originalRequest = chain.request()
+                Log.d("OkHttp", "X-Firebase-Auth: $token")
+                Log.d("OkHttp", "User id: ${getCurrentFirebaseUser().uid}")
                 val headers = Headers.Builder()
                     .add("X-Firebase-Auth", token ?: "")
                     .build()

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+>
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbPermissionList"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/toolbarBackground"
+            android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+
+            app:layout_constraintTop_toTopOf="parent"
+    >
+    </androidx.appcompat.widget.Toolbar>
+
+    <Button
+            android:id="@+id/bIUser"
+            android:text="Я раздал"
+            android:layout_width="0dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/bIOwner"
+            app:layout_constraintTop_toBottomOf="@id/tbPermissionList"
+            app:layout_constraintBottom_toTopOf="@id/rvPermission"
+            android:background="@android:color/holo_blue_bright"
+    />
+
+    <Button
+            android:id="@+id/bIOwner"
+            android:text="Мне раздали"
+            android:layout_width="0dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintLeft_toRightOf="@id/bIUser"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tbPermissionList"
+            app:layout_constraintBottom_toTopOf="@id/rvPermission"
+            android:background="@android:color/holo_blue_bright"
+    />
+
+    <View
+            android:id="@+id/vTap"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="wrap"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bIOwner"
+            app:layout_constraintBottom_toTopOf="@id/rvPermission"
+    />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPermission"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_default="spread"
+
+            app:layout_constraintTop_toBottomOf="@id/vTap"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

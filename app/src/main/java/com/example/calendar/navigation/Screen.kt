@@ -14,6 +14,7 @@ import com.example.calendar.eventFragment.EditEventInstanceFragment
 import com.example.calendar.auth.FirebaseSignInActivity
 import com.example.calendar.eventFragment.TimeZoneSelectFragment
 import com.example.calendar.permission.CreateEventPermissionFragment
+import com.example.calendar.permission.PermissionListFragment
 import com.example.calendar.repository.server.model.EntityType
 import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
@@ -78,6 +79,11 @@ class Screens {
     class TimeZoneSelectScreen : SupportAppScreen() {
         override fun getFragment(): Fragment =
                 TimeZoneSelectFragment.newInstance()
+    }
+
+    class PermissionListScreen : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+                PermissionListFragment.newInstance()
     }
 
     class CreateEventPermissionScreen(

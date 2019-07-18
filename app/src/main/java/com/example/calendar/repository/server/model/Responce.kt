@@ -46,12 +46,13 @@ data class TaskResponse(
 )
 
 data class UserResponse(
-    val id: String,
-    val username: String,
-    val photo: String,
+    val count: Int,
+    val data: List<UserModel>,
+    val message: String,
+    val offset: Long,
+    val status: Int,
+    val success: Boolean
+) {
 
-    val enabled: Boolean,
-    val credentials_non_expired: Boolean,
-    val account_non_locked: Boolean,
-    val account_non_expired: Boolean   
-)
+    fun isEmpty() = count == 0 || data.isEmpty()
+}

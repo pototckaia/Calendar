@@ -3,6 +3,7 @@ package com.example.calendar.repository.server
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
@@ -15,7 +16,7 @@ interface PlannerApi {
     // iCal
     @GET("$request/export")
     @Streaming
-    fun exportICal() : Observable<ResponseBody>
+    fun exportICal() : Single<ResponseBody>
 
     @POST("$request/export")
     @Multipart
@@ -44,24 +45,24 @@ interface PlannerApi {
     fun getEventsFromTo(
         @Query("from") from: Long,
         @Query("to") to: Long
-    ) : Observable<EventResponse>
+    ) : Single<EventResponse>
 
     @POST("$request/events")
     fun createEvent(
         @Body event: EventRequest
-    ): Observable<EventResponse>
+    ): Single<EventResponse>
 
     @GET("$request/events/{id}")
-    fun getEventById(@Path("id") id: Long) : Observable<EventResponse>
+    fun getEventById(@Path("id") id: Long) : Single<EventResponse>
 
     @DELETE("$request/events/{id}")
-    fun deleteEventById(@Path("id") id: Long) : Observable<EventResponse>
+    fun deleteEventById(@Path("id") id: Long) : Single<EventResponse>
 
     @PATCH("$request/events/{id}")
     fun updateEvent(
         @Path("id") id: Long,
         @Body updates: EventRequest
-    ) : Observable<EventResponse>
+    ) : Single<EventResponse>
 
     // [from, to]
     @GET("$request/events/instances")
@@ -76,38 +77,38 @@ interface PlannerApi {
 //        @Query("created_to") created_to: Long,
 //        @Query("updated_from") updated_from: Long,
 //        @Query("updated_to") updated_to: Long
-    ) : Observable<EventInstanceResponse>
+    ) : Single<EventInstanceResponse>
 
 
     // Pattern
     @GET("$request/patterns")
     fun getPatterns(
         @Query("event_id") event_id: Long
-    ) : Observable<EventPatternResponse>
+    ) : Single<EventPatternResponse>
 
     @GET("$request/patterns")
     fun getPatternsFromTo(
         @Query("from") from: Long,
         @Query("to") to: Long
-    ) : Observable<EventPatternResponse>
+    ) : Single<EventPatternResponse>
 
     @POST("$request/patterns")
     fun createPattern(
         @Query("event_id") event_id: Long,
         @Body pattern: PatternRequest
-    ): Observable<EventPatternResponse>
+    ): Single<EventPatternResponse>
 
     @GET("$request/patterns/{id}")
-    fun getPatternById(@Path("id") id: Long) : Observable<EventPatternResponse>
+    fun getPatternById(@Path("id") id: Long) : Single<EventPatternResponse>
 
     @DELETE("$request/patterns/{id}")
-    fun deletePatternById(@Path("id") id: Long) : Observable<EventPatternResponse>
+    fun deletePatternById(@Path("id") id: Long) : Single<EventPatternResponse>
 
     @PATCH("$request/patterns/{id}")
     fun updatePattern(
         @Path("id") id: Long,
         @Body updates: PatternRequest
-    ) : Observable<EventPatternResponse>
+    ) : Single<EventPatternResponse>
 
     // Permission
 
@@ -118,7 +119,7 @@ interface PlannerApi {
         @Query("entity_id") entity_id: Long?, //  Grant all entities of requested type if not set
         @Query("entity_type") entity_type: EntityType, // EVENT, PATTERN, TASK
         @Query("user_id") user_id: String // READ, UPDATE, DELETE
-    ) : Observable<PermissionResponse>
+    ) : Single<PermissionResponse>
 
     // Get granted permission for resources
     @GET("$request/permissions")
@@ -127,10 +128,10 @@ interface PlannerApi {
     	@Query("mine") meni: Boolean = true,
         @Query("count") count: Int = 100,
         @Query("offset") offset: Long = 0
-    ) : Observable<PermissionResponse>
+    ) : Single<PermissionResponse>
 
     @DELETE("$request/permissions/{id}")
-    fun revokePermissionById(@Path("id") id: Long) : Observable<PermissionResponse>
+    fun revokePermissionById(@Path("id") id: Long) : Single<PermissionResponse>
 
     // Generate a link for sharing permission on specific entity
     @GET("$request/share")
@@ -138,24 +139,24 @@ interface PlannerApi {
         @Query("action") action: PermissionAction,
         @Query("entity_id") entity_id: Long?,
         @Query("entity_type") entity_type: EntityType
-    ) : Observable<String>
+    ) : Single<String>
 
     // Generate a link for sharing multiple permissions
     @POST("$request/share")
     fun getLink(
         @Body permissions: List<PermissionRequest>
-    ) : Observable<ResponseBody>
+    ) : Single<ResponseBody>
 
     // Activate generated share-link
     @GET("$request/share/{token}")
-    fun activateLink(@Path("token") token: String) : Observable<PermissionResponse>
+    fun activateLink(@Path("token") token: String) : Single<PermissionResponse>
 
     // Find user
     @GET("$request/user")
     fun getUser(
     	@Query("user_id") user_id: String?,
     	@Query("phone") phone: String?,
-    	@Query("email") email: String?) : Observable<UserResponse>
+    	@Query("email") email: String?) : Single<UserResponse>
 
 
     // TaskServer
@@ -170,24 +171,24 @@ interface PlannerApi {
 //        @Query("id") id: List<Long>,
 //        @Query("updated_from") updated_from: Long,
 //        @Query("updated_to") updated_to: Long
-    ) : Observable<TaskResponse>
+    ) : Single<TaskResponse>
 
     @POST("$request/tasks")
     fun createTasks(
         @Query("event_id") event_id: Long,
         @Body task : TaskRequest
-    ): Observable<TaskResponse>
+    ): Single<TaskResponse>
 
     @GET("$request/tasks/{id}")
-    fun getTaskById(@Path("id") id: Long) : Observable<TaskResponse>
+    fun getTaskById(@Path("id") id: Long) : Single<TaskResponse>
 
     @DELETE("$request/tasks/{id}")
-    fun deleteTaskById(@Path("id") id: Long) : Observable<TaskResponse>
+    fun deleteTaskById(@Path("id") id: Long) : Single<TaskResponse>
 
     @PATCH("$request/tasks/{id}")
     fun updateTask(
         @Path("id") id: Long,
         @Body updates: TaskRequest
-    ) : Observable<TaskResponse>
+    ) : Single<TaskResponse>
 
 }

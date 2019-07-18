@@ -1,12 +1,9 @@
 package com.example.calendar.eventFragment
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.example.calendar.helpers.BaseMvpSubscribe
 import com.example.calendar.repository.server.EventRepository
 import com.example.calendar.repository.server.model.*
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
@@ -38,7 +35,7 @@ class EditEventInstancePresenter(
         pattern.timezone = editEventPattern.timezone
         newEventInstance.pattern.patternRequest = pattern
 
-        val sub = eventRepository.updateAll(newEventInstance)
+        val sub = eventRepository.updateEvent(newEventInstance)
             .subscribe(
                 {
                     onUpdateLoading(newEventInstance)
@@ -58,7 +55,7 @@ class EditEventInstancePresenter(
         }
 
         isDelete = true
-        val sub = eventRepository.deleteAll(eventInstance)
+        val sub = eventRepository.deleteEvent(eventInstance)
             .subscribe(
                 {
                     onDeleteLoading()

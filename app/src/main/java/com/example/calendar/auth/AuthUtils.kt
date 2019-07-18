@@ -6,6 +6,8 @@ import com.example.calendar.repository.server.model.UserServer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+fun isFindCurrentUser() = FirebaseAuth.getInstance().currentUser != null
+
 fun getCurrentFirebaseUser(): FirebaseUser {
     val user = FirebaseAuth.getInstance().currentUser
     if (user == null) {

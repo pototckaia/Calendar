@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/colorWhite"
                 android:gravity="center|start"
         />
@@ -64,13 +64,15 @@
 
     <TextView
             android:id="@+id/tvEvery"
-            android:text="Каждый"
+            android:text="Интервал  "
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
+            android:textSize="18sp"
             android:gravity="center"
 
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintWidth_percent="0.3"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/etEach"
@@ -89,23 +91,10 @@
 
             app:layout_constraintWidth_percent="0.1"
             app:layout_constraintStart_toEndOf="@+id/tvEvery"
-            app:layout_constraintEnd_toStartOf="@+id/tvEach"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spFreq"
     />
 
-    <TextView
-            android:id="@+id/tvEach"
-            android:text="раз"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-
-            app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintStart_toEndOf="@+id/etEach"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/etEach"
-            app:layout_constraintBottom_toBottomOf="@+id/etEach"
-    />
 
     <TextView
             android:id="@+id/tvTitleDuration"

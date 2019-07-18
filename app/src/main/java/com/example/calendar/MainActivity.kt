@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.calendar.auth.getCurrentFirebaseUser
+import com.example.calendar.auth.isFindCurrentUser
 import com.example.calendar.helpers.OnBackPressed
 import com.example.calendar.helpers.USER_ID_TOKEN
 import com.example.calendar.helpers.USER_ID_TOKEN_PREF
@@ -24,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (!isFindCurrentUser()) {
+            InjectApplication.inject.router.newRootChain(Screens.NavigationScreen(), Screens.AuthScreen())
+            return
+        }
 
         // UserServer is signed in
         // token might not valid : local token has not refreshed

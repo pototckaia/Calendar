@@ -1,10 +1,14 @@
 package com.example.calendar.repository.server
 
+import android.util.Log
+import com.example.calendar.auth.getCurrentFirebaseUser
+import com.example.calendar.auth.isFindCurrentUser
 import com.example.calendar.helpers.convert.toLongUTC
 import com.example.calendar.helpers.getEventInstances
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import okhttp3.MediaType
@@ -16,6 +20,7 @@ import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
 import java.io.*
+
 
 class EventServerRepository(val api: PlannerApi) : EventRepository {
 
@@ -47,18 +52,19 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 //            .toObservable()
 //    }
 
-    override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Observable<List<EventInstance>> {
+    override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Single<List<EventInstance>> {
         val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
         val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
 
         return api.getEventsFromTo(startUTC, endUTC)
             .map { it.data }
-            .flatMap { Observable.fromIterable(it) }
+            .flattenAsFlowable { it }
             .flatMap { entity ->
                 api.getPatterns(entity.id)
                     .zipWith(api.getUser(entity.owner_id, null, null),
                         BiFunction { p: EventPatternResponse, u: UserResponse ->
-                            Pair(p.data, UserServer(u.id, u.username))
+                            val user = u.data[0]
+                            Pair(p.data, UserServer(user.id, user.username ?: ""))
                         }
                     )
                     .map {
@@ -71,6 +77,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                         }
                         Pair(entity.id, list)
                     }
+                    .toFlowable()
             }
             .toList()
             .map {
@@ -79,10 +86,8 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 list as List<EventInstance>
 
             }
-            .toObservable()
             .observeOn(AndroidSchedulers.mainThread())
     }
-
 
     private fun daysInEvent(event: EventInstance): List<ZonedDateTime> {
         val dates = arrayListOf<ZonedDateTime>()
@@ -100,19 +105,18 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 
     override fun fromToSet(
         startLocal: ZonedDateTime, endLocal: ZonedDateTime
-    ): Observable<HashSet<ZonedDateTime>> {
+    ): Single<HashSet<ZonedDateTime>> {
         return fromTo(startLocal, endLocal)
             .flatMap {
                 Observable.fromIterable(it)
                     .map { daysInEvent(it) }
                     .flatMapIterable { it }
                     .collect({ hashSetOf<ZonedDateTime>() }, { set, z -> set.add(z) })
-                    .toObservable()
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun getEventById(eventId: Long): Observable<Event> {
+    override fun getEventById(eventId: Long): Single<Event> {
         return api.getEventById(eventId)
             .zipWith(
                 api.getPatterns(eventId),
@@ -129,28 +133,30 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         return api.createEvent(eventRequest)
             .flatMap {
                 val eventId = it.data[0].id
-                val observables = patternRequests.map {
+                val singles = patternRequests.map {
                     api.createPattern(eventId, it)
+                        .toObservable()
                 }
-                Observable.merge(observables)
+                Observable.merge(singles)
+                    .firstOrError()
             }
-            .ignoreElements()
+            .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun updateAll(event: EventInstance): Completable {
+    override fun updateEvent(event: EventInstance): Completable {
         return api.updateEvent(event.entity.id, EventRequest(event.entity))
-            .ignoreElements()
+            .toCompletable()
             .mergeWith(
                 api.updatePattern(event.pattern.id, event.pattern.patternRequest)
-                    .ignoreElements()
+                    .toCompletable()
             )
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun deleteAll(event: EventInstance): Completable {
+    override fun deleteEvent(event: EventInstance): Completable {
         return api.deletePatternById(event.pattern.id)
-            .ignoreElements()
+            .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
 //            .andThen(
 //                api.deleteEventById(event.entity.id)
@@ -158,7 +164,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 //            )
     }
 
-    override fun export(uri: String): Observable<ResponseBody> {
+    override fun export(uri: String): Single<ResponseBody> {
         return api.exportICal()
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -170,7 +176,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun getToken(permissions: List<PermissionRequest>): Observable<String> {
+    override fun getToken(permissions: List<PermissionRequest>): Single<String> {
         return api.getLink(permissions)
             .map { it.string() }
             .observeOn(AndroidSchedulers.mainThread())
@@ -178,24 +184,29 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 
     override fun activateToken(token: String): Completable {
         return api.activateLink(token)
-            .ignoreElements()
+            .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun getUserByEmail(email: String): Observable<UserServer> {
+    override fun getUserByEmail(email: String): Single<UserServer> {
         return api.getUser(null, null, email)
             .map {
-                UserServer(it.id, it.username)
+                if (it.isEmpty()) {
+                    throw NotFind()
+                }
+                val user = it.data[0]
+                UserServer(user.id, user.username ?: "")
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun getPermission(user_id: String, permissions: List<PermissionRequest>) : Completable {
+    override fun getPermission(user_id: String, permissions: List<PermissionRequest>): Completable {
         if (permissions.isEmpty()) {
-            return Completable.fromRunnable {  }
+            return Completable.fromRunnable { }
         }
         val c = permissions.map {
             api.getGrant(it.action, it.entity_id, it.entity_type, user_id)
+                .toObservable()
                 .onErrorResumeNext(Observable.empty<PermissionResponse>())
                 .ignoreElements()
         }
@@ -204,4 +215,67 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+
+    private fun getUserIdByMine(it: PermissionServer, mine: Boolean) = if (mine) it.user_id else it.owner_id
+
+    private fun getActionTypeByName(it: String): PermissionAction {
+        val l = it.split("_".toRegex(), 2)
+        return PermissionAction.valueOf(l[0])
+    }
+
+    // todo refactor
+    override fun getEventPermissions(mine: Boolean, namePermissionAll: String, nameUserNotFind: String): Single<List<PermissionModel>> {
+        val entityType = EntityType.EVENT
+        return api.getPermissions(entityType, mine)
+            .map { it.data }
+            .flattenAsFlowable { it }
+            .flatMap {
+                if (!isFindCurrentUser()) {
+                    throw NotAuthorized()
+                }
+
+                var single = Observable.empty<PermissionModel>().firstOrError()
+                if (it.entity_id == it.user_id || it.entity_id == it.owner_id) {
+                    // permission for all calendar
+                    single = api
+                        .getUser(getUserIdByMine(it, mine), null, null)
+                        .map {
+                            if (it.isEmpty())
+                                throw NotFind()
+                            it.data[0]
+                        }
+                        .map { user ->
+                            val actionType = getActionTypeByName(it.name)
+                            PermissionModel(
+                                it.id, mine, entityType,
+                                namePermissionAll, user.id, user.username, actionType, true)
+                        }
+                } else {
+                    // permission for entity
+                    val entity_id = it.entity_id.toLongOrNull()
+                    if (entity_id == null) {
+                        throw InternalError()
+                    }
+                    single = api
+                        .getEventById(entity_id)
+                        .zipWith(
+                            api.getUser(getUserIdByMine(it, mine), null, null)
+                                .map {
+                                    if (it.isEmpty())
+                                        throw NotFind()
+                                    it.data[0]
+                                },
+                            BiFunction { event: EventResponse, user: UserModel ->
+                                val e = event.data[0]
+                                val actionType = getActionTypeByName(it.name)
+                                PermissionModel(it.id, mine, entityType,
+                                    e.name, user.id, user.username, actionType, false)
+                            })
+                }
+                single.toFlowable()
+            }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }
+

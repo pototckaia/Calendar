@@ -129,6 +129,8 @@ class NavigationFragment :
 
         v.bActivateToken.setOnClickListener { activateTokenPresenter.onActivateClick() }
 
+        v.bPermission.setOnClickListener { router.navigateTo(Screens.PermissionListScreen()) }
+
         v.bCreatePermissionAll.setOnClickListener {
             AlertDialog.Builder(activity)
                 .setView(R.layout.dialog_create_link)
