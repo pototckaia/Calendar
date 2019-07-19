@@ -7,10 +7,10 @@ data class PermissionModel(
     val mine: Boolean,
 
     val entityType: EntityType,
-    val entityName: String,
+    val entityName: String?,
 
     val user_id: String,
-    val username: String,
+    val username: String?,
 
     val actionType: PermissionAction,
 

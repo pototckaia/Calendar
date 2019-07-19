@@ -61,6 +61,8 @@ class PatternRecycleViewAdapter(
     val onDeleteClick: (pos: Int) -> Unit
 ) : LifecycleOwnerRecycleAdapter<PatternRecycleViewAdapter.PatternViewHolder>() {
 
+    var canDelete = true
+
     inner class PatternViewHolder constructor(val v: EventPatternRequestView) : LifecycleOwnerViewHolder(v) {
         private var posItem = -1
 
@@ -96,17 +98,24 @@ class PatternRecycleViewAdapter(
         val pattern = patterns[position]
 
         val imgRemove = holder.v.ivDelete
+        if (!canDelete) {
+            imgRemove.visibility = View.GONE
+        }
         imgRemove.setOnClickListener {
+            if (!canDelete) {
+                return@setOnClickListener
+            }
             if (patterns.size <= 1) {
                 Toast.makeText(it.context, "Должен быть покрайне мере один интервал времени", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            patterns.removeAt(position)
             onDeleteClick(position)
+            patterns.removeAt(position)
             notifyItemRemoved(position)
             for (i in position until patterns.size) {
                 notifyItemChanged(i)
             }
+
         }
         holder.bind(pattern, position)
     }
@@ -133,5 +142,14 @@ class PatternRecycleViewAdapter(
     fun updatePatterns(m: ArrayList<PatternRequest>) {
         patterns = m
         notifyDataSetChanged()
+    }
+
+    fun setUnDelete() {
+        canDelete = false
+        notifyDataSetChanged()
+    }
+
+    fun setUnUpdate() {
+
     }
 }

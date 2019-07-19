@@ -16,7 +16,7 @@ data class Event(
 @Parcelize
 data class EventInstance(
     val entity_id: Long,
-    val entity_name: String,
+    val entity_name: String?,
     val pattern_id: Long,
     val user: UserServer,
     // [start, end]

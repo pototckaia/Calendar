@@ -1,10 +1,14 @@
 package com.example.calendar.eventFragment
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
+import com.example.calendar.auth.getCurrentFirebaseUser
 import com.example.calendar.helpers.BaseMvpSubscribe
+import com.example.calendar.repository.server.AccessDenied
 import com.example.calendar.repository.server.EventRepository
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
+import io.reactivex.functions.BiFunction
 import ru.terrakok.cicerone.Router
 import java.lang.IllegalArgumentException
 
@@ -16,6 +20,9 @@ class EditEventPresenter(
 ) : BaseMvpSubscribe<EditEventView>() {
 
     private var isDelete = false
+
+    var canDelete = true
+    var canUpdate = true
 
     val isEditMode = eventInstance != null
 
@@ -55,18 +62,22 @@ class EditEventPresenter(
         patterns.add(EventPatternServer.getStubPatternServer(p))
     }
 
-    fun deletePattern(pos: Int) {
-        if (!isEditMode) {
+    fun deletePattern(pos: Int)  {
+        if (!isEditMode || !canDelete) {
+            viewState.showError("У вас не доступа на удаления")
             return
         }
         delete_patterns.add(patterns[pos])
         patterns.removeAt(pos)
+        return
     }
 
     fun onUpdateAll(eventRequest: EventRequest, newPatterns: List<PatternRequest>) {
-        if (!isEditMode) {
+        if (!isEditMode || !canUpdate) {
+            viewState.showError("У вас не доступа на обновление")
             return
         }
+
         entity.eventRequest = eventRequest
 
         if (newPatterns.size != patterns.size) {
@@ -96,15 +107,21 @@ class EditEventPresenter(
                     // todo notfind
                     router.exit()
                 },
-                { error ->
-                    onLoadingFailed(error.toString())
+                {
+                    if (it is AccessDenied) {
+                        canUpdate = false
+                        onLoadingFailed("У вас не доступа на обновление")
+                        return@subscribe
+                    }
+                    onLoadingFailed(it.toString())
                     router.exit()
                 })
         unsubscribeOnDestroy(u)
     }
 
     fun onDeleteAll() {
-        if (isDelete || !isEditMode) {
+        if (!isEditMode || !canDelete) {
+            viewState.showError("У вас не доступа на удаления")
             return
         }
 
@@ -115,6 +132,11 @@ class EditEventPresenter(
                     onDeleteLoading()
                 },
                 { error ->
+                    if (error is AccessDenied) {
+                        canDelete = false
+                        onLoadingFailed("У вас не доступа на удаление")
+                        return@subscribe
+                    }
                     onLoadingFailed(error.toString())
                 })
         unsubscribeOnDestroy(sub)

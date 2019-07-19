@@ -163,10 +163,7 @@ class EventFragment : MvpAppCompatFragment(),
             v.vEventRequest.setOwner("Вы")
         }
 
-        var emptyPattern = ArrayList<PatternRequest>()
-        if (savedInstanceState == null && !editEventPresenter.isEditMode) {
-            emptyPattern = patternsPresenter.patterns
-        }
+        val emptyPattern = patternsPresenter.patterns
         val adapter = PatternRecycleViewAdapter(
             emptyPattern,
             this::onRecurrenceRuleClick, this::onTimeZoneClick, this::deletePattern
@@ -209,11 +206,15 @@ class EventFragment : MvpAppCompatFragment(),
         adapter.updatePattern(m, pos)
     }
 
-    private fun deletePattern(pos: Int) {
+    private fun deletePattern(pos: Int) =
         editEventPresenter.deletePattern(pos)
-    }
+
 
     fun addPattern(pattern: PatternRequest) {
+        if (!editEventPresenter.canUpdate) {
+            showError("У вас не доступа на изменения")
+            return
+        }
         adapter.addItem(pattern, context!!)
         editEventPresenter.addPattern(pattern)
     }
@@ -274,5 +275,7 @@ class EventFragment : MvpAppCompatFragment(),
 
     override fun enableUpdate() {}
 
-    override fun enableDelete() {}
+    override fun enableDelete() {
+        adapter.setUnDelete()
+    }
 }

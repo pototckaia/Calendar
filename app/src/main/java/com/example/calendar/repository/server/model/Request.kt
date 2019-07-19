@@ -21,10 +21,10 @@ data class RruleStructure(
 
 @Parcelize
 data class EventRequest(
-    val details: String,
-    val location: String,
-    val name: String,
-    val status: String
+    val details: String?,
+    val location: String?,
+    val name: String?,
+    val status: String?
 ) : Parcelable {
 
     constructor(entity: EventServer)

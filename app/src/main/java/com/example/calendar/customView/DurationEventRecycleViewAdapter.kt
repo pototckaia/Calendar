@@ -25,7 +25,7 @@ class DurationEventViewHolder(
     private val emptyTitle = "< Нет названия >"
 
     fun bind(e: EventInstance, start: ZonedDateTime, end: ZonedDateTime) {
-        if (e.entity_name.isEmpty()) {
+        if (e.entity_name == null || e.entity_name.isEmpty()) {
             view.tvEventTitle.text = emptyTitle
         } else {
             view.tvEventTitle.text = e.entity_name

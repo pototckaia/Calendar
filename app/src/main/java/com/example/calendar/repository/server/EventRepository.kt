@@ -57,6 +57,8 @@ interface EventRepository {
         mine: Boolean, namePermissionAll: String, nameUserNotFind: String
     ): Single<List<PermissionModel>>
 
+    fun getPermissionForAllEvent() : Single<List<PermissionServer>>
+
     fun getPermissionsById(entity_id: Long, entity_type: EntityType) : Single<List<PermissionServer>>
 
     fun revokeEventPermission(event_permissions: List<PermissionModel>): Completable

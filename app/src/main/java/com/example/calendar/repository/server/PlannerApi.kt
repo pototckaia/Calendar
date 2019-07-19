@@ -19,9 +19,6 @@ interface PlannerApi {
     fun exportICal() : Single<ResponseBody>
 
 
-    @Headers(
-        "Accept: application/json",
-        "Content-Type: application/json")
     @Multipart
     @POST("$request/import")
     fun importICal(@Part file: MultipartBody.Part) : Completable

@@ -12,27 +12,30 @@ data class EventServer(
     val created_at: ZonedDateTime,
     val updated_at: ZonedDateTime,
 
-    var name: String,
-    var details: String,
-    var status: String,
-    var location: String
+    var name: String?,
+    var details: String?,
+    var status: String?,
+    var location: String?
 ) : Parcelable {
+
+    init {
+        if (name == null) {
+            name = ""
+        }
+        if (status == null) {
+            status = ""
+        }
+        if (location == null) {
+            location = ""
+        }
+        if (details == null) {
+            details = ""
+        }
+    }
 
     var eventRequest: EventRequest
         get() {
             // error kotlin
-            if (name == null) {
-                name = ""
-            }
-            if (status == null) {
-                status = ""
-            }
-            if (location == null) {
-                location = ""
-            }
-            if (details == null) {
-                details = ""
-            }
             return EventRequest(name = name, details = details, status = status, location = location)
         }
         set(value) {

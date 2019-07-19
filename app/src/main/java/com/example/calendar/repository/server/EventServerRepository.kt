@@ -1,14 +1,17 @@
 package com.example.calendar.repository.server
 
+import androidx.annotation.MainThread
 import com.example.calendar.auth.isFindCurrentUser
 import com.example.calendar.helpers.convert.toLongUTC
 import com.example.calendar.helpers.getEventInstances
 import com.example.calendar.repository.server.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -34,6 +37,8 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     Pair(event.data[0], pattern)
                 }
             )
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     private fun getFixPatterns(event_id: Long): Single<EventPatternResponse> {
@@ -96,6 +101,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 
             }
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     private fun daysInEvent(event: EventInstance): List<ZonedDateTime> {
@@ -123,6 +129,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     .collect({ hashSetOf<ZonedDateTime>() }, { set, z -> set.add(z) })
             }
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getEventById(eventId: Long): Single<Event> {
@@ -134,12 +141,14 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 }
             )
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun updateEvent(event: EventServer): Completable {
         return api.updateEvent(event.id, event.eventRequest)
             .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
 
@@ -159,12 +168,14 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             }
             .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getPatterns(event_id: Long): Single<List<EventPatternServer>> {
         return getFixPatterns(event_id)
             .map { it.data }
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun createPatterns(event_id: Long, patternRequests: List<PatternRequest>): Completable {
@@ -175,6 +186,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         }
         return Completable.merge(com)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun updatePatterns(patterns: List<EventPatternServer>): Completable {
@@ -185,6 +197,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         }
         return Completable.merge(com)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun deletePatterns(patterns_id: List<Long>): Completable {
@@ -194,17 +207,20 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         }
         return Completable.merge(com)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun deleteEvent(event_id: Long): Completable {
         return api.deleteEventById(event_id)
             .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun export(uri: String): Single<ResponseBody> {
         return api.exportICal()
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun import(file: File): Completable {
@@ -212,18 +228,21 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
         return api.importICal(body)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getToken(permissions: List<PermissionRequest>): Single<String> {
         return api.getLink(permissions)
             .map { it.string() }
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun activateToken(token: String): Completable {
         return api.activateLink(token)
             .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getUser(user_id: String?, email: String?): Single<UserServer> {
@@ -236,6 +255,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 UserServer(user.id, user.username)
             }
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getPermission(user_id: String, permissions: List<PermissionRequest>): Completable {
@@ -248,6 +268,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         // on exist permission throw NoContent
         return Completable.merge(c)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
 
@@ -299,6 +320,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             }
             .toList()
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     private fun revokeEventPermission(event_permission: PermissionModel): Completable {
@@ -343,10 +365,22 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun getPermissionForAllEvent() : Single<List<PermissionServer>> {
+        val entityType = EntityType.EVENT
+        return api.getPermissions(entityType, false)
+            .map { it.data }
+            .flattenAsFlowable { it }
+            .filter { it.entity_id == it.user_id || it.entity_id == it.owner_id }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+    }
+
     override fun getPermissionsById(entity_id: Long, entity_type: EntityType): Single<List<PermissionServer>> {
         return api.getPermissionsById(entity_type, listOf(entity_id))
             .map { it.data }
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 }
 
