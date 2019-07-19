@@ -10,10 +10,11 @@ import org.dmfs.rfc5545.recur.Freq
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import org.threeten.bp.Duration
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
-fun isRecurrence(rrule: String) = rrule.isNotEmpty()
+fun isRecurrence(rrule: String?) = rrule != null
 
 fun isFromPeriod(
     start_event: ZonedDateTime, end_event: ZonedDateTime,
@@ -74,17 +75,16 @@ fun getEventInstances(
             break;
         }
         val startNewEvent = fromDateTime(startInstance)
-        val eventInstance = EventInstance(
-            event, pattern,
-            user,
-            startNewEvent, startNewEvent.plus(pattern.duration)
-        )
+        val eventInstance =
+            EventInstance(
+                event, pattern,
+                user,
+                startNewEvent, startNewEvent.plus(pattern.duration)
+            )
 
         if (isFromPeriod(
                 eventInstance.started_at_local, eventInstance.ended_at_local,
-                startLocal, endLocal
-            )
-        ) {
+                startLocal, endLocal)) {
             instances.add(eventInstance)
             counter++
         }
@@ -92,13 +92,17 @@ fun getEventInstances(
     return instances
 }
 
+val MAX_TIME = 253402300799000L
+
+fun equalMaxTime(z: ZonedDateTime)
+        = zonedDateTime_cn.toZonedDateTime(MAX_TIME) == z.withZoneSameInstant(ZoneOffset.UTC)
 
 fun calculateEndedAt(
     started_at: ZonedDateTime,
     duration: Duration,
-    rrule: String
+    rrule: String?
 ): ZonedDateTime {
-    val maxDate = zonedDateTime_cn.toZonedDateTime(Long.MAX_VALUE)
+    val maxDate = zonedDateTime_cn.toZonedDateTime(MAX_TIME)
     var newEndedAt = started_at.plus(duration)
 
     if (!isRecurrence(rrule)) {
@@ -127,9 +131,7 @@ fun calculateEndedAt(
 }
 
 private fun getPosName(p: Int?) = when (p) {
-    0, null -> {
-        ""
-    }
+    0, null -> { "" }
     else -> {
         var first = p.toString()
         if (p < 0) {
@@ -163,45 +165,19 @@ private fun getBYDAY(w: RecurrenceRule.WeekdayNum): String {
 // list of months of the year - all
 // 1..12
 private fun getBYMONTH(p: Int?) = when (p) {
-    1 -> {
-        "янв."
-    }
-    2 -> {
-        "фев."
-    }
-    3 -> {
-        "мар."
-    }
-    4 -> {
-        "апр."
-    }
-    5 -> {
-        "май"
-    }
-    6 -> {
-        "июн."
-    }
-    7 -> {
-        "июл."
-    }
-    8 -> {
-        "авг."
-    }
-    9 -> {
-        "сент."
-    }
-    10 -> {
-        "окт."
-    }
-    11 -> {
-        "нояб."
-    }
-    12 -> {
-        "дек."
-    }
-    else -> {
-        ""
-    }
+    1 -> { "янв." }
+    2 -> { "фев." }
+    3 -> { "мар." }
+    4 -> { "апр." }
+    5 -> { "май" }
+    6 -> { "июн." }
+    7 -> { "июл." }
+    8 -> { "авг." }
+    9 -> { "сент." }
+    10 -> { "окт." }
+    11 -> { "нояб." }
+    12 -> { "дек." }
+    else -> { "" }
 }
 
 //BYMONTHDAY
@@ -236,9 +212,9 @@ private fun getListPos(
 }
 
 // Freq.HOURLY, Freq.MINUTELY, FREQ.SECONDLY
-fun getRecurrenceName(r: String): String {
+fun getRecurrenceName(r: String?): String {
     if (!isRecurrence(r)) {
-        return r
+        return ""
     }
 
     val fmt_day = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -246,20 +222,11 @@ fun getRecurrenceName(r: String): String {
 
     var freq = ""
     when (rrule.freq) {
-        Freq.DAILY -> {
-            freq = "Ежедневно"
-        }
-        Freq.WEEKLY -> {
-            freq = "Еженедельно"
-        }
-        Freq.MONTHLY -> {
-            freq = "Ежемесячно"
-        }
-        Freq.YEARLY -> {
-            freq = "Ежегодно"
-        }
-        else -> {
-        }
+        Freq.DAILY -> { freq = "Ежедневно" }
+        Freq.WEEKLY -> { freq = "Еженедельно" }
+        Freq.MONTHLY -> { freq = "Ежемесячно" }
+        Freq.YEARLY -> { freq = "Ежегодно" }
+        else -> { }
     }
 
     var interval = ""

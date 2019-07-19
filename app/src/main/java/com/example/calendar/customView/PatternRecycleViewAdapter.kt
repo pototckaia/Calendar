@@ -57,7 +57,8 @@ abstract class LifecycleOwnerRecycleAdapter<T : LifecycleOwnerViewHolder> : Recy
 class PatternRecycleViewAdapter(
     var patterns: ArrayList<PatternRequest>,
     val onRecurrenceRuleClick: (pos: Int, patter: PatternRequest) -> Unit,
-    val onTimeZoneClick: (pos: Int) -> Unit
+    val onTimeZoneClick: (pos: Int) -> Unit,
+    val onDeleteClick: (pos: Int) -> Unit
 ) : LifecycleOwnerRecycleAdapter<PatternRecycleViewAdapter.PatternViewHolder>() {
 
     inner class PatternViewHolder constructor(val v: EventPatternRequestView) : LifecycleOwnerViewHolder(v) {
@@ -101,7 +102,7 @@ class PatternRecycleViewAdapter(
                 return@setOnClickListener
             }
             patterns.removeAt(position)
-
+            onDeleteClick(position)
             notifyItemRemoved(position)
             for (i in position until patterns.size) {
                 notifyItemChanged(i)

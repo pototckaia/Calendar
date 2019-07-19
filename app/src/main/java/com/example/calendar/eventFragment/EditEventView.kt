@@ -7,9 +7,14 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.example.calendar.repository.server.model.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface EditEventInstanceView : MvpView {
+interface EditEventView : MvpView {
 
-    fun updateEventInfo(user: UserServer, e: EventRequest, p: PatternRequest)
+    @StateStrategyType(SingleStateStrategy::class)
+    fun updateEventInfo(user: UserServer, e: EventRequest, p: ArrayList<PatternRequest>)
+
+    fun enableUpdate()
+
+    fun enableDelete()
 
     @StateStrategyType(SingleStateStrategy::class)
     fun showError(e: String)

@@ -53,7 +53,7 @@ class EventPatternViewModel: MvvmViewModel<EventPatternViewState> {
         liveData.value = state?.state
     }
 
-    fun setRecurrence(r: String) {
+    fun setRecurrence(r: String?) {
         liveData.value?.setRecurrence(r)
         liveData.value = liveData.value
     }
@@ -160,7 +160,7 @@ class EventPatternRequestView
 
     private fun validateStart(start: ZonedDateTime): Boolean {
         val rule = eventPattern.rrule
-        if (rule.isNotEmpty() && RecurrenceRule(rule).until != null) {
+        if (rule != null && RecurrenceRule(rule).until != null) {
             val until = fromDateTimeUTC(RecurrenceRule(rule).until)
             val startUTC = start.withZoneSameInstant(ZoneOffset.UTC)
             if (startUTC >= until) {

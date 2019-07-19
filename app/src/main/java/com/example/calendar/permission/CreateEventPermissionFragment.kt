@@ -24,12 +24,10 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
     PermissionView {
 
     companion object {
-        fun newInstance(entity_id: Long,
-                        pattern_id: Long): CreateEventPermissionFragment {
+        fun newInstance(entity_id: Long): CreateEventPermissionFragment {
             val args = Bundle()
             args.run {
                 putLong(ENTITY_ID, entity_id)
-                putLong(PATTERN_ID, pattern_id)
                 putString(ENTITY_TYPE, EntityType.EVENT.toString())
             }
             val f = CreateEventPermissionFragment()
@@ -44,15 +42,12 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
     @ProvidePresenter
     fun providePermissionPresenter(): PermissionEventPresenter {
         var entity_id : Long? = null
-        var pattern_id : Long? = null
         arguments?.let {
             entity_id = it.getLong(ENTITY_ID)
-            pattern_id = it.getLong(PATTERN_ID)
         }
 
         return PermissionEventPresenter(
             entity_id,
-            pattern_id,
             InjectApplication.inject.repository,
             InjectApplication.inject.router
         )

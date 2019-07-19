@@ -3,6 +3,7 @@ package com.example.calendar.repository.server.model
 import android.os.Parcelable
 import com.example.calendar.helpers.calculateEndedAt
 import com.example.calendar.helpers.convert.toDateTimeUTC
+import com.example.calendar.helpers.equalMaxTime
 import com.example.calendar.helpers.isRecurrence
 import kotlinx.android.parcel.Parcelize
 import org.dmfs.rfc5545.DateTime
@@ -14,7 +15,7 @@ import java.util.*
 
 @Parcelize
 data class RruleStructure(
-    var rrule: String
+    var rrule: String?
 ) : Parcelable
 
 
@@ -40,7 +41,7 @@ data class PatternRequest(
     var duration: Duration,
     var ended_at: ZonedDateTime,
     val exrules: List<RruleStructure>,
-    var rrule: String,
+    var rrule: String?,
     var started_at: ZonedDateTime,
     var timezone: ZoneId
 ) : Parcelable {
@@ -54,7 +55,7 @@ data class PatternRequest(
     constructor(
         started_at: ZonedDateTime,
         ended_at: ZonedDateTime,
-        rrule: String,
+        rrule: String?,
         exrules: List<String>,
         timezone: ZoneId
     ) : this(
@@ -87,7 +88,7 @@ data class PatternRequest(
     }
 
     fun removeRecurrence() {
-        rrule = ""
+        rrule = null
         ended_at = calculateEndedAt(started_at, duration, rrule)
     }
 
@@ -105,8 +106,8 @@ data class PatternRequest(
         ended_at = calculateEndedAt(started_at, duration, rrule)
     }
 
-    fun setRecurrence(r: String) {
-        if (r.isEmpty()) {
+    fun setRecurrence(r: String?) {
+        if (r == null) {
             removeRecurrence()
             return
         }
@@ -130,6 +131,38 @@ data class PatternRequest(
             rrule = recurrence.toString()
             ended_at = calculateEndedAt(started_at, duration, rrule)
         }
+    }
+
+    companion object {
+
+        fun getPatternToSend(pattern: PatternRequest) : PatternRequest {
+            val rrule = pattern.rrule
+            if (rrule != null && rrule.isEmpty()) {
+                pattern.rrule = null
+            }
+            if (!isRecurrence(pattern.rrule)) {
+                return pattern
+            }
+            val r = RecurrenceRule(pattern.rrule)
+            if (r.until != null) {
+                r.until = null
+                pattern.rrule = r.toString()
+            }
+            return pattern
+        }
+
+        fun getPatternFromReceive(pattern: PatternRequest): PatternRequest {
+            if (!isRecurrence(pattern.rrule)) {
+                return pattern
+            }
+            val r = RecurrenceRule(pattern.rrule)
+            if (r.count == null && !equalMaxTime(pattern.ended_at)) {
+                r.until = toDateTimeUTC(pattern.ended_at)
+                pattern.rrule = r.toString()
+            }
+            return pattern
+        }
+
     }
 }
 

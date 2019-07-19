@@ -24,7 +24,7 @@ class PatternsPresenter(
         patterns = newPatterns
     }
 
-    fun onCloseRecurrenceSelect(rrule: String, pos: Int) {
+    fun onCloseRecurrenceSelect(rrule: String?, pos: Int) {
         patterns[pos].setRecurrence(rrule)
         viewState.updatePattern(patterns[pos], pos)
     }
@@ -39,7 +39,7 @@ class PatternsPresenter(
             PatternRequest(
                 started_at = start,
                 ended_at = end,
-                rrule = "",
+                rrule = null,
                 timezone = ZoneId.systemDefault(),
                 exrules = emptyList()
             )

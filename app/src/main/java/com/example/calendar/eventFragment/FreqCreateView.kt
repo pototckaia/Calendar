@@ -31,5 +31,5 @@ interface FreqCreateView : MvpView {
     fun onSave(it: RecurrenceRule)
 
     @StateStrategyType(SkipStrategy::class)
-    fun onExit(r: String)
+    fun onExit(r: String?)
 }

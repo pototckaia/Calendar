@@ -19,9 +19,17 @@ interface EventRepository {
 
     fun insertEvent(eventRequest: EventRequest, patternRequests: ArrayList<PatternRequest>): Completable
 
-    fun updateEvent(event: EventInstance): Completable
+    fun updateEvent(event: EventServer): Completable
 
-    fun deleteEvent(event: EventInstance): Completable
+    fun deleteEvent(event_id: Long): Completable
+
+    fun getPatterns(event_id: Long): Single<List<EventPatternServer>>
+
+    fun createPatterns(event_id: Long, patternRequests: List<PatternRequest>): Completable
+
+    fun updatePatterns(patterns: List<EventPatternServer>): Completable
+
+    fun deletePatterns(patterns_id: List<Long>): Completable
 
     fun export(uri: String): Single<ResponseBody>
 

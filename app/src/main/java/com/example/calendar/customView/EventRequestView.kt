@@ -6,6 +6,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.calendar.R
 import com.example.calendar.repository.server.model.EventRequest
+import kotlinx.android.synthetic.main.fragment_create_permission.view.*
 import kotlinx.android.synthetic.main.view_event_request.view.*
 
 class EventRequestView
@@ -32,5 +33,9 @@ class EventRequestView
             etTextLocation.setText(value.location)
             etTextStatus.setText(value.status)
         }
+
+    fun setOwner(name: String) {
+        etOwner.text = name
+    }
 
 }

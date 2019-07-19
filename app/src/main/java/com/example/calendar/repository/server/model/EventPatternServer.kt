@@ -15,14 +15,12 @@ data class EventPatternServer(
     var duration: Duration,
     var ended_at: ZonedDateTime,
     var exrules: List<EventPatternExruleServer>,
-    var rrule: String,
+    var rrule: String?,
     var timezone: ZoneId
 ) : Parcelable {
 
     var patternRequest: PatternRequest
         get() {
-            // kotlin error
-            if (rrule == null) { rrule = ""}
             return PatternRequest(
                 started_at = started_at,
                 duration = duration,
@@ -42,4 +40,12 @@ data class EventPatternServer(
             // todo exrules
             // exrules = value.exrules
         }
+
+    companion object {
+        fun getStubPatternServer(p: PatternRequest) = EventPatternServer(
+            -1, ZonedDateTime.now(), ZonedDateTime.now(),
+            p.started_at, p.duration, p.ended_at, emptyList<EventPatternExruleServer>(),
+            p.rrule, p.timezone
+        )
+    }
 }

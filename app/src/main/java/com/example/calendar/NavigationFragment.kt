@@ -74,7 +74,6 @@ class NavigationFragment :
     fun providePermissionPresenter(): PermissionEventPresenter {
         return PermissionEventPresenter(
             null,
-            null,
             repository,
             router
         )

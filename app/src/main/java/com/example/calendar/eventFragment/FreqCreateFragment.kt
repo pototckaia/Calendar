@@ -34,7 +34,7 @@ class FreqCreateFragment : MvpAppCompatFragment(),
     companion object {
         fun newInstance(
             start: ZonedDateTime,
-            freq: String = ""
+            freq: String? = null
         ): FreqCreateFragment {
             val args = Bundle()
             args.run {
@@ -55,7 +55,7 @@ class FreqCreateFragment : MvpAppCompatFragment(),
     fun provideFreqPresenter(): FreqCreatePresenter {
         val args = arguments!!
         return FreqCreatePresenter(
-            args.getString(RULE_RECURRENCE_RULE)!!,
+            args.getString(RULE_RECURRENCE_RULE),
             fromStringToZoned(args.getString(START_RECURRENCE_RULE)!!)
         )
     }
@@ -149,8 +149,7 @@ class FreqCreateFragment : MvpAppCompatFragment(),
                     v.wvWekSelected.setSelected(it.byDayPart)
                 }
             }
-            else -> {
-            }
+            else -> { }
         }
 
         v.etEach.setText(it.interval.toString())
@@ -214,7 +213,7 @@ class FreqCreateFragment : MvpAppCompatFragment(),
         Toast.makeText(context, s, Toast.LENGTH_LONG).show()
     }
 
-    override fun onExit(r: String) {
+    override fun onExit(r: String?) {
         recurrenceViewModel.recurrence.postValue(r)
         InjectApplication.inject.router.exit()
     }

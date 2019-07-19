@@ -19,39 +19,58 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.calendar.auth.isCurrentFirebaseUser
 import com.example.calendar.customView.PatternRecycleViewAdapter
 import com.example.calendar.helpers.convert.fromStringToZoned
 import com.example.calendar.helpers.convert.toStringFromZoned
 import com.example.calendar.navigation.Screens
+import com.example.calendar.repository.server.model.EventInstance
+import com.example.calendar.repository.server.model.EventRequest
+import com.example.calendar.repository.server.model.UserServer
 import org.threeten.bp.ZoneId
 
 
 class ExitEventPatternViewModel : ViewModel() {
-    var posItem : Int = -1
+    var posItem: Int = -1
 
-    val recurrence = MutableLiveData<String>()
+    val recurrence = MutableLiveData<String?>()
     //    val location = MutableLiveData<String?>()
     val timezone = MutableLiveData<ZoneId>()
 
     fun isActivate() = posItem >= 0
-    fun activate(i: Int = 0) { posItem = i }
-    fun deactivate() { posItem = -1 }
+    fun activate(i: Int = 0) {
+        posItem = i
+    }
+
+    fun deactivate() {
+        posItem = -1
+    }
 }
 
-class CreateEventFragment : MvpAppCompatFragment(),
-    CreateEventView, PatternsSaveView {
+class EventFragment : MvpAppCompatFragment(),
+    CreateEventView, PatternsSaveView, EditEventView {
 
     companion object {
         fun newInstance(
             startEvent: ZonedDateTime,
             endEvent: ZonedDateTime
-        ): CreateEventFragment {
+        ): EventFragment {
             val args = Bundle()
             args.run {
                 putString(START_EVENT_KEY, toStringFromZoned(startEvent))
                 putString(END_EVENT_KEY, toStringFromZoned(endEvent))
             }
-            val f = CreateEventFragment()
+            val f = EventFragment()
+            f.arguments = args
+            return f
+        }
+
+        fun newInstance(event: EventInstance): EventFragment {
+            val args = Bundle()
+            args.run {
+                this.putParcelable(EVENT_INSTANCE_KEY, event)
+            }
+            val f = EventFragment()
             f.arguments = args
             return f
         }
@@ -69,15 +88,42 @@ class CreateEventFragment : MvpAppCompatFragment(),
     }
 
     @InjectPresenter
+    lateinit var editEventPresenter: EditEventPresenter
+
+    @ProvidePresenter
+    fun provideEditEventPresenter(): EditEventPresenter {
+        val arg = arguments!!
+        if (arg.containsKey(EVENT_INSTANCE_KEY)) {
+            return EditEventPresenter(
+                router,
+                InjectApplication.inject.repository,
+                arguments!!.getParcelable<EventInstance>(EVENT_INSTANCE_KEY)!!
+            )
+        } else {
+            return EditEventPresenter(
+                router,
+                InjectApplication.inject.repository,
+                null
+            )
+        }
+    }
+
+    @InjectPresenter
     lateinit var patternsPresenter: PatternsPresenter
 
     @ProvidePresenter
     fun providePatternsPresenter(): PatternsPresenter {
         val arg = arguments!!
-        return PatternsPresenter(
-            fromStringToZoned(arg.getString(START_EVENT_KEY)!!),
-            fromStringToZoned(arg.getString(END_EVENT_KEY)!!)
-        )
+        if (arg.containsKey(START_EVENT_KEY)) {
+            return PatternsPresenter(
+                fromStringToZoned(arg.getString(START_EVENT_KEY)!!),
+                fromStringToZoned(arg.getString(END_EVENT_KEY)!!)
+            )
+        } else {
+            val now = ZonedDateTime.now()
+            return PatternsPresenter(now, now.plusHours(1))
+        }
+
     }
 
     private val router = InjectApplication.inject.router
@@ -113,8 +159,16 @@ class CreateEventFragment : MvpAppCompatFragment(),
             onCloseTimezoneSelect(p)
         })
 
-        val emptyPattern = patternsPresenter.patterns
-        val adapter = PatternRecycleViewAdapter(emptyPattern, this::onRecurrenceRuleClick, this::onTimeZoneClick)
+        if (!editEventPresenter.isEditMode) {
+            v.vEventRequest.setOwner("Вы")
+        }
+
+        var emptyPattern = ArrayList<PatternRequest>()
+        if (savedInstanceState == null && !editEventPresenter.isEditMode) {
+            emptyPattern = patternsPresenter.patterns
+        }
+        val adapter = PatternRecycleViewAdapter(emptyPattern,
+            this::onRecurrenceRuleClick, this::onTimeZoneClick, this::deletePattern)
         val linerLayoutManager = LinearLayoutManager(context)
         v.rvPattern.run {
             this.adapter = adapter
@@ -122,11 +176,10 @@ class CreateEventFragment : MvpAppCompatFragment(),
         }
 
         v.fabAddPattern.setOnClickListener { addPattern(patternsPresenter.patternStub) }
-
         return v
     }
 
-    private fun onCloseRecurrenceSelect(p: String) {
+    private fun onCloseRecurrenceSelect(p: String?) {
         if (exitViewModel.isActivate()) {
             patternsPresenter.onCloseRecurrenceSelect(p, exitViewModel.posItem)
             exitViewModel.deactivate()
@@ -154,8 +207,13 @@ class CreateEventFragment : MvpAppCompatFragment(),
         adapter.updatePattern(m, pos)
     }
 
+    private fun deletePattern(pos: Int) {
+        editEventPresenter.deletePattern(pos)
+    }
+
     fun addPattern(pattern: PatternRequest) {
         adapter.addItem(pattern, context!!)
+        editEventPresenter.addPattern(pattern)
     }
 
     override fun onStop() {
@@ -165,18 +223,50 @@ class CreateEventFragment : MvpAppCompatFragment(),
 
     private fun initToolBar() {
         v.tbEventInstance.setNavigationOnClickListener { router.exit() }
-        v.tbEventInstance.inflateMenu(R.menu.menu_enent_create)
-        v.tbEventInstance.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
-            onSave()
-            true
+        if (!editEventPresenter.isEditMode) {
+            v.tbEventInstance.inflateMenu(R.menu.menu_enent_create)
+            v.tbEventInstance.menu.findItem(R.id.actionCreate).setOnMenuItemClickListener {
+                onCreate()
+                true
+            }
+        } else {
+            v.tbEventInstance.inflateMenu(R.menu.menu_event_edit)
+            v.tbEventInstance.menu.findItem(R.id.actionSave).setOnMenuItemClickListener {
+                editEventPresenter.onUpdateAll(v.vEventRequest.eventRequest, adapter.patterns)
+                true
+            }
+            v.tbEventInstance.menu.findItem(R.id.actionShare).setOnMenuItemClickListener {
+                router.navigateTo(Screens.CreateEventPermissionScreen(editEventPresenter.eventInstance!!.entity.id))
+                true
+            }
+            v.tbEventInstance.menu.findItem(R.id.actionDelete).setOnMenuItemClickListener {
+                editEventPresenter.onDeleteAll()
+                true
+            }
+
         }
+
     }
 
-    private fun onSave() {
+    private fun onCreate() {
         createEventPresenter.onSaveEvent(v.vEventRequest.eventRequest, adapter.patterns)
     }
 
     override fun showError(e: String) {
         Toast.makeText(context, e, Toast.LENGTH_SHORT).show()
     }
+
+    override fun updateEventInfo(user: UserServer, e: EventRequest, p: ArrayList<PatternRequest>) {
+        v.vEventRequest.eventRequest = e
+        if (isCurrentFirebaseUser(user)) {
+            v.vEventRequest.setOwner("Вы")
+        } else {
+            v.vEventRequest.setOwner(user.username)
+        }
+        adapter.updatePatterns(p)
+    }
+
+    override fun enableUpdate() {}
+
+    override fun enableDelete() {}
 }

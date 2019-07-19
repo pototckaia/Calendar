@@ -9,13 +9,11 @@ import com.example.calendar.MainActivity
 import com.example.calendar.NavigationFragment
 import com.example.calendar.calendarFragment.MonthCalendarFragment
 import com.example.calendar.calendarFragment.WeekCalendarFragment
-import com.example.calendar.eventFragment.CreateEventFragment
-import com.example.calendar.eventFragment.EditEventInstanceFragment
+import com.example.calendar.eventFragment.EventFragment
 import com.example.calendar.auth.FirebaseSignInActivity
 import com.example.calendar.eventFragment.TimeZoneSelectFragment
 import com.example.calendar.permission.CreateEventPermissionFragment
 import com.example.calendar.permission.PermissionListFragment
-import com.example.calendar.repository.server.model.EntityType
 import com.example.calendar.repository.server.model.EventInstance
 import org.threeten.bp.ZonedDateTime
 
@@ -27,7 +25,7 @@ class Screens {
         }
 
         override fun getFragment(): Fragment =
-            EditEventInstanceFragment.newInstance(event)
+            EventFragment.newInstance(event)
     }
 
     class NewEventScreen(
@@ -35,7 +33,7 @@ class Screens {
         private val e: ZonedDateTime
     ) : SupportAppScreen() {
         override fun getFragment(): Fragment =
-            CreateEventFragment.newInstance(s, e)
+            EventFragment.newInstance(s, e)
     }
 
     class MonthCalendarScreen : SupportAppScreen() {
@@ -64,7 +62,7 @@ class Screens {
 
     class FreqScreen(
         private val start: ZonedDateTime,
-        private val rule: String = ""
+        private val rule: String? = null
     ) : SupportAppScreen() {
         override fun getFragment(): Fragment =
             FreqCreateFragment.newInstance(start, rule)
@@ -87,12 +85,11 @@ class Screens {
     }
 
     class CreateEventPermissionScreen(
-        val entity_id: Long,
-        val pattern_id: Long
+        val entity_id: Long
     ): SupportAppScreen() {
 
         override fun getFragment(): Fragment =
-                CreateEventPermissionFragment.newInstance(entity_id, pattern_id)
+                CreateEventPermissionFragment.newInstance(entity_id)
 
     }
 }

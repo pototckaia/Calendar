@@ -18,8 +18,7 @@ class CreateEventPresenter(
 
     fun onSaveEvent(
         event: EventRequest,
-        pattern: ArrayList<PatternRequest>
-    ) {
+        pattern: ArrayList<PatternRequest>) {
 
         for (i in 0 until pattern.size) {
             if (!check(i, pattern[i])) {

@@ -28,13 +28,13 @@ class WeekEventPresenter(
     private val titleFake: String
 ) : BaseMvpSubscribe<WeekEventView>() {
 
-    private val events : ArrayList<EventWeekView> = arrayListOf()
+    private val events: ArrayList<EventWeekView> = arrayListOf()
 
     // todo period
     private val monthsLoad = HashSet<Pair<Int, Int>>()
     private var isFirstUpdate = true;
 
-    fun onMonthChange(month: ZonedDateTime) : List<EventWeekView> {
+    fun onMonthChange(month: ZonedDateTime): List<EventWeekView> {
         val pair = Pair(month.year, month.monthValue)
 
         val monthStart = month
@@ -57,16 +57,16 @@ class WeekEventPresenter(
         monthsLoad.clear()
     }
 
-    private fun isLoad(yearAndMonth: Pair<Int, Int>) : Boolean {
+    private fun isLoad(yearAndMonth: Pair<Int, Int>): Boolean {
         return monthsLoad.contains(yearAndMonth)
     }
 
     // [start, end]
-    private fun isStartFromPeriod(it: EventWeekView, start: ZonedDateTime, end: ZonedDateTime) : Boolean {
-        return  it.event.started_at_local in start..end
+    private fun isStartFromPeriod(it: EventWeekView, start: ZonedDateTime, end: ZonedDateTime): Boolean {
+        return it.event.started_at_local in start..end
     }
 
-    private fun isFromPeriod(it: EventWeekView, start: ZonedDateTime, end: ZonedDateTime) : Boolean {
+    private fun isFromPeriod(it: EventWeekView, start: ZonedDateTime, end: ZonedDateTime): Boolean {
         return (it.event.started_at_local >= start && it.event.ended_at_local <= end) ||
                 (it.event.started_at_local < end && it.event.ended_at_local > start)
     }
@@ -126,7 +126,7 @@ class WeekEventPresenter(
                 }
                 // not intersection
                 else {
-                    events.addAll( filterIntersection(intersection, startIntersection, endIntersection) )
+                    events.addAll(filterIntersection(intersection, startIntersection, endIntersection))
                     // clear
                     intersection.clear()
                     intersection.add(sortEvent[i])
@@ -145,8 +145,8 @@ class WeekEventPresenter(
 
     private fun filterIntersection(
         inter: List<EventInstance>,
-        startIntersection: ZonedDateTime, endIntersection: ZonedDateTime): List<EventWeekView>
-    {
+        startIntersection: ZonedDateTime, endIntersection: ZonedDateTime
+    ): List<EventWeekView> {
         val res = arrayListOf<EventWeekView>()
 
         if (inter.size == 1) {
@@ -176,25 +176,15 @@ class WeekEventPresenter(
                 // todo a lot of code
                 val eventFake = EventInstance(
                     entity = EventServer(
-                        id = -1,
-                        owner_id = "-1",
-                        created_at = ZonedDateTime.now(),
-                        updated_at = ZonedDateTime.now(),
-                        name = titleFake,
-                        details = "",
-                        status = "",
-                        location = ""
+                        -1, "-1",
+                        ZonedDateTime.now(), ZonedDateTime.now(),
+                        titleFake, "", "", ""
                     ),
                     pattern = EventPatternServer(
-                        id = -1,
-                        created_at = ZonedDateTime.now(),
-                        updated_at = ZonedDateTime.now(),
-                        started_at = startIntersection,
-                        ended_at = endIntersection,
-                        duration = durationFake,
-                        exrules = emptyList(),
-                        rrule = "",
-                        timezone = startIntersection.zone
+                        -1,
+                        ZonedDateTime.now(), ZonedDateTime.now(),
+                        startIntersection, durationFake, endIntersection,
+                        emptyList(), null, startIntersection.zone
                     ),
                     user = UserServer("-1", "-1"),
                     started_at = startIntersection,

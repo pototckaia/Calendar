@@ -20,7 +20,7 @@ data class EventInstanceResponse(
 
 data class EventPatternResponse(
     val count: Int,
-    val data: List<EventPatternServer>,
+    var data: List<EventPatternServer>,
     val message: String,
     val offset: Long,
     val status: Int,

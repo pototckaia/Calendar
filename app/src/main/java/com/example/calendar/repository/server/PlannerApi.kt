@@ -18,11 +18,12 @@ interface PlannerApi {
     @Streaming
     fun exportICal() : Single<ResponseBody>
 
-    @POST("$request/export")
-    @Multipart
+
     @Headers(
-        "Content-Type: multipart/form-data",
-        "accept: application/json")
+        "Accept: application/json",
+        "Content-Type: application/json")
+    @Multipart
+    @POST("$request/import")
     fun importICal(@Part file: MultipartBody.Part) : Completable
 
     // Event

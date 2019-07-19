@@ -51,6 +51,31 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
 //            .toObservable()
 //    }
 
+    private fun getFixPatterns(event_id: Long): Single<EventPatternResponse> {
+        return api.getPatterns(event_id)
+            .map {
+                it.data = it.data.map { pattern ->
+                    val newPatternRequest = PatternRequest.getPatternFromReceive(pattern.patternRequest)
+                    pattern.patternRequest = newPatternRequest
+                    pattern
+                }
+                it
+            }
+    }
+
+    private fun fixPatterns(e: List<EventPatternServer>) =
+        e.map {
+            val request = PatternRequest.getPatternToSend(it.patternRequest)
+            it.patternRequest = request
+            it
+        }
+
+    private fun getFixPatternsRequest(e: List<PatternRequest>) =
+        e.map {
+            PatternRequest.getPatternToSend(it)
+        }
+
+
     override fun fromTo(startLocal: ZonedDateTime, endLocal: ZonedDateTime): Single<List<EventInstance>> {
         val startUTC = toLongUTC(startLocal.withZoneSameInstant(ZoneOffset.UTC))
         val endUTC = toLongUTC(endLocal.withZoneSameInstant(ZoneOffset.UTC))
@@ -59,7 +84,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .map { it.data }
             .flattenAsFlowable { it }
             .flatMap { entity ->
-                api.getPatterns(entity.id)
+                getFixPatterns(entity.id)
                     .zipWith(api.getUser(entity.owner_id, null, null),
                         BiFunction { p: EventPatternResponse, u: UserResponse ->
                             val user = u.data[0]
@@ -118,7 +143,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
     override fun getEventById(eventId: Long): Single<Event> {
         return api.getEventById(eventId)
             .zipWith(
-                api.getPatterns(eventId),
+                getFixPatterns(eventId),
                 BiFunction { e: EventResponse, p: EventPatternResponse ->
                     Event(e.data[0], p.data)
                 }
@@ -126,13 +151,21 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun updateEvent(event: EventServer): Completable {
+        return api.updateEvent(event.id, event.eventRequest)
+            .toCompletable()
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+
     override fun insertEvent(
         eventRequest: EventRequest, patternRequests: ArrayList<PatternRequest>
     ): Completable {
+        val fixPatternRequest = getFixPatternsRequest(patternRequests as List<PatternRequest>)
         return api.createEvent(eventRequest)
             .flatMap {
                 val eventId = it.data[0].id
-                val singles = patternRequests.map {
+                val singles = fixPatternRequest.map {
                     api.createPattern(eventId, it)
                         .toObservable()
                 }
@@ -143,24 +176,45 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun updateEvent(event: EventInstance): Completable {
-        return api.updateEvent(event.entity.id, EventRequest(event.entity))
-            .toCompletable()
-            .mergeWith(
-                api.updatePattern(event.pattern.id, event.pattern.patternRequest)
-                    .toCompletable()
-            )
+    override fun getPatterns(event_id: Long): Single<List<EventPatternServer>> {
+        return getFixPatterns(event_id)
+            .map { it.data }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun deleteEvent(event: EventInstance): Completable {
-        return api.deletePatternById(event.pattern.id)
+    override fun createPatterns(event_id: Long, patternRequests: List<PatternRequest>): Completable {
+        val fixPatterResponse = getFixPatternsRequest(patternRequests)
+        val com = fixPatterResponse.map {
+            api.createPattern(event_id, it)
+                .toCompletable()
+        }
+        return Completable.merge(com)
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun updatePatterns(patterns: List<EventPatternServer>): Completable {
+        val fixPattern = fixPatterns(patterns)
+        val com = fixPattern.map {
+            api.updatePattern(it.id, it.patternRequest)
+                .toCompletable()
+        }
+        return Completable.merge(com)
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun deletePatterns(patterns_id: List<Long>): Completable {
+        val com = patterns_id.map {
+            api.deletePatternById(it)
+                .toCompletable()
+        }
+        return Completable.merge(com)
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun deleteEvent(event_id: Long): Completable {
+        return api.deleteEventById(event_id)
             .toCompletable()
             .observeOn(AndroidSchedulers.mainThread())
-//            .andThen(
-//                api.deleteEventById(event.entity.id)
-//                    .ignoreElements()
-//            )
     }
 
     override fun export(uri: String): Single<ResponseBody> {
@@ -235,8 +289,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                 var single = Observable.empty<PermissionModel>().firstOrError()
                 if (it.entity_id == it.user_id || it.entity_id == it.owner_id) {
                     // permission for all calendar
-                    single = api
-                        .getUser(getUserIdByMine(it, mine), null, null)
+                    single = api.getUser(getUserIdByMine(it, mine), null, null)
                         .map {
                             if (it.isEmpty())
                                 throw NotFind()
@@ -254,8 +307,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     if (entity_id == null) {
                         throw InternalError()
                     }
-                    single = api
-                        .getEventById(entity_id)
+                    single = api.getEventById(entity_id)
                         .zipWith(
                             api.getUser(getUserIdByMine(it, mine), null, null)
                                 .map {
@@ -290,7 +342,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
         val event_id = event_permission.entity_id.toLong()
 
         return start
-            .flatMap { api.getPatterns(event_id) }
+            .flatMap { getFixPatterns(event_id) }
             .map { it.data }
             .flatMap {
                 api.getPermissionsById(EntityType.PATTERN, it.map { p -> p.id })

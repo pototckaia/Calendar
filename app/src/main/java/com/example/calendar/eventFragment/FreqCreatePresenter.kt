@@ -13,7 +13,7 @@ import org.threeten.bp.temporal.ChronoUnit
 
 @InjectViewState
 class FreqCreatePresenter(
-    ruleString: String,
+    ruleString: String?,
     start_: ZonedDateTime) :
     BaseMvpSubscribe<FreqCreateView>() {
 
@@ -23,7 +23,7 @@ class FreqCreatePresenter(
     val until : ZonedDateTime
         get() = untilUTC.withZoneSameInstant(ZoneId.systemDefault())
 
-    var isNotRule : Boolean = ruleString.isEmpty()
+    var isNotRule = ruleString == null
 
     init {
         if (!isNotRule && RecurrenceRule(ruleString).until != null) {
@@ -70,7 +70,7 @@ class FreqCreatePresenter(
 
     fun onBack() {
         if (isNotRule) {
-            viewState.onExit("")
+            viewState.onExit(null)
         } else {
             val r = RecurrenceRule("FREQ=DAILY;")
             viewState.onSave(r)
