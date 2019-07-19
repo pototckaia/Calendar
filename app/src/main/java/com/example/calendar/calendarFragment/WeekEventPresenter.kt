@@ -173,22 +173,10 @@ class WeekEventPresenter(
 
             if (isAddFake) {
                 val durationFake = Duration.between(startIntersection, endIntersection)
-                // todo a lot of code
                 val eventFake = EventInstance(
-                    entity = EventServer(
-                        -1, "-1",
-                        ZonedDateTime.now(), ZonedDateTime.now(),
-                        titleFake, "", "", ""
-                    ),
-                    pattern = EventPatternServer(
-                        -1,
-                        ZonedDateTime.now(), ZonedDateTime.now(),
-                        startIntersection, durationFake, endIntersection,
-                        emptyList(), null, startIntersection.zone
-                    ),
-                    user = UserServer("-1", "-1"),
-                    started_at = startIntersection,
-                    ended_at = endIntersection
+                    -1, titleFake,
+                    -1, UserServer("-1", "-1"),
+                    startIntersection, endIntersection
                 )
                 res.add(EventWeekView(eventFake, true, colorFake))
             }

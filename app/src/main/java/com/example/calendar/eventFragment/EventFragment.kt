@@ -167,8 +167,10 @@ class EventFragment : MvpAppCompatFragment(),
         if (savedInstanceState == null && !editEventPresenter.isEditMode) {
             emptyPattern = patternsPresenter.patterns
         }
-        val adapter = PatternRecycleViewAdapter(emptyPattern,
-            this::onRecurrenceRuleClick, this::onTimeZoneClick, this::deletePattern)
+        val adapter = PatternRecycleViewAdapter(
+            emptyPattern,
+            this::onRecurrenceRuleClick, this::onTimeZoneClick, this::deletePattern
+        )
         val linerLayoutManager = LinearLayoutManager(context)
         v.rvPattern.run {
             this.adapter = adapter
@@ -236,7 +238,11 @@ class EventFragment : MvpAppCompatFragment(),
                 true
             }
             v.tbEventInstance.menu.findItem(R.id.actionShare).setOnMenuItemClickListener {
-                router.navigateTo(Screens.CreateEventPermissionScreen(editEventPresenter.eventInstance!!.entity.id))
+                router.navigateTo(
+                    Screens.CreateEventPermissionScreen(
+                        editEventPresenter.event_id, editEventPresenter.pattern_ids
+                    )
+                )
                 true
             }
             v.tbEventInstance.menu.findItem(R.id.actionDelete).setOnMenuItemClickListener {

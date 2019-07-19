@@ -13,8 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.calendar.R
 import com.example.calendar.helpers.ENTITY_ID
-import com.example.calendar.helpers.ENTITY_TYPE
-import com.example.calendar.helpers.PATTERN_ID
+import com.example.calendar.helpers.PATTERN_IDS
 import com.example.calendar.inject.InjectApplication
 import com.example.calendar.repository.server.model.EntityType
 import com.example.calendar.repository.server.model.PermissionAction
@@ -24,11 +23,11 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
     PermissionView {
 
     companion object {
-        fun newInstance(entity_id: Long): CreateEventPermissionFragment {
+        fun newInstance(entity_id: Long, pattern_ids: List<Long>): CreateEventPermissionFragment {
             val args = Bundle()
             args.run {
                 putLong(ENTITY_ID, entity_id)
-                putString(ENTITY_TYPE, EntityType.EVENT.toString())
+                putLongArray(PATTERN_IDS, pattern_ids.toLongArray())
             }
             val f = CreateEventPermissionFragment()
             f.arguments = args
@@ -41,13 +40,10 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
 
     @ProvidePresenter
     fun providePermissionPresenter(): PermissionEventPresenter {
-        var entity_id : Long? = null
-        arguments?.let {
-            entity_id = it.getLong(ENTITY_ID)
-        }
-
+        val arg = arguments!!
         return PermissionEventPresenter(
-            entity_id,
+            arg.getLong(ENTITY_ID)!!,
+            arg.getLongArray(PATTERN_IDS)!!.toList(),
             InjectApplication.inject.repository,
             InjectApplication.inject.router
         )
@@ -70,9 +66,9 @@ class CreateEventPermissionFragment : MvpAppCompatFragment(),
         var text = "Предоставления доступа "
         if (!permissionPresenter.allEntity) {
             val id = permissionPresenter.event_id!!
-            text = "$text для события \nid: $id"
+            text = "$text для событие \nid: $id"
         } else {
-            text = "$text на событий"
+            text = "$text на все события"
         }
         v.tvTitleAccess.text = text
 

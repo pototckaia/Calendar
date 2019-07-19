@@ -19,21 +19,30 @@ class EditEventPresenter(
 
     val isEditMode = eventInstance != null
 
+    var event_id = eventInstance?.entity_id ?: -1
+    val pattern_ids = ArrayList<Long>()
+
+    lateinit var entity: EventServer
     val patterns = ArrayList<EventPatternServer>()
     val delete_patterns = ArrayList<EventPatternServer>()
 
     init {
         if (isEditMode) {
             val e = eventInstance!!
-            val u = eventRepository.getPatterns(e.entity.id)
+            val u = eventRepository.getEventWithPatter(e.entity_id)
                 .subscribe({
-                    patterns.addAll(it)
+                    entity = it.first
+                    patterns.addAll(it.second)
+                    pattern_ids.addAll(it.second.map { p -> p.id })
+
                     viewState.updateEventInfo(
                         e.user,
-                        e.entity.eventRequest,
-                        it.map { p -> p.patternRequest } as ArrayList<PatternRequest>)
+                        entity.eventRequest,
+                        patterns.map { p -> p.patternRequest } as ArrayList<PatternRequest>
+                    )
                 }, {
                     onLoadingFailed(it.toString())
+                    router.exit()
                 })
             unsubscribeOnDestroy(u)
         }
@@ -58,7 +67,7 @@ class EditEventPresenter(
         if (!isEditMode) {
             return
         }
-        val entity = eventInstance!!.entity
+        entity.eventRequest = eventRequest
 
         if (newPatterns.size != patterns.size) {
             throw IllegalArgumentException()
@@ -84,9 +93,7 @@ class EditEventPresenter(
             .subscribe(
                 {
                     // todo forbined
-                    // todo auth
                     // todo notfind
-                    viewState.showError("Update!!")
                     router.exit()
                 },
                 { error ->
@@ -102,7 +109,7 @@ class EditEventPresenter(
         }
 
         isDelete = true
-        val sub = eventRepository.deleteEvent(eventInstance!!.entity.id)
+        val sub = eventRepository.deleteEvent(entity.id)
             .subscribe(
                 {
                     onDeleteLoading()

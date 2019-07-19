@@ -43,7 +43,7 @@ fun getEventInstances(
 
     if (!isRecurrence(pattern.rrule)) {
         val eventInstance = EventInstance(
-            event, pattern, user,
+            event.id, event.name, pattern.id, user,
             pattern.started_at, pattern.started_at.plus(pattern.duration)
         )
         if (isFromPeriod(
@@ -77,14 +77,15 @@ fun getEventInstances(
         val startNewEvent = fromDateTime(startInstance)
         val eventInstance =
             EventInstance(
-                event, pattern,
-                user,
+                event.id, event.name, pattern.id, user,
                 startNewEvent, startNewEvent.plus(pattern.duration)
             )
 
         if (isFromPeriod(
                 eventInstance.started_at_local, eventInstance.ended_at_local,
-                startLocal, endLocal)) {
+                startLocal, endLocal
+            )
+        ) {
             instances.add(eventInstance)
             counter++
         }
@@ -94,8 +95,7 @@ fun getEventInstances(
 
 val MAX_TIME = 253402300799000L
 
-fun equalMaxTime(z: ZonedDateTime)
-        = zonedDateTime_cn.toZonedDateTime(MAX_TIME) == z.withZoneSameInstant(ZoneOffset.UTC)
+fun equalMaxTime(z: ZonedDateTime) = zonedDateTime_cn.toZonedDateTime(MAX_TIME) == z.withZoneSameInstant(ZoneOffset.UTC)
 
 fun calculateEndedAt(
     started_at: ZonedDateTime,
@@ -131,7 +131,9 @@ fun calculateEndedAt(
 }
 
 private fun getPosName(p: Int?) = when (p) {
-    0, null -> { "" }
+    0, null -> {
+        ""
+    }
     else -> {
         var first = p.toString()
         if (p < 0) {

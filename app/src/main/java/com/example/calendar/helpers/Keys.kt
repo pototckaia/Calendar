@@ -19,6 +19,5 @@ const val USER_ID_TOKEN = "USER_ID_TOKEN"
 const val USER_ID_TOKEN_PREF = "USER_ID_TOKEN_PREF"
 
 const val ENTITY_ID = "ENTITY_ID"
-const val PATTERN_ID = "PATTERN_ID"
-const val ENTITY_TYPE = "ENTITY_TYPE"
+const val PATTERN_IDS = "PATTERN_IDS"
 

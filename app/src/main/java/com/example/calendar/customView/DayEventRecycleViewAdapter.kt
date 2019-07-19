@@ -32,10 +32,10 @@ class DayEventViewHolder(
     private val emptyTitle = "< Нет названия >"
 
     fun bind(e: EventInstance, day: ZonedDateTime) {
-        if (e.entity.name.isEmpty()) {
+        if (e.entity_name.isEmpty()) {
             view.tvEventTitle.text = emptyTitle
         } else {
-            view.tvEventTitle.text = e.entity.name
+            view.tvEventTitle.text = e.entity_name
         }
         view.tvUser.visibility = View.GONE
         if (!isCurrentFirebaseUser(e.user)) {

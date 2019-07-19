@@ -21,7 +21,7 @@ class Screens {
 
     class EventScreen(private val event: EventInstance) : SupportAppScreen() {
         init {
-            screenKey = "${javaClass.simpleName}_${event.entity.id}"
+            screenKey = "${javaClass.simpleName}_${event.entity_id}"
         }
 
         override fun getFragment(): Fragment =
@@ -85,11 +85,12 @@ class Screens {
     }
 
     class CreateEventPermissionScreen(
-        val entity_id: Long
+        val entity_id: Long,
+        val pattern_ids: List<Long>
     ): SupportAppScreen() {
 
         override fun getFragment(): Fragment =
-                CreateEventPermissionFragment.newInstance(entity_id)
+                CreateEventPermissionFragment.newInstance(entity_id, pattern_ids)
 
     }
 }

@@ -74,6 +74,7 @@ class NavigationFragment :
     fun providePermissionPresenter(): PermissionEventPresenter {
         return PermissionEventPresenter(
             null,
+            null,
             repository,
             router
         )
@@ -133,7 +134,7 @@ class NavigationFragment :
         v.bCreatePermissionAll.setOnClickListener {
             AlertDialog.Builder(activity)
                 .setView(R.layout.dialog_create_link)
-                .setPositiveButton(context!!.getString(android.R.string.ok)) { d, i ->
+                .setPositiveButton(context!!.getString(android.R.string.ok)) { d, _ ->
                     val dialog = d as AlertDialog
                     val action = arrayListOf(PermissionAction.READ)
                     if (dialog.cbUpdate.isChecked) {

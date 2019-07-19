@@ -13,7 +13,7 @@ class EventWeekView (
 
     override fun toWeekViewEvent(): WeekViewEvent<EventWeekView> {
         return WeekViewEvent(0,
-            event.entity.name,
+            event.entity_name,
             toCalendar(event.started_at_local), toCalendar(event.ended_at_local),
             null, color, false, this)
     }
