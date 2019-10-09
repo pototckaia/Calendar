@@ -19,12 +19,9 @@ class PermissionEventListPresenter(
 
     init {
         // мне дали доступ
-        loadPermission(I_OWNER, iOwnerPermission) { }
+        loadPermission(I_OWNER, iOwnerPermission) {}
         // я дал доступ - true
-        loadPermission(I_USER, iUserPermission) {
-
-            onMineSwitch(I_USER)
-        }
+        loadPermission(I_USER, iUserPermission) {}
     }
 
     private fun getPermission(m: Boolean) = if (m == I_USER) iUserPermission else iOwnerPermission

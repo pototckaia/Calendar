@@ -272,7 +272,8 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
     }
 
 
-    private fun getUserIdByMine(it: PermissionServer, mine: Boolean) = if (mine) it.user_id else it.owner_id
+    private fun getUserIdByMine(it: PermissionServer, mine: Boolean) =
+        if (mine) it.user_id else it.owner_id
 
 
     override fun getEventPermissions(
@@ -289,10 +290,9 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     throw NotAuthorized()
                 }
 
-                var single = Observable.empty<PermissionModel>().firstOrError()
-                if (it.entity_id == it.user_id || it.entity_id == it.owner_id) {
+                var single = if (it.entity_id == it.user_id || it.entity_id == it.owner_id) {
                     // permission for all calendar
-                    single = getUser(getUserIdByMine(it, mine), null)
+                    getUser(getUserIdByMine(it, mine), null)
                         .map { user ->
                             PermissionModel(
                                 it.id, it.entity_id, mine, entityType,
@@ -305,7 +305,7 @@ class EventServerRepository(val api: PlannerApi) : EventRepository {
                     if (entity_id == null) {
                         throw InternalError()
                     }
-                    single = api.getEventById(entity_id)
+                    api.getEventById(entity_id)
                         .zipWith(
                             getUser(getUserIdByMine(it, mine), null),
                             BiFunction { event: EventResponse, user: UserServer ->

@@ -113,7 +113,7 @@ data class PatternRequest(
         }
 
         val recurrence = RecurrenceRule(r)
-        // until to UTF
+        // until to UTC
         if (recurrence.until != null) {
             recurrence.until = DateTime(
                 DateTime.GREGORIAN_CALENDAR_SCALE, TimeZone.getTimeZone("UTC"), recurrence.until
